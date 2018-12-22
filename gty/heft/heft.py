@@ -181,4 +181,4 @@ def heft():
         logging.info('tasks on processor %s: %s', p.id, [{t.id: (t.ast, t.aft)} for t in p.tasks])
 
     logging.info('makespan: %s', makespan(tasks))
-    return processors, tasks
+    return processors, tasks, priority_list

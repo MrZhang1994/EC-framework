@@ -2,15 +2,12 @@ from example import *
 from heft import *
 import numpy as np
 import queue
+import copy
 
 def reverse_graph(dag, r_dag):
     for key in dag:
         for u in dag[key]:
-            try:
-                r_dag[u].add(key)
-            except:
-                r_dag[u] = set()
-                r_dag[u].add(key)
+            r_dag[u].add(key)
     return r_dag
 
 def add_core_dependency(processors, dag, r_dag):
@@ -152,7 +149,7 @@ def get_bridge_tasks(d, N, cont):
                 break
     return bridge_tasks
 
-def containerize(d, processors, tasks, s):
+def containerize(d, processors, tasks, s, order):
     global iso_value
     N = len(tasks)
     init_iso(N)
@@ -164,7 +161,7 @@ def containerize(d, processors, tasks, s):
             except:
                 dag[k] = set()
                 dag[k].add(v)
-    r_dag = {s:()}
+    r_dag = dict([(i, set()) for i in range(N)])
     reverse_graph(dag, r_dag)
     add_core_dependency(processors, dag, r_dag)
     get_avg_commcost(dag)
@@ -182,9 +179,30 @@ def containerize(d, processors, tasks, s):
 
     bridge_tasks = get_bridge_tasks(d, N, cont)
     # print(iso_value)
+    new_tasks, new_processors = update_schedule(r_dag, processors, tasks, bridge_tasks, order)
 
-    return r_dag, cpath, index, cont, bridge_tasks
+    return r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors
 
-def update_schedule(d, processors, tasks, s):
+def update_schedule(r_dag, processors, tasks, bridge_tasks, order):
+    new_tasks = copy.deepcopy(tasks)
+    new_processors = copy.deepcopy(processors)
+    fact = 1.1
     w = [task.aft - task.ast for task in tasks]
+    for i, x in enumerate(w):
+        if i in bridge_tasks:
+            x *= fact
+
+    for i, p in enumerate(processors):
+        for t in p.tasks:
+            new_tasks[t.id].aft = 0
     
+    for t in order:
+        new_tasks[t].ast = max([new_tasks[x].aft for x in r_dag[t]]) if r_dag[t] != set() else 0
+        new_tasks[t].aft = new_tasks[t].ast + w[t]
+    
+    for p in new_processors:
+        for t in p.tasks:
+            t.ast = new_tasks[t.id].ast
+            t.aft = new_tasks[t.id].aft
+
+    return new_tasks, new_processors
