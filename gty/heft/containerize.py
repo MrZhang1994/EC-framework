@@ -49,7 +49,7 @@ def get_avg_commcost(dag):
         if n == 0:
             avg_cost[key] = 0
             continue
-        s = sum([commcost_con(key, v) for v in dag[key]])
+        s = sum([commcost(key, v, 0, 1) for v in dag[key]])
         avg_cost[key] = s / n;
         
 
@@ -73,13 +73,31 @@ def get_index(dag, tasks, cpath):
 
 def init_iso(N):
     global iso_value
+    """
     iso_value = np.random.rand(N**2).reshape(N, N)
     iso_value = (iso_value + iso_value.T)/2
+    """
+    iso_value =[
+         [0.08, 0.24, 0.12, 0.18, 0.24, 0.42, 0.05, 0.90, 0.94, 0.49, 0.49, 0.34],
+         [   0, 0.37, 0.11, 0.78, 0.39, 0.24, 0.40, 0.10, 0.13, 0.94, 0.96, 0.58],
+         [   0,    0, 0.35, 0.82, 0.02, 0.04, 0.17, 0.65, 0.73, 0.65, 0.45, 0.55],
+         [   0,    0,    0, 0.69, 0.18, 0.37, 0.63, 0.78, 0.08, 0.93, 0.78, 0.49],
+         [   0,    0,    0,    0, 0.51, 0.82, 0.79, 0.64, 0.38, 0.81, 0.53, 0.35],
+         [   0,    0,    0,    0,    0, 0.21, 0.30, 0.47, 0.23, 0.84, 0.19, 0.23],
+         [   0,    0,    0,    0,    0,    0, 0.18, 0.90, 0.98, 0.44, 0.11, 0.26],
+         [   0,    0,    0,    0,    0,    0,    0, 0.30, 0.32, 0.42, 0.51, 0.09],
+         [   0,    0,    0,    0,    0,    0,    0,    0, 0.46, 0.96, 0.55, 0.52],
+         [   0,    0,    0,    0,    0,    0,    0,    0,    0, 0.91, 0.80, 0.10],
+         [   0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0.90, 0.89],
+         [   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, 0.81]
+    ]
 
 def iso(u, v):
-    return 0.5
+    if u == 0 or v == 0:
+        return 0
     global iso_value
-    return iso_value[u, v]
+    if u > v: u, v = v, u
+    return iso_value[u-1][v-1]
 
 def bfs(r_dag, tasks, index, t):
     N = len(tasks)
@@ -91,6 +109,7 @@ def bfs(r_dag, tasks, index, t):
     cont = dict()
     vis = set()
     cnt = 0
+    print("Vc:")
     print(Vc)
     cont[cnt] = set()
     iso_sum = 0
