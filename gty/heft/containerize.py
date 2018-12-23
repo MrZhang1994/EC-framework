@@ -188,9 +188,9 @@ def update_schedule(r_dag, processors, tasks, bridge_tasks, order):
     new_processors = copy.deepcopy(processors)
     fact = 1.1
     w = [task.aft - task.ast for task in tasks]
-    for i, x in enumerate(w):
+    for i in range(len(w)):
         if i in bridge_tasks:
-            x *= fact
+            w[i] *= fact
 
     for i, p in enumerate(processors):
         for t in p.tasks:
