@@ -54,7 +54,6 @@ def get_index(dag, tasks, cpath):
         if not u in dag:
             continue
         tmp = sum([tasks[v].ast - tasks[u].aft for v in dag[u] if v in cpath])
-        # print(u, tmp)
         tmp -= avg_cost[u]
         n = sum([v in cpath for v in dag[u]])
         if n == 0:
@@ -95,12 +94,12 @@ def iso(u, v):
     return iso_value[u-1][v-1]
 
 def bfs(r_dag, tasks, index, t):
+    global iso_limit
     N = len(tasks)
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
     Vc = sorted(Vc, key = lambda x: tasks[x].aft, reverse = True)
     Vp = [x for x in range(N) if x not in Vc]
-    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = False)
-    iso_limit = 2
+    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
     cont = dict()
     vis = set()
     cnt = 0
@@ -109,18 +108,18 @@ def bfs(r_dag, tasks, index, t):
     cont[cnt] = set()
     iso_sum = 0
     
+    q = queue.Queue()
     for vc in Vc + Vp:
-        q = queue.Queue()
         if vc in vis: continue
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
-        if iso_sum + delta > iso_limit: # new container
+        iso_sum += delta
+        if iso_sum > iso_limit: # new container
             iso_sum = 0
             cnt += 1
             cont[cnt] = set()
         
-        iso_sum += delta
         cont[cnt].add(vc)
         vis.add(vc)
         q.put(vc)
@@ -129,43 +128,48 @@ def bfs(r_dag, tasks, index, t):
             u = q.get()
             if not u in r_dag: continue
             parents = sorted(r_dag[u], key = lambda x: index[x])
-            exceeded = True
+            exceeded = False
             for p in parents:
                 if p in vis: continue
                 delta = 0
                 for task in cont[cnt]:
                     delta += iso(task, p)
 
-                if iso_sum + delta <= iso_limit:
-                    exceeded = False
-                    iso_sum += delta
-                    cont[cnt].add(p)
-                    vis.add(p)
-                    q.put(p)
+                iso_sum += delta
+
+                if iso_sum > iso_limit:
+                    exceeded = True
+                    break
+                cont[cnt].add(p)
+                vis.add(p)
+                q.put(p)
             
-            if parents != [] and exceeded and (cont[cnt] != set()):
+            if exceeded:
+                q.queue.clear()
                 iso_sum = 0
-                cnt += 1
-                cont[cnt] = set()
+                if cont[cnt] != set():
+                    cnt += 1
+                    cont[cnt] = set()
                 break
     """
     for vc in Vc + Vp:
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
-        if iso_sum + delta > iso_limit: # new container
+        iso_sum += delta
+        if iso_sum > iso_limit: # new container
             iso_sum = 0
             cnt += 1
             cont[cnt] = set()
         
-        iso_sum += delta
         cont[cnt].add(vc)
     """
     return cont
 
 def inorder(r_dag, tasks, index, t):
+    global iso_limit
+    print('inorder')
     N = len(tasks)
-    iso_limit = 1.5
     cont = dict()
     cnt = 0
     cont[cnt] = set()
@@ -174,12 +178,13 @@ def inorder(r_dag, tasks, index, t):
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
-        if iso_sum + delta > iso_limit: # new container
+        iso_sum += delta
+
+        if iso_sum > iso_limit: # new container
             iso_sum = 0
             cnt += 1
             cont[cnt] = set()
         
-        iso_sum += delta
         cont[cnt].add(vc)
     return cont
 
@@ -197,7 +202,8 @@ def get_bridge_tasks(d, N, cont):
     return cont_set, bridge_tasks
 
 def containerize(d, processors, tasks, s, order, flag):
-    global iso_value
+    global iso_value, iso_limit
+    iso_limit = 2
     N = len(tasks)
     init_iso(N)
     dag = dict()
