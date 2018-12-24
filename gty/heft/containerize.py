@@ -26,12 +26,6 @@ def cp(t, last, processors, tasks, step):
         return True
     time_stamp = tasks[t].ast
     for i in range(len(last)):
-        """
-        print(last[i])
-        print(processors[i].tasks[last[i]].id)
-        print(tasks[processors[i].tasks[last[i]].id].aft)
-        print('---')
-        """
         while last[i] >= 0 and tasks[processors[i].tasks[last[i]].id].aft > time_stamp:
             last[i] -= 1
         if tasks[processors[i].tasks[last[i]].id].aft == time_stamp:
@@ -49,7 +43,7 @@ def get_avg_commcost(dag):
         if n == 0:
             avg_cost[key] = 0
             continue
-        s = sum([commcost(key, v, 0, 1) for v in dag[key]])
+        s = sum([commcost_con(key, v) for v in dag[key]])
         avg_cost[key] = s / n;
         
 
@@ -60,6 +54,7 @@ def get_index(dag, tasks, cpath):
         if not u in dag:
             continue
         tmp = sum([tasks[v].ast - tasks[u].aft for v in dag[u] if v in cpath])
+        # print(u, tmp)
         tmp -= avg_cost[u]
         n = sum([v in cpath for v in dag[u]])
         if n == 0:
@@ -104,15 +99,16 @@ def bfs(r_dag, tasks, index, t):
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
     Vc = sorted(Vc, key = lambda x: tasks[x].aft, reverse = True)
     Vp = [x for x in range(N) if x not in Vc]
-    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
+    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = False)
     iso_limit = 2
     cont = dict()
     vis = set()
     cnt = 0
-    print("Vc:")
-    print(Vc)
+    print("Vc+Vp:")
+    print(Vc+Vp)
     cont[cnt] = set()
     iso_sum = 0
+    
     for vc in Vc + Vp:
         q = queue.Queue()
         if vc in vis: continue
@@ -133,7 +129,7 @@ def bfs(r_dag, tasks, index, t):
             u = q.get()
             if not u in r_dag: continue
             parents = sorted(r_dag[u], key = lambda x: index[x])
-            exceeded = False
+            exceeded = True
             for p in parents:
                 if p in vis: continue
                 delta = 0
@@ -146,13 +142,45 @@ def bfs(r_dag, tasks, index, t):
                     cont[cnt].add(p)
                     vis.add(p)
                     q.put(p)
-                else:
-                    exceeded = True
-            if exceeded and (cont[cnt] != set()):
+            
+            if parents != [] and exceeded and (cont[cnt] != set()):
                 iso_sum = 0
                 cnt += 1
                 cont[cnt] = set()
                 break
+    """
+    for vc in Vc + Vp:
+        delta = 0
+        for task in cont[cnt]:
+            delta += iso(task, vc)
+        if iso_sum + delta > iso_limit: # new container
+            iso_sum = 0
+            cnt += 1
+            cont[cnt] = set()
+        
+        iso_sum += delta
+        cont[cnt].add(vc)
+    """
+    return cont
+
+def inorder(r_dag, tasks, index, t):
+    N = len(tasks)
+    iso_limit = 1.5
+    cont = dict()
+    cnt = 0
+    cont[cnt] = set()
+    iso_sum = 0
+    for vc in range(N):
+        delta = 0
+        for task in cont[cnt]:
+            delta += iso(task, vc)
+        if iso_sum + delta > iso_limit: # new container
+            iso_sum = 0
+            cnt += 1
+            cont[cnt] = set()
+        
+        iso_sum += delta
+        cont[cnt].add(vc)
     return cont
 
 def get_bridge_tasks(d, N, cont):
@@ -166,9 +194,9 @@ def get_bridge_tasks(d, N, cont):
             if cont_set[u] != cont_set[v]:
                 bridge_tasks.append(u)
                 break
-    return bridge_tasks
+    return cont_set, bridge_tasks
 
-def containerize(d, processors, tasks, s, order):
+def containerize(d, processors, tasks, s, order, flag):
     global iso_value
     N = len(tasks)
     init_iso(N)
@@ -184,6 +212,7 @@ def containerize(d, processors, tasks, s, order):
     reverse_graph(dag, r_dag)
     add_core_dependency(processors, dag, r_dag)
     get_avg_commcost(dag)
+    print(avg_cost)
     
     # get critical path
     t = max(enumerate(tasks), key = lambda x: x[1].aft)[0]
@@ -194,22 +223,26 @@ def containerize(d, processors, tasks, s, order):
         cpath.append(res[key])
     
     index = get_index(dag, tasks, cpath)
-    cont = bfs(r_dag, tasks, index, t)
+    if flag == 'inorder':
+        cont = inorder(r_dag, tasks, index, t)
+    else:
+        cont = bfs(r_dag, tasks, index, t)
 
-    bridge_tasks = get_bridge_tasks(d, N, cont)
-    # print(iso_value)
-    new_tasks, new_processors = update_schedule(r_dag, processors, tasks, bridge_tasks, order)
+    cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
+
+    new_tasks, new_processors = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
 
     return r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors
 
-def update_schedule(r_dag, processors, tasks, bridge_tasks, order):
+def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     new_tasks = copy.deepcopy(tasks)
     new_processors = copy.deepcopy(processors)
-    fact = 1.1
+    fact = 3.7
     w = [task.aft - task.ast for task in tasks]
+    
     for i in range(len(w)):
         if i in bridge_tasks:
-            w[i] *= fact
+            w[i] += sum([commcost_con(i, v) for v in d[i] if cont_set[i] != cont_set[v]]) * fact
 
     for i, p in enumerate(processors):
         for t in p.tasks:

@@ -77,34 +77,80 @@ def commcost(ni, nj, A, B):
         return 0
     else:
         if(ni==1 and nj==2):
-            return 18
+            return 3
         if(ni==1 and nj==3):
-            return 12
-        if(ni==1 and nj==4):
+            return 2
+        if(ni==1 and nj==8):
+            return 7
+        if(ni==2 and nj==3):
+            return 6
+        if(ni==2 and nj==4):
+            return 8
+        if(ni==3 and nj==5):
+            return 6
+        if(ni==3 and nj==6):
             return 9
-        if(ni==1 and nj==5):
-            return 11
-        if(ni==1 and nj==6):
-            return 14
-        if(ni==2 and nj==8):
-            return 19
-        if(ni==2 and nj==9):
-            return 16
-        if(ni==3 and nj==7):
-            return 23
+        if(ni==4 and nj==7):
+            return 5
         if(ni==4 and nj==8):
-            return 27
-        if(ni==4 and nj==9):
-            return 23
+            return 7
         if(ni==5 and nj==9):
-            return 13
-        if(ni==6 and nj==8):
-            return 15
+            return 4
+        if(ni==7 and nj==5):
+            return 5
         if(ni==7 and nj==10):
-            return 17
+            return 4
         if(ni==8 and nj==10):
-            return 11
-        if(ni==9 and nj==10):
-            return 13
+            return 8
+        if(ni==8 and nj==11):
+            return 6
+        if(ni==6 and nj==12):
+            return 8
+        if(ni==9 and nj==12):
+            return 2
+        if(ni==10 and nj==12):
+            return 8
+        if(ni==11 and nj==12):
+            return 4
         else:
             return 0
+
+def commcost_con(ni, nj):
+    if(ni==1 and nj==2):
+        return 3
+    if(ni==1 and nj==3):
+        return 2
+    if(ni==1 and nj==8):
+        return 7
+    if(ni==2 and nj==3):
+        return 6
+    if(ni==2 and nj==4):
+        return 8
+    if(ni==3 and nj==5):
+        return 6
+    if(ni==3 and nj==6):
+        return 9
+    if(ni==4 and nj==7):
+        return 5
+    if(ni==4 and nj==8):
+        return 7
+    if(ni==5 and nj==9):
+        return 4
+    if(ni==7 and nj==5):
+        return 5
+    if(ni==7 and nj==10):
+        return 4
+    if(ni==8 and nj==10):
+        return 8
+    if(ni==8 and nj==11):
+        return 6
+    if(ni==6 and nj==12):
+        return 8
+    if(ni==9 and nj==12):
+        return 2
+    if(ni==10 and nj==12):
+        return 8
+    if(ni==11 and nj==12):
+        return 4
+    else:
+        return 0
