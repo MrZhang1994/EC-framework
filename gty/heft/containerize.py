@@ -175,7 +175,9 @@ def inorder(tasks):
     cnt = 0
     cont[cnt] = set()
     iso_sum = 0
-    for vc in range(N):
+    lst = [x for x in range(N)]
+    lst = sorted(lst, key = lambda x: tasks[x].ast, reverse = False)
+    for vc in lst:
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
