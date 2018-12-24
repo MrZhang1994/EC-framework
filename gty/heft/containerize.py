@@ -3,6 +3,7 @@ from heft import *
 import numpy as np
 import queue
 import copy
+import random
 
 def reverse_graph(dag, r_dag):
     for key in dag:
@@ -63,6 +64,7 @@ def get_index(dag, tasks, cpath):
     index = []
     for key in influ_index:
         index.append(influ_index[key])
+    index.append(0)
     return index
 
 def init_iso(N):
@@ -93,13 +95,13 @@ def iso(u, v):
     if u > v: u, v = v, u
     return iso_value[u-1][v-1]
 
-def bfs(r_dag, tasks, index, t):
+def bfs(dag, tasks, index, t):
     global iso_limit
     N = len(tasks)
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
-    Vc = sorted(Vc, key = lambda x: tasks[x].aft, reverse = True)
+    Vc = sorted(Vc, key = lambda x: tasks[x].ast, reverse = False)
     Vp = [x for x in range(N) if x not in Vc]
-    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
+    Vp = sorted(Vp, key = lambda x: tasks[x].ast, reverse = False)
     cont = dict()
     vis = set()
     cnt = 0
@@ -123,13 +125,12 @@ def bfs(r_dag, tasks, index, t):
         cont[cnt].add(vc)
         vis.add(vc)
         q.put(vc)
-
         while not q.empty():
             u = q.get()
-            if not u in r_dag: continue
-            parents = sorted(r_dag[u], key = lambda x: index[x])
+            if not u in dag: continue
+            children = sorted(dag[u], key = lambda x: index[x])
             exceeded = False
-            for p in parents:
+            for p in children:
                 if p in vis: continue
                 delta = 0
                 for task in cont[cnt]:
@@ -166,7 +167,7 @@ def bfs(r_dag, tasks, index, t):
     """
     return cont
 
-def inorder(r_dag, tasks, index, t):
+def inorder(tasks):
     global iso_limit
     print('inorder')
     N = len(tasks)
@@ -175,6 +176,30 @@ def inorder(r_dag, tasks, index, t):
     cont[cnt] = set()
     iso_sum = 0
     for vc in range(N):
+        delta = 0
+        for task in cont[cnt]:
+            delta += iso(task, vc)
+        iso_sum += delta
+
+        if iso_sum > iso_limit: # new container
+            iso_sum = 0
+            cnt += 1
+            cont[cnt] = set()
+        
+        cont[cnt].add(vc)
+    return cont
+
+def rd(tasks):
+    global iso_limit
+    print('random')
+    N = len(tasks)
+    cont = dict()
+    cnt = 0
+    cont[cnt] = set()
+    iso_sum = 0
+    lst = [x for x in range(N)]
+    random.shuffle(lst)
+    for vc in lst:
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
@@ -203,7 +228,7 @@ def get_bridge_tasks(d, N, cont):
 
 def containerize(d, processors, tasks, s, order, flag):
     global iso_value, iso_limit
-    iso_limit = 2
+    iso_limit = 3
     N = len(tasks)
     init_iso(N)
     dag = dict()
@@ -218,7 +243,6 @@ def containerize(d, processors, tasks, s, order, flag):
     reverse_graph(dag, r_dag)
     add_core_dependency(processors, dag, r_dag)
     get_avg_commcost(dag)
-    print(avg_cost)
     
     # get critical path
     t = max(enumerate(tasks), key = lambda x: x[1].aft)[0]
@@ -230,9 +254,11 @@ def containerize(d, processors, tasks, s, order, flag):
     
     index = get_index(dag, tasks, cpath)
     if flag == 'inorder':
-        cont = inorder(r_dag, tasks, index, t)
+        cont = inorder(tasks)
+    elif flag == 'rand':
+        cont = rd(tasks)
     else:
-        cont = bfs(r_dag, tasks, index, t)
+        cont = bfs(dag, tasks, index, t)
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 
