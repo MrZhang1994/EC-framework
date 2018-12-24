@@ -1,4 +1,5 @@
 import copy
+import numpy as np
 """
 This is a simple script to use the HEFT function provided based on the example given in the original HEFT paper.
 You have to define the DAG, compcost function and commcost funtion.
@@ -15,7 +16,6 @@ Schedule:
 ('c', [Event(job=1, start=0, end=9), Event(job=3, start=9, end=28), Event(job=5, start=28, end=38), Event(job=7, start=38, end=49)])
 {1: 'c', 2: 'a', 3: 'c', 4: 'b', 5: 'c', 6: 'b', 7: 'c', 8: 'a', 9: 'b', 10: 'b'}
 """
-
 
 dag = dict()
 graph = np.zeros((1, 1))
