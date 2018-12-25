@@ -16,3 +16,34 @@ sche = [(0, 0, 0, 0),
 cont = {0: {0, 1, 2, 3, 4}, 1: {6, 7, 8, 11}, 2: {5, 9, 10}, 3: {12}}
 
 draw.draw_canvas(sche, cont,'a.png')
+
+# rgbstr='aabbcc'
+# print(tuple(ord(c) for c in rgbstr.decode('hex')))
+
+
+
+a=list(bytes.fromhex("aabbcc"))
+
+cont_color_origin = ["ff6666"];
+new_cont_color = {}
+
+i = 0
+for color in cont_color_origin:
+        new_cont_color[i]=list(bytes.fromhex(color))
+        i+=1
+
+print(new_cont_color)
+
+cont_color = {0: [106, 154, 178],
+                1: [123, 201, 212],
+                2: [162, 227, 193],
+                3: [211, 249, 175],
+                4: [237, 255, 171],
+                5: [255, 208, 220],
+                6: [253, 227, 243],
+                7: [241, 211, 255],
+                8: [208, 185, 255],
+                9: [171, 169, 193]}
+
+
+print(a)
