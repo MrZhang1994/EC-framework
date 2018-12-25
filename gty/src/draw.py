@@ -68,14 +68,49 @@ def draw_rule(data):
         draw_text(data, [60, 100+de-5], str(i), [0, 0, 0])
 
 
+# 0<index < 875
+def get_color(x):
+    if (175 <= x < 350):
+        R = (-1)*(x-175)+255
+    elif (700 <= x < 700+175):
+        R = (1)*(x-700)+80
+    elif (350 <= x < 700):
+        R = 80
+    else:
+        R = 255
+
+    if (0 <= x < 175):
+        G = (1)*(x)+80
+    elif (525 <= x < 700):
+        G = (-1)*(x-525)+255
+    elif (175 <= x < 525):
+        G = 255
+    else:
+        G = 80
+
+    if (350 <= x < 525):
+        B = (1)*(x-350)+80
+    elif (0 <= x < 350):
+        B = 80
+    else:
+        B = 255
+
+    return [int(R), int(G), int(B)]
+
+
 def draw_schedule(sche, cont, data):
-    cont_color_origin = ["ff6666", "ffb266", "ffff66",
-                         "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
+    # cont_color_origin = ["ff6666", "ffb266", "ffff66",
+    #                      "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
+    container_count = len(cont)
 
     cont_color = {}
+
     i = 0
+    # for color in cont_color_origin:
+    #     cont_color[i] = list(bytes.fromhex(color))
+    #     i += 1
     for color in cont_color_origin:
-        cont_color[i] = list(bytes.fromhex(color))
+        cont_color[i] = get_color((i+1)*875/(container_count+1))
         i += 1
 
     wr_cont = {}
