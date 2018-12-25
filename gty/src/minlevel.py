@@ -2,10 +2,12 @@ import heapq
 import queue
 n = 0
 
-def init_minLevel(nn):
+def init_minLevel(nn, g):
+    global n
     n = nn
 
 def toposort(graph, s, t):
+    global n
     ind = [0 for i in range(n)]
     q = queue.Queue()
     for i, x in enumerate(graph):
@@ -26,6 +28,7 @@ def toposort(graph, s, t):
     return topo
 
 def getTopLevel(graph, topo):
+    global n
     top = [0 for i in range(n)]
     for i in topo:
         m = 0
@@ -37,6 +40,7 @@ def getTopLevel(graph, topo):
     return top
         
 def getBottomLevel(graph, topo):
+    global n
     bottom = [0 for i in range(n)]
     for i in reversed(topo):
         m = 0

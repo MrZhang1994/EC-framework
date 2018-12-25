@@ -1,6 +1,6 @@
 from example import *
 from heft import *
-from maxcut import iso_value
+import maxcut
 import numpy as np
 import queue
 import copy
@@ -14,7 +14,6 @@ def reverse_graph(dag, r_dag):
 
 def add_core_dependency(processors, dag, r_dag):
     dag[0] = set()
-    print(dag)
     r_dag[0] = set()
     for p in processors:
         n = len(p.tasks)
@@ -71,10 +70,9 @@ def get_index(dag, tasks, cpath):
 def iso(u, v):
     if u == 0 or v == 0:
         return 0
-    if u > v: u, v = v, u
-    return iso_value[u-1][v-1]
+    return maxcut.iso_value[u-1, v-1]
 
-def bfs(dag, tasks, index, t):
+def bfs_forward(dag, tasks, index, t):
     global iso_limit
     N = len(tasks)
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
@@ -131,8 +129,26 @@ def bfs(dag, tasks, index, t):
                     cnt += 1
                     cont[cnt] = set()
                 break
-    """
+    return cont
+
+def bfs_backward(r_dag, tasks, index, t):
+    global iso_limit
+    N = len(tasks)
+    Vc = [t] + [x for x in range(N-1) if index[x] < 0]
+    Vc = sorted(Vc, key = lambda x: tasks[x].aft, reverse = True)
+    Vp = [x for x in range(N) if x not in Vc]
+    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
+    cont = dict()
+    vis = set()
+    cnt = 0
+    print("Vc+Vp:")
+    print(Vc+Vp)
+    cont[cnt] = set()
+    iso_sum = 0
+    
+    q = queue.Queue()
     for vc in Vc + Vp:
+        if vc in vis: continue
         delta = 0
         for task in cont[cnt]:
             delta += iso(task, vc)
@@ -143,12 +159,39 @@ def bfs(dag, tasks, index, t):
             cont[cnt] = set()
         
         cont[cnt].add(vc)
-    """
+        vis.add(vc)
+        q.put(vc)
+        while not q.empty():
+            u = q.get()
+            if not u in r_dag: continue
+            parents = sorted(r_dag[u], key = lambda x: index[x])
+            exceeded = False
+            for p in parents:
+                if p in vis: continue
+                delta = 0
+                for task in cont[cnt]:
+                    delta += iso(task, p)
+
+                iso_sum += delta
+
+                if iso_sum > iso_limit:
+                    exceeded = True
+                    break
+                cont[cnt].add(p)
+                vis.add(p)
+                q.put(p)
+            
+            if exceeded:
+                q.queue.clear()
+                iso_sum = 0
+                if cont[cnt] != set():
+                    cnt += 1
+                    cont[cnt] = set()
+                break
     return cont
 
 def inorder(tasks):
     global iso_limit
-    print('inorder')
     N = len(tasks)
     cont = dict()
     cnt = 0
@@ -172,7 +215,6 @@ def inorder(tasks):
 
 def rd(tasks):
     global iso_limit
-    print('random')
     N = len(tasks)
     cont = dict()
     cnt = 0
@@ -231,8 +273,10 @@ def containerize(d, processors, tasks, order, flag, limit):
         cont = inorder(tasks)
     elif flag == 'rand':
         cont = rd(tasks)
+    elif flag == 'forward':
+        cont = bfs_forward(dag, tasks, index, t)
     else:
-        cont = bfs(dag, tasks, index, t)
+        cont = bfs_backward(r_dag, tasks, index, t)
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 

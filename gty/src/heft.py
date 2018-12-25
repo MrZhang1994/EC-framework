@@ -1,4 +1,5 @@
-from example import core, dag, commcost, compcost
+from example import dag, commcost, compcost
+import example
 import statistics as stats
 from decimal import Decimal, ROUND_DOWN
 import logging
@@ -135,7 +136,7 @@ def schedule(task, tasks, processors):
 
 def heft():
     # Create Processors
-    P = core
+    P = example.core
     processors = [Processor(i) for i in range(P)]
     # Create Tasks
     N = len(dag)

@@ -28,9 +28,11 @@ def init_dag(g, cc, c):
     graph = copy.deepcopy(g)
     communication_cpu = copy.deepcopy(cc)
     graph_to_dag(g)
+    print(dag)
 
 def graph_to_dag(graph):
     global dag
+    print(graph)
     for u, x in enumerate(graph):
         dag[u+1] = set()
         for v, w in enumerate(x):
@@ -39,6 +41,7 @@ def graph_to_dag(graph):
 
 def compcost(job, agent):
     global communication_cpu
+    if job == 0: return 0
     return communication_cpu[job - 1]
 
 def commcost(ni, nj, A, B):
@@ -47,4 +50,5 @@ def commcost(ni, nj, A, B):
 # for containerize
 def commcost_con(ni, nj):
     global graph
+    if ni == 0 or nj == 0: return 0
     return graph[ni-1][nj-1]
