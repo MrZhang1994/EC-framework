@@ -75,11 +75,15 @@ def main():
     one_tasks, one_processors = update_schedule(dag, r_dag, processors, tasks, range(1, vertex_num + 1), order, [i for i in range(vertex_num + 1)])
     print('upper bound:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks], cont, 'upper.png')
-    upper = new_tasks[vertex_num].aft
+    upper = one_tasks[vertex_num].aft
     print(one_tasks[vertex_num].aft)
     print(cont)
 
     print('-'*21)
+    print('lower: ')
+    print(lower)
+    print('upper: ')
+    print(upper)
     print('forward: ')
     print(round((makespan_f - lower)/(upper - lower), 4))
     print('backward: ')
