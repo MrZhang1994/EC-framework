@@ -14,7 +14,7 @@ def graph1_parameter():
     impact_factor = 1.1
     arc_num = 18
     vertex_num = 12
-    core = 3
+    core = 2
     return impact_factor, arc_num, vertex_num, core
 
 def graph2_parameter():
