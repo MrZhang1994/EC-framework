@@ -4,12 +4,12 @@ from PIL import Image, ImageDraw, ImageFont
 
 def draw_line_v(data_p, start_p, length_p, width_p, color=[0, 0, 0]):
     data_p[start_p[0]:start_p[0]+length_p+1,
-         start_p[1]: start_p[1]+width_p] = color
+           start_p[1]: start_p[1]+width_p] = color
 
 
 def draw_line_h(data_p, start_p, length_p, width_p, color=[0, 0, 0]):
     data_p[start_p[0]:start_p[0]+width_p,
-         start_p[1]: start_p[1]+length_p+1] = color
+           start_p[1]: start_p[1]+length_p+1] = color
 
 
 def fill_color(data_p, start_p, size, color):
@@ -69,8 +69,18 @@ def draw_rule(data):
 
 
 def draw_schedule(sche, cont, data):
-    cont_color = {0: [255, 102, 102], 1: [255, 178, 102],
-                  2: [255, 255, 102], 3: [178, 255, 102]}
+    # cont_color = {0: [255, 102, 102], 1: [255, 178, 102],
+    #               2: [255, 255, 102], 3: [178, 255, 102]}
+    cont_color = {0: [106, 154, 178],
+                  1: [123, 201, 212],
+                  2: [162, 227, 193],
+                  3: [211, 249, 175],
+                  4: [237, 255, 171],
+                  5: [255, 208, 220],
+                  6: [253, 227, 243],
+                  7: [241, 211, 255],
+                  8: [208, 185, 255],
+                  9: [171, 169, 193]}
 
     wr_cont = {}
     for x in cont:
@@ -96,8 +106,8 @@ def draw_schedule(sche, cont, data):
         draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
     sum_cpu_time = last_end*3
-    for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
-        print("%.2f" % print_num, end='  ')
+    # for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
+    #     print("%.2f" % print_num, end='  ')
 
     draw_text(data, [500, 500],
               str(int(used_cpu_time/sum_cpu_time*100))+'%', [0, 0, 0])
@@ -107,7 +117,7 @@ def draw_schedule(sche, cont, data):
     draw_line_v(data, [25, 100 + int(last_end)], int(len(data)/2) - 25*2, 1)
 
 
-def draw_canvas(sche, cont,picture_name):
+def draw_canvas(sche, cont, picture_name):
     size = 1024
     data = numpy.full((size, size*2, 3), 255, dtype=numpy.uint8)
 
@@ -118,10 +128,6 @@ def draw_canvas(sche, cont,picture_name):
     draw_line_v(data, [25, 100], size - 25*2, 3)
 
     Image.fromarray(data).save(picture_name)
-
-
-
-
 
 
 # # ------------1  2  3  4  5  6  7  8  9  10 11 12-----
