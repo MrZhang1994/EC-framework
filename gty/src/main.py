@@ -35,35 +35,35 @@ def main():
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', 2)
     print('forward:')
-    # print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks])
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', 2)
     print('backward:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont)
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # in order
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', 2)
     print('in order:')
-    # print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks])
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # random
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', 2)
     print('random:')
-    # print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks])
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # upper bound
     one_tasks, one_processors = update_schedule(dag, r_dag, processors, tasks, range(1, vertex_num + 1), order, [i for i in range(vertex_num + 1)])
     print('upper bound:')
-    # print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks])
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks], cont, 'upper.png')
     print(one_tasks[vertex_num].aft)
     print(cont)
     

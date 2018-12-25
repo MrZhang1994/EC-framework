@@ -69,19 +69,18 @@ def draw_rule(data):
 
 
 def draw_schedule(sche, cont, data):
-    N = len(sche)
     cont_color = {0: [255, 102, 102], 1: [255, 178, 102],
                   2: [255, 255, 102], 3: [178, 255, 102]}
 
     wr_cont = {}
     for x in cont:
-        for i in range(N):
+        for i in range(len(sche)):
             if i in cont[x]:
                 wr_cont[i] = x
 
     last_end = 0
     used_cpu_time = 0
-    for i in range(N):
+    for i in range(len(sche)):
         x_processor = sche[i][3]
         x_p = 120+x_processor*100
         x_aft = sche[i][2]
@@ -108,7 +107,7 @@ def draw_schedule(sche, cont, data):
     draw_line_v(data, [25, 100 + int(last_end)], int(len(data)/2) - 25*2, 1)
 
 
-def draw_canvas(sche, cont):
+def draw_canvas(sche, cont,picture_name):
     size = 1024
     data = numpy.full((size, size*2, 3), 255, dtype=numpy.uint8)
 
@@ -118,33 +117,11 @@ def draw_canvas(sche, cont):
 
     draw_line_v(data, [25, 100], size - 25*2, 3)
 
-    Image.fromarray(data).save('output.png')
+    Image.fromarray(data).save(picture_name)
 
 
-from heft import heft
-from example import dag
-from containerize import *
-import random
-
-print("========================")
 
 
-sche = [(0, 0, 0, 0),
-        (1, 0, 67.9, 0),
-        (2, 67.9, 161.9, 0),
-        (3, 161.9, 322.4, 1),
-        (4, 161.9, 318.3, 0),
-        (5, 460.6, 504.6, 0),
-        (6, 322.4, 410.0, 2),
-        (7, 318.3, 460.6, 0),
-        (8, 322.4, 416.0, 1),
-        (9, 504.6, 554.0, 0),
-        (10, 460.6, 558.2, 1),
-        (11, 416.0, 474.8, 2),
-        (12, 558.2, 588.2, 0)]
-cont = {0: {0, 1, 2, 3, 4}, 1: {6, 7, 8, 11}, 2: {5, 9, 10}, 3: {12}}
-
-draw_canvas(sche, cont)
 
 
 # # ------------1  2  3  4  5  6  7  8  9  10 11 12-----
