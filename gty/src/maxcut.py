@@ -50,7 +50,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10))
+        vertex_cpu.append(random.randint(2,10)*10)
         for j in range(vertex_num):
             graph[i, j] = -1
     print('vertex_cpu:')

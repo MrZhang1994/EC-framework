@@ -7,8 +7,8 @@ import draw
 
 def main():
     # init graph
-    impact_factor, arc_num, vertex_num, core = maxcut.graph1_parameter()
-    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_1(vertex_num, arc_num, impact_factor)
+    impact_factor, arc_num, vertex_num, core = maxcut.graph4_parameter()
+    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_4(vertex_num, arc_num, impact_factor)
 
     # calculate maxtopcut
     S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
