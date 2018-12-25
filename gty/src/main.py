@@ -6,9 +6,10 @@ from containerize import *
 import draw
 
 def main():
+    iso_limit = 3
     # init graph
-    impact_factor, arc_num, vertex_num, core = maxcut.graph1_parameter()
-    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_1(vertex_num, arc_num, impact_factor)
+    impact_factor, arc_num, vertex_num, core = maxcut.graph4_parameter()
+    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_4(vertex_num, arc_num, impact_factor)
 
     # calculate maxtopcut
     S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
@@ -33,28 +34,28 @@ def main():
     order = [t.id for t in priority_list]
     
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', iso_limit)
     print('forward:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', iso_limit)
     print('backward:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # in order
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', iso_limit)
     print('in order:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # random
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', iso_limit)
     print('random:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
     print(new_tasks[vertex_num].aft)
