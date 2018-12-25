@@ -15,4 +15,4 @@ sche = [(0, 0, 0, 0),
         (12, 558.2, 588.2, 0)]
 cont = {0: {0, 1, 2, 3, 4}, 1: {6, 7, 8, 11}, 2: {5, 9, 10}, 3: {12}}
 
-draw.draw_canvas(sche, cont)
+draw.draw_canvas(sche, cont,'a.png')
