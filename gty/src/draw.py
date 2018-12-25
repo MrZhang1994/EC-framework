@@ -103,6 +103,11 @@ def draw_schedule(sche, cont, data):
     #                      "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
     container_count = len(cont)
 
+    core_num = 0
+    for task in sche:
+        if task[3] > core_num:
+            core_num = task[3]
+
     cont_color = {}
 
     i = 0
@@ -136,18 +141,15 @@ def draw_schedule(sche, cont, data):
         draw_line_h(data, [x_p, 100], 1800, 1, [0, 0, 0])
         draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
-    sum_cpu_time = last_end*3
-    """
-    for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
-        print("%.2f" % print_num, end='  ')
-    """
+    sum_cpu_time = last_end*(core_num+1)
 
-    draw_text(data, [500, 500],
+    draw_text(data, [25, 25],
               str(int(used_cpu_time/sum_cpu_time*100))+'%', [0, 0, 0])
+    draw_text(data, [25, 125], 'con_num:'+str(container_count), [0, 0, 0])
 
     draw_rule(data)
 
-    draw_line_v(data, [25, 100 + int(last_end)], int(len(data)/2) - 25*2, 1)
+    draw_line_v(data, [50, 100 + int(last_end)], int(len(data)) - 25*2, 1)
 
 
 def draw_canvas(sche, cont, picture_name):
@@ -158,7 +160,7 @@ def draw_canvas(sche, cont, picture_name):
 
     draw_schedule(sche, cont, data)
 
-    draw_line_v(data, [25, 100], size - 25*2, 3)
+    draw_line_v(data, [90, 100], size - 25*2, 3)
 
     Image.fromarray(data).save(picture_name)
 
