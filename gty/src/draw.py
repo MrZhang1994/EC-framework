@@ -59,7 +59,7 @@ def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
 def draw_rule(data):
     draw_line_h(data, [90, 100], 1800, 2, [0, 0, 0])
 
-    for i in range(10):
+    for i in range(18):
         de = 100 * (i)
         for j in range(2):
             draw_line_v(data, [90, 100+de+j*50], 5, 2, [0, 0, 0])

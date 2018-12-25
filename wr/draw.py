@@ -59,7 +59,7 @@ def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
 def draw_rule(data):
     draw_line_h(data, [90, 100], 1800, 2, [0, 0, 0])
 
-    for i in range(10):
+    for i in range(18):
         de = 100 * (i)
         for j in range(2):
             draw_line_v(data, [90, 100+de+j*50], 5, 2, [0, 0, 0])
@@ -69,9 +69,6 @@ def draw_rule(data):
 
 
 def draw_schedule(sche, cont, data):
-    # cont_color = {0: [255, 102, 102], 1: [255, 178, 102],
-    #               2: [255, 255, 102], 3: [178, 255, 102]}
-
     cont_color_origin = ["ff6666", "ffb266", "ffff66",
                          "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
 
@@ -105,8 +102,10 @@ def draw_schedule(sche, cont, data):
         draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
     sum_cpu_time = last_end*3
-    # for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
-    #     print("%.2f" % print_num, end='  ')
+    """
+    for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
+        print("%.2f" % print_num, end='  ')
+    """
 
     draw_text(data, [500, 500],
               str(int(used_cpu_time/sum_cpu_time*100))+'%', [0, 0, 0])
