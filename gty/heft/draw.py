@@ -68,9 +68,13 @@ def draw_rule(data):
         draw_text(data, [60, 100+de-5], str(i), [0, 0, 0])
 
 
+
+
 def draw_schedule(sche, cont, data):
     # cont_color = {0: [255, 102, 102], 1: [255, 178, 102],
     #               2: [255, 255, 102], 3: [178, 255, 102]}
+
+    cont_color_origin = [];
     cont_color = {0: [106, 154, 178],
                   1: [123, 201, 212],
                   2: [162, 227, 193],
