@@ -1,6 +1,10 @@
 import heapq
 import queue
-n = 12
+n = 0
+
+def init_minLevel(nn):
+    n = nn
+
 def toposort(graph, s, t):
     ind = [0 for i in range(n)]
     q = queue.Queue()
