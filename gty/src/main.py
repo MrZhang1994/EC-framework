@@ -3,6 +3,7 @@ from minlevel import minLevel, init_minLevel
 from example import init_dag, dag
 from heft import heft
 from containerize import *
+import draw
 
 def main():
     # init graph
@@ -41,7 +42,7 @@ def main():
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', 2)
     print('backward:')
-    # print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks])
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont)
     print(new_tasks[vertex_num].aft)
     print(cont)
 
