@@ -96,8 +96,10 @@ def draw_schedule(sche, cont, data):
         draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
     sum_cpu_time = last_end*3
+    """
     for print_num in [used_cpu_time, sum_cpu_time,  used_cpu_time/sum_cpu_time]:
         print("%.2f" % print_num, end='  ')
+    """
 
     draw_text(data, [500, 500],
               str(int(used_cpu_time/sum_cpu_time*100))+'%', [0, 0, 0])

@@ -1,4 +1,5 @@
 from example import dag, commcost, compcost
+import example
 import statistics as stats
 from queue import PriorityQueue
 import logging
@@ -137,9 +138,9 @@ def assign(i, p, tasks, processors):
 
 
 
-if __name__ == "__main__":
+def cpop():
     # Create Processors
-    P = 3
+    P = example.core
     processors = [Processor(i) for i in range(P)]
     # Create Tasks
     N = len(dag)
@@ -221,3 +222,10 @@ if __name__ == "__main__":
         logging.info('tasks on processor %s: %s', p.id, [{t.id: (t.ast, t.aft)} for t in p.tasks])
 
     logging.info('makespan: %s', makespan(tasks))
+
+    priority_list = []
+    for p in processors:
+        for t in p.tasks:
+            priority_list.append(t)
+    print(priority_list)
+    return processors, tasks, priority_list
