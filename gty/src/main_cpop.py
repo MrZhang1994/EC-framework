@@ -31,6 +31,7 @@ def main():
     # heft
     processors, tasks, priority_list = cpop()
     order = [t.id for t in priority_list]
+    print(order)
     
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', 2)
