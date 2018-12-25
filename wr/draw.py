@@ -74,13 +74,13 @@ def draw_schedule(sche, cont, data):
 
     wr_cont = {}
     for x in cont:
-        for i in range(N):
+        for i in range(len(sche)):
             if i in cont[x]:
                 wr_cont[i] = x
 
     last_end = 0
     used_cpu_time = 0
-    for i in range(N):
+    for i in range(len(sche)):
         x_processor = sche[i][3]
         x_p = 120+x_processor*100
         x_aft = sche[i][2]
@@ -120,36 +120,8 @@ def draw_canvas(sche, cont):
     Image.fromarray(data).save('output.png')
 
 
-from heft import heft
-from example import dag
-from containerize import *
-import random
-
-N = 13
-processors, tasks, priority_list = heft()
-order = [t.id for t in priority_list]
-r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(
-    dag, processors, tasks, 0, order, 'bfs')
-
-print("========================")
 
 
-sche = [(0, 0, 0, 0),
-        (1, 0, 67.9, 0),
-        (2, 67.9, 161.9, 0),
-        (3, 161.9, 322.4, 1),
-        (4, 161.9, 318.3, 0),
-        (5, 460.6, 504.6, 0),
-        (6, 322.4, 410.0, 2),
-        (7, 318.3, 460.6, 0),
-        (8, 322.4, 416.0, 1),
-        (9, 504.6, 554.0, 0),
-        (10, 460.6, 558.2, 1),
-        (11, 416.0, 474.8, 2),
-        (12, 558.2, 588.2, 0)]
-cont = {0: {0, 1, 2, 3, 4}, 1: {6, 7, 8, 11}, 2: {5, 9, 10}, 3: {12}}
-
-draw_canvas(sche, cont)
 
 
 # # ------------1  2  3  4  5  6  7  8  9  10 11 12-----
