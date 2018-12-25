@@ -223,10 +223,10 @@ def cpop():
 
     logging.info('makespan: %s', makespan(tasks))
 
-    priority_list = [0]
+    priority_list = [tasks[0]]
     for p in processors:
         for t in p.tasks:
             priority_list.append(t)
     tasks[0].processor = 0
-    print([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in tasks])
+    processors[0].tasks = [tasks[0]] + processors[0].tasks
     return processors, tasks, priority_list
