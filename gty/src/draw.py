@@ -109,7 +109,7 @@ def draw_schedule(sche, cont, data):
     # for color in cont_color_origin:
     #     cont_color[i] = list(bytes.fromhex(color))
     #     i += 1
-    for color in cont_color_origin:
+    for color in cont:
         cont_color[i] = get_color((i+1)*875/(container_count+1))
         i += 1
 
