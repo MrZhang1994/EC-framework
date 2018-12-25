@@ -28,34 +28,33 @@ def main():
     # init example for heft
     init_dag(graph, communication_cpu, core)
 
-    # heft
+    # cpop
     processors, tasks, priority_list = cpop()
     order = [t.id for t in priority_list]
-    print(order)
     
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', 3)
     print('forward:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', 3)
     print('backward:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # in order
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', 3)
     print('in order:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
     print(new_tasks[vertex_num].aft)
     print(cont)
 
     # random
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', 2)
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', 3)
     print('random:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
     print(new_tasks[vertex_num].aft)
