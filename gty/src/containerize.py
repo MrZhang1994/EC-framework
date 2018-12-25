@@ -78,7 +78,7 @@ def bfs_forward(dag, tasks, index, t):
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
     Vc = sorted(Vc, key = lambda x: tasks[x].ast, reverse = False)
     Vp = [x for x in range(N) if x not in Vc]
-    Vp = sorted(Vp, key = lambda x: tasks[x].ast, reverse = False)
+    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
     cont = dict()
     vis = set()
     cnt = 0
@@ -137,7 +137,7 @@ def bfs_backward(r_dag, tasks, index, t):
     Vc = [t] + [x for x in range(N-1) if index[x] < 0]
     Vc = sorted(Vc, key = lambda x: tasks[x].aft, reverse = True)
     Vp = [x for x in range(N) if x not in Vc]
-    Vp = sorted(Vp, key = lambda x: tasks[x].aft, reverse = True)
+    Vp = sorted(Vp, key = lambda x: tasks[x].ast, reverse = False)
     cont = dict()
     vis = set()
     cnt = 0
