@@ -17,6 +17,8 @@ Schedule:
 {1: 'c', 2: 'a', 3: 'c', 4: 'b', 5: 'c', 6: 'b', 7: 'c', 8: 'a', 9: 'b', 10: 'b'}
 """
 
+verbose = False
+
 dag = dict()
 graph = np.zeros((1, 1))
 communication_cpu = []
@@ -28,11 +30,13 @@ def init_dag(g, cc, c):
     graph = copy.deepcopy(g)
     communication_cpu = copy.deepcopy(cc)
     graph_to_dag(g)
-    print(dag)
+    if verbose:
+        print(dag)
 
 def graph_to_dag(graph):
     global dag
-    print(graph)
+    if verbose:
+        print(graph)
     for u, x in enumerate(graph):
         dag[u+1] = set()
         for v, w in enumerate(x):

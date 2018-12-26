@@ -83,8 +83,6 @@ def bfs_forward(dag, tasks, index, t):
     cont = dict()
     vis = set()
     cnt = 0
-    print("Vc+Vp:")
-    print(Vc, Vp)
     cont[cnt] = set()
     iso_sum = 0
     
@@ -142,8 +140,6 @@ def bfs_backward(r_dag, tasks, index, t):
     cont = dict()
     vis = set()
     cnt = 0
-    print("Vc+Vp:")
-    print(Vc, Vp)
     cont[cnt] = set()
     iso_sum = 0
     
