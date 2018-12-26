@@ -98,9 +98,13 @@ def get_color(x):
     return [int(R), int(G), int(B)]
 
 
+def get_color_from_origin(i):
+    cont_color_origin = ["ff6666", "ffb266", "ffff66",
+                         "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
+    return list(bytes.fromhex(cont_color_origin[i]))
+
+
 def draw_schedule(sche, cont, data):
-    # cont_color_origin = ["ff6666", "ffb266", "ffff66",
-    #                      "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
     container_count = len(cont)
 
     core_num = 0
@@ -111,9 +115,6 @@ def draw_schedule(sche, cont, data):
     cont_color = {}
 
     i = 0
-    # for color in cont_color_origin:
-    #     cont_color[i] = list(bytes.fromhex(color))
-    #     i += 1
     for color in cont:
         cont_color[i] = get_color((i+1)*875/(container_count+1))
         i += 1
@@ -126,6 +127,9 @@ def draw_schedule(sche, cont, data):
 
     last_end = 0
     used_cpu_time = 0
+
+    core_used = set()
+
     for i in range(len(sche)):
         x_processor = sche[i][3]
         x_p = 120+x_processor*100
@@ -133,22 +137,29 @@ def draw_schedule(sche, cont, data):
         x_ast = sche[i][1]
         if (x_aft > last_end):
             last_end = x_aft
+
         used_cpu_time += x_aft-x_ast
 
         draw_job(data, str(i), [x_p, 100], int(x_ast), int(
             x_aft), color_filled=cont_color[wr_cont[i]])
-        draw_text(data, [x_p+10, 20], 'core '+str(x_processor), [0, 0, 0])
-        draw_line_h(data, [x_p, 100], 1800, 1, [0, 0, 0])
-        draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
+
+        if (x_processor not in core_used):
+            core_used.add(x_processor)
+            draw_text(data, [x_p+10, 20], 'core '+str(x_processor), [0, 0, 0])
+            draw_line_h(data, [x_p, 100], 1800, 1, [0, 0, 0])
+            draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
     sum_cpu_time = last_end*(core_num+1)
 
+    # up left side
     draw_text(data, [25, 25],
               str(int(used_cpu_time/sum_cpu_time*100))+'%', [0, 0, 0])
     draw_text(data, [25, 125], 'con_num:'+str(container_count), [0, 0, 0])
 
+    # rule
     draw_rule(data)
 
+    # last end v line
     draw_line_v(data, [50, 100 + int(last_end)], int(len(data)) - 25*2, 1)
 
 
