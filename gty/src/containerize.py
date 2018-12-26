@@ -5,6 +5,7 @@ import numpy as np
 import queue
 import copy
 import random
+from wr_sc import sc
 
 def reverse_graph(dag, r_dag):
     for key in dag:
@@ -315,7 +316,7 @@ def get_bridge_tasks(d, N, cont):
                 break
     return cont_set, bridge_tasks
 
-def containerize(d, processors, tasks, order, flag, limit):
+def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     global iso_limit
     iso_limit = limit
     N = len(tasks)
@@ -343,8 +344,10 @@ def containerize(d, processors, tasks, order, flag, limit):
         cont = bfs_forward(dag, tasks, index, t)
     elif flag == 'backward':
         cont = bfs_backward(r_dag, tasks, index, t)
-    else:
+    elif flag == 'i2c':
         cont = bfs_i2c(r_dag, processors, tasks, t)
+    else:
+        cont = sc(graph, maxcut.iso_value, iso_limit)
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 

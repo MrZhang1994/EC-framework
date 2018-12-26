@@ -71,6 +71,14 @@ def main():
     print(new_tasks[vertex_num].aft)
     print(cont)
 
+    # spectral clustering
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph)
+    print('sc:')
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
+    makespan_s = new_tasks[vertex_num].aft
+    print(new_tasks[vertex_num].aft)
+    print(cont)
+
     # random
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', iso_limit)
     print('random:')
@@ -104,6 +112,8 @@ def main():
     print(round((makespan_i2c - lower)/(upper - lower), 4))
     print('inorder: ')
     print(round((makespan_i - lower)/(upper - lower), 4))
+    print('sc: ')
+    print(round((makespan_s - lower)/(upper - lower), 4))
     print('random: ')
     print(round((makespan_r - lower)/(upper - lower), 4))
 
@@ -119,11 +129,14 @@ def main():
     with open('./results/inorder.txt', 'a') as f:
         f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/sc.txt', 'a') as f:
+        f.write(str(round((makespan_s - lower)/(upper - lower), 4)) + '\n')
+    
     with open('./results/random.txt', 'a') as f:
         f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
     
     return 0
 
 if __name__ == '__main__':
-    for i in range(100):
+    for i in range(50):
         main()
