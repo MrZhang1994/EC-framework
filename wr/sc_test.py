@@ -19,7 +19,6 @@ iso[0][2] = 4
 iso[2][0] = 4
 iso_threshold = 3
 
-cluster_data, cluster_num, cut_sum = wr_sc.sc(A, iso, iso_threshold)
+cluster_data, cut_sum = wr_sc.sc(A, iso, iso_threshold)
 print(cluster_data)
-print(cluster_num)
 print(cut_sum)
