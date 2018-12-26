@@ -11,28 +11,28 @@ def init_iso(N):
     return iso_value
 
 def graph1_parameter():
-    impact_factor = 0.8
+    impact_factor = random.uniform(0.8, 1.1)
     arc_num = 18
     vertex_num = 12
     core = 3
     return impact_factor, arc_num, vertex_num, core
 
 def graph2_parameter():
-    impact_factor = 1.1
+    impact_factor = random.uniform(0.8, 1.1)    
     arc_num = 56
     vertex_num = 25
     core = 3
     return impact_factor, arc_num, vertex_num, core
 
 def graph3_parameter():
-    impact_factor = 1.1
+    impact_factor = random.uniform(0.8, 1.1)
     arc_num = 71
     vertex_num = 41
     core = 6
     return impact_factor, arc_num, vertex_num, core
 
 def graph4_parameter():
-    impact_factor = 1.1
+    impact_factor = random.uniform(0.8, 1.1)
     arc_num = 34
     vertex_num = 19
     core = 3
