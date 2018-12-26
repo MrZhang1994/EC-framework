@@ -8,8 +8,8 @@ import draw
 def main():
     iso_limit = 3
     # init graph
-    impact_factor, arc_num, vertex_num, core = maxcut.graph3_parameter()
-    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_3(vertex_num, arc_num, impact_factor)
+    impact_factor, arc_num, vertex_num, core = maxcut.graph1_parameter()
+    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_1(vertex_num, arc_num, impact_factor)
 
     # calculate maxtopcut
     S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
@@ -51,6 +51,14 @@ def main():
     print(new_tasks[vertex_num].aft)
     print(cont)
 
+    # containerize
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'i2c', iso_limit)
+    print('idle/comm:')
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
+    makespan_i2c = new_tasks[vertex_num].aft
+    print(new_tasks[vertex_num].aft)
+    print(cont)
+
     # in order
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', iso_limit)
     print('in order:')
@@ -88,11 +96,29 @@ def main():
     print(round((makespan_f - lower)/(upper - lower), 4))
     print('backward: ')
     print(round((makespan_b - lower)/(upper - lower), 4))
+    print('idle/communication: ')
+    print(round((makespan_i2c - lower)/(upper - lower), 4))
     print('inorder: ')
     print(round((makespan_i - lower)/(upper - lower), 4))
     print('random: ')
     print(round((makespan_r - lower)/(upper - lower), 4))
+
+
+    with open('./results/forward.txt', 'a') as f:
+        f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/backward.txt', 'a') as f:
+        f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/i2c.txt', 'a') as f:
+        f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
+
+    with open('./results/inorder.txt', 'a') as f:
+        f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/random.txt', 'a') as f:
+        f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
 
 if __name__ == '__main__':
-    main()
+    for i in range(100):
+        main()

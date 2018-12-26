@@ -11,7 +11,7 @@ def init_iso(N):
     return iso_value
 
 def graph1_parameter():
-    impact_factor = 1.1
+    impact_factor = 0.8
     arc_num = 18
     vertex_num = 12
     core = 3
