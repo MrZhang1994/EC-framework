@@ -8,8 +8,8 @@ import draw
 def main():
     iso_limit = 3
     # init graph
-    impact_factor, arc_num, vertex_num, core = maxcut.graph3_parameter()
-    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_3(vertex_num, arc_num, impact_factor)
+    impact_factor, arc_num, vertex_num, core = maxcut.graph2_parameter()
+    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_2(vertex_num, arc_num, impact_factor)
 
     # calculate maxtopcut
     S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
@@ -17,12 +17,18 @@ def main():
 
     # calculate backward edge
     init_minLevel(vertex_num, graph)
+    tmpu = 0
+    tmpv = 0
     while cut > M:
         print(S, T)
         u, v = minLevel(graph, S, T, 0, vertex_num-1)
         if u == 0 and v == 0:
             print('MinLevel Heuristic Failed\n')
-            return
+            return -1
+        if tmpu == u and tmpv == v:
+            return -2
+        tmpu = u
+        tmpv = v
         maxcut.update_graph(graph, u, v)
         S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
     
@@ -48,6 +54,14 @@ def main():
     print('backward:')
     draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
     makespan_b = new_tasks[vertex_num].aft
+    print(new_tasks[vertex_num].aft)
+    print(cont)
+
+    # containerize
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'i2c', iso_limit)
+    print('idle/comm:')
+    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
+    makespan_i2c = new_tasks[vertex_num].aft
     print(new_tasks[vertex_num].aft)
     print(cont)
 
@@ -88,11 +102,32 @@ def main():
     print(round((makespan_f - lower)/(upper - lower), 4))
     print('backward: ')
     print(round((makespan_b - lower)/(upper - lower), 4))
+    print('idle/communication: ')
+    print(round((makespan_i2c - lower)/(upper - lower), 4))
     print('inorder: ')
     print(round((makespan_i - lower)/(upper - lower), 4))
     print('random: ')
     print(round((makespan_r - lower)/(upper - lower), 4))
+
+    with open('./results/forward.txt', 'a') as f:
+        f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/backward.txt', 'a') as f:
+        f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/i2c.txt', 'a') as f:
+        f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
+
+    with open('./results/inorder.txt', 'a') as f:
+        f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/random.txt', 'a') as f:
+        f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
+    
+    return 0
 
 if __name__ == '__main__':
-    main()
+    for i in range(100):
+        if main() == -2:
+            print('OooooooOOooooops!')
+            break

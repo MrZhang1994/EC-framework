@@ -190,6 +190,72 @@ def bfs_backward(r_dag, tasks, index, t):
                 break
     return cont
 
+def bfs_i2c(r_dag, processors, tasks, t):
+    global iso_limit
+
+    idle = dict()
+    # get idle
+    for p in processors:
+        if len(p.tasks) == 0: continue
+        for i in range(len(p.tasks)-1):
+            idle[p.tasks[i].id] = p.tasks[i+1].ast - p.tasks[i].aft
+        if p.tasks[-1].id != t:
+            idle[p.tasks[-1].id] = tasks[t].ast - p.tasks[-1].aft
+
+    N = len(tasks)
+    V = [x for x in range(N)]
+    V = sorted(V, key = lambda x: tasks[x].aft, reverse = True)
+    cont = dict()
+    vis = set()
+    cnt = 0
+    cont[cnt] = set()
+    iso_sum = 0
+    
+    q = queue.Queue()
+    for vc in V:
+        if vc in vis: continue
+        delta = 0
+        for task in cont[cnt]:
+            delta += iso(task, vc)
+        iso_sum += delta
+        if iso_sum > iso_limit: # new container
+            iso_sum = 0
+            cnt += 1
+            cont[cnt] = set()
+        
+        cont[cnt].add(vc)
+        vis.add(vc)
+        q.put(vc)
+        while not q.empty():
+            u = q.get()
+            if not u in r_dag: continue
+            parents = sorted(r_dag[u], key = lambda x: idle[x]/commcost_con(x, u) if commcost_con(x, u) != 0 else 10000)
+            exceeded = False
+            for p in parents:
+                if p in vis: continue
+                delta = 0
+                for task in cont[cnt]:
+                    delta += iso(task, p)
+
+                iso_sum += delta
+
+                if iso_sum > iso_limit:
+                    exceeded = True
+                    break
+                cont[cnt].add(p)
+                vis.add(p)
+                q.put(p)
+            
+            if exceeded:
+                q.queue.clear()
+                iso_sum = 0
+                if cont[cnt] != set():
+                    cnt += 1
+                    cont[cnt] = set()
+                break
+    return cont
+
+
 def inorder(tasks):
     global iso_limit
     N = len(tasks)
@@ -275,8 +341,10 @@ def containerize(d, processors, tasks, order, flag, limit):
         cont = rd(tasks)
     elif flag == 'forward':
         cont = bfs_forward(dag, tasks, index, t)
-    else:
+    elif flag == 'backward':
         cont = bfs_backward(r_dag, tasks, index, t)
+    else:
+        cont = bfs_i2c(r_dag, processors, tasks, t)
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 
