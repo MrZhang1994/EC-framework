@@ -104,6 +104,66 @@ def get_color_from_origin(i):
     return list(bytes.fromhex(cont_color_origin[i]))
 
 
+def cal_cont_open(sche, cont):
+    def cont_open_data_maintain(data_l, d_input):
+        start, end = d_input
+
+        for existed_datum in data_l:
+            e_s, e_e = existed_datum
+
+            update_code = 0
+            if (e_s <= start <= end <= e_e):
+                update_code = 1
+
+            if (start <= e_s <= e_e <= end):
+                update_code = 2
+                existed_datum[0], existed_datum[1] = start, end
+
+            if (e_s <= start <= e_e):
+                update_code = 3
+                existed_datum[1] = end
+
+            if (e_s <= end <= e_e):
+                update_code = 4
+                existed_datum[0] = start
+
+            if update_code > 0:
+                return
+            else:
+                pass
+
+        data_l.append(d_input)
+
+    def cont_open_data_maintain_again(data_l):
+        new_data_l = []
+        for i in data_l:
+            cont_open_data_maintain(new_data_l, i)
+        data_l.clear()
+        for i in new_data_l:
+            data_l.append(i)
+
+    cont_open_data = {}
+    for cont_i in cont:
+        jobs = cont[cont_i]
+        for job_id in jobs:
+            start = sche[job_id][1]
+            end = sche[job_id][2]
+
+            if cont_i not in cont_open_data:
+                cont_open_data[cont_i] = [[start, end]]
+            else:
+                cont_open_data_maintain(cont_open_data[cont_i], [start, end])
+
+            cont_open_data_maintain_again(cont_open_data[cont_i])
+
+    result = []
+    for cont_i in cont_open_data:
+        job_sf = cont_open_data[cont_i]
+        result.append(len(job_sf))
+
+    return result
+
+
 def draw_schedule(sche, cont, data):
     container_count = len(cont)
 
@@ -113,7 +173,6 @@ def draw_schedule(sche, cont, data):
             core_num = task[3]
 
     cont_color = {}
-
     i = 0
     for color in cont:
         cont_color[i] = get_color((i+1)*875/(container_count+1))
@@ -127,7 +186,6 @@ def draw_schedule(sche, cont, data):
 
     last_end = 0
     used_cpu_time = 0
-
     core_used = set()
 
     for i in range(len(sche)):
@@ -150,6 +208,16 @@ def draw_schedule(sche, cont, data):
             draw_line_h(data, [x_p+50, 100], 1800, 1, [0, 0, 0])
 
     sum_cpu_time = last_end*(core_num+1)
+
+    cont_open_data = cal_cont_open(sche, cont)
+
+    draw_text(data, [25, 300], 'con_open_times:', [0, 0, 0])
+
+    cont_open_data_print_gap = 30
+
+    for i in range(len(cont_open_data)):
+        draw_text(data, [25, 500+i*cont_open_data_print_gap],
+                  str(cont_open_data[i]), [0, 0, 0])
 
     # up left side
     draw_text(data, [25, 25],
