@@ -33,12 +33,15 @@ def check_iso(Graph, iso, iso_threshold, sc_data):
                 iso_sum += iso[cluster[ii]][cluster[jj]]
 
         if iso_sum > iso_threshold:
+            # print(cluster_data,iso_sum)
             return False
 
     return True
 
 
-def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=5):
+def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=20):
+    Graph = list(Graph) + np.transpose(Graph)
+    isolation = list(isolation) + np.transpose(isolation)
     warnings.warn = warn_disable
 
     best_cluster, best_cut_sum = [], -1
