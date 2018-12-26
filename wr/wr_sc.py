@@ -38,12 +38,8 @@ def check_iso(Graph, iso, iso_threshold, sc_data):
     return True
 
 
-def sc(Graph, isolation, isolation_threshold, iter_times):
+def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=10):
     warnings.warn = warn_disable
-
-    times_for_each_sc_num = int(iter_times/(len(Graph)))
-    if times_for_each_sc_num < 1:
-        times_for_each_sc_num = 1
 
     best_cluster, best_cut_sum = [], -1
 
