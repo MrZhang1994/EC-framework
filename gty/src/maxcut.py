@@ -28,7 +28,7 @@ def graph3_parameter():
     impact_factor = 1.1
     arc_num = 71
     vertex_num = 41
-    core = 3
+    core = 6
     return impact_factor, arc_num, vertex_num, core
 
 def graph4_parameter():
@@ -118,7 +118,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*10)
+        vertex_cpu.append(random.randint(2,10)*6)
         for j in range(vertex_num):
             graph[i, j] = -1
     print('vertex_cpu:')
@@ -237,7 +237,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*10)
+        vertex_cpu.append(random.randint(2,10)*5)
         for j in range(vertex_num):
             graph[i, j] = -1
     print('vertex_cpu:')
