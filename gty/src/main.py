@@ -22,11 +22,9 @@ def main():
     while cut > M:
         print(S, T)
         u, v = minLevel(graph, S, T, 0, vertex_num-1)
-        if u == 0 and v == 0:
+        if (u == 0 and v == 0) or (tmpu == u and tmpv == v):
             print('MinLevel Heuristic Failed\n')
             return -1
-        if tmpu == u and tmpv == v:
-            return -2
         tmpu = u
         tmpv = v
         maxcut.update_graph(graph, u, v)
@@ -128,6 +126,4 @@ def main():
 
 if __name__ == '__main__':
     for i in range(100):
-        if main() == -2:
-            print('OooooooOOooooops!')
-            break
+        main()
