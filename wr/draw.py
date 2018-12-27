@@ -218,6 +218,7 @@ def draw_schedule(sche, cont, data):
     for i in range(len(cont_open_data)):
         draw_text(data, [25, 500+i*cont_open_data_print_gap],
                   str(cont_open_data[i]), [0, 0, 0])
+    print(cont_open_data)
 
     # up left side
     draw_text(data, [25, 25],
