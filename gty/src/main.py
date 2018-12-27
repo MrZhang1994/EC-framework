@@ -6,10 +6,10 @@ from containerize import *
 import draw
 import os
 
-cores = [2, 3, 4, 5, 6]
-mem = [1, 0.9, 0.8, 0.7, 0.6]
-isol = [1.5, 3, 5, 7.5, 10.5]
-tests = [[0, 1, 1], [1, 1, 1], [2, 1, 1], [3, 1, 1], [4, 1, 1], [2, 0, 1], [2, 2, 1], [2, 3, 1], [2, 4, 1], [2, 1, 0], [2, 1, 2], [2, 1, 3], [2, 1, 4]]
+cores = [2,    3,   4,    5,   6]
+mem   = [1, 0.95, 0.9, 0.85,  0.8, 0.75]
+isol  = [1.5,  3,   5,  7.5, 10.5]
+tests = [[0, 2, 1], [1, 2, 1], [2, 2, 1], [3, 2, 1], [4, 2, 1], [2, 0, 1], [2, 3, 1], [2, 4, 1], [2, 5, 1], [2, 2, 0], [2, 2, 2], [2, 2, 3], [2, 2, 4]]
 
 def main(k, gid):
     core = cores[tests[k][0]]
@@ -122,23 +122,40 @@ def main(k, gid):
         print(cont)
     upper = one_tasks[vertex_num].aft
 
-    print('-'*10)
-    print('lower: ')
-    print(lower)
-    print('upper: ')
-    print(upper)
-    print('forward: ')
-    print(round((makespan_f - lower)/(upper - lower), 4))
-    print('backward: ')
-    print(round((makespan_b - lower)/(upper - lower), 4))
-    print('i2c: ')
-    print(round((makespan_i2c - lower)/(upper - lower), 4))
-    print('inorder: ')
-    print(round((makespan_i - lower)/(upper - lower), 4))
-    print('sc: ')
-    print(round((makespan_s - lower)/(upper - lower), 4))
-    print('random: ')
-    print(round((makespan_r - lower)/(upper - lower), 4))
+    if verbose:
+        print('-'*10)
+        print('lower: ')
+        print(lower)
+        print('upper: ')
+        print(upper)
+        print('forward: ')
+        print(round((makespan_f - lower)/(upper - lower), 4))
+        print('backward: ')
+        print(round((makespan_b - lower)/(upper - lower), 4))
+        print('i2c: ')
+        print(round((makespan_i2c - lower)/(upper - lower), 4))
+        print('inorder: ')
+        print(round((makespan_i - lower)/(upper - lower), 4))
+        print('sc: ')
+        print(round((makespan_s - lower)/(upper - lower), 4))
+        print('random: ')
+        print(round((makespan_r - lower)/(upper - lower), 4))
+    
+        with open('./results/'+str(k)+str(gid)+'output.txt', 'a') as f:
+            f.write(str(lower))
+            f.write(str(upper))
+            f.write(str(round((makespan_f - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_b - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_i - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_r - lower)/(upper - lower), 4)))
+
+    with open('./results/'+str(k)+str(gid)+'lower.txt', 'a') as f:
+        f.write(str(lower) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'upper.txt', 'a') as f:
+        f.write(str(upper) + '\n')
 
     with open('./results/'+str(k)+str(gid)+'forward.txt', 'a') as f:
         f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
@@ -161,12 +178,11 @@ def main(k, gid):
     return 0
 
 if __name__ == '__main__':
-    k = 0
     num = 50
-    gid = 1
-    os.system('rm -r ./results/'+str(k)+str(gid)+'*')
-
-    cnt = 0
-    while cnt < num:
-        if main(k, gid) == 0:
-            cnt += 1
+    for k in range(len(tests)):
+        for gid in range(1, 5):
+            os.system('rm -r ./results/'+str(k)+str(gid)+'*')
+            cnt = 0
+            while cnt < num:
+                if main(k, gid) == 0:
+                    cnt += 1
