@@ -345,7 +345,12 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     else:
         cont = sc(graph, maxcut.iso_value, iso_limit)
 
-    cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
+    try:
+        cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
+    except:
+        print(flag)
+        print(cont)
+        exit()
 
     new_tasks, new_processors = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
 

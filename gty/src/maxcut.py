@@ -4,6 +4,7 @@ from scipy.optimize import linprog
 from example import verbose
 
 iso_value = np.zeros((1, 1))
+cpu_factor = 10
 
 def init_iso(N):
     global iso_value
@@ -67,7 +68,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*10)
+        vertex_cpu.append(random.randint(2,10)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -123,6 +124,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
 
     for i in range(vertex_num):
         communication_cpu.append(process[i] / impact_factor + vertex_cpu[i])
+    
     if verbose:
         print('communication_cpu')
         print(communication_cpu)
@@ -138,7 +140,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*6)
+        vertex_cpu.append(random.randint(2,10)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -260,7 +262,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*5)
+        vertex_cpu.append(random.randint(2,10)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -413,7 +415,7 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*10)
+        vertex_cpu.append(random.randint(2,10)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:

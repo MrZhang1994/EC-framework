@@ -1,4 +1,3 @@
-import copy
 import numpy as np
 """
 This is a simple script to use the HEFT function provided based on the example given in the original HEFT paper.
@@ -27,8 +26,8 @@ core = 0
 def init_dag(g, cc, c):
     global communication_cpu, graph, core
     core = c
-    graph = copy.deepcopy(g)
-    communication_cpu = copy.deepcopy(cc)
+    graph = list(g)
+    communication_cpu = list(cc)
     graph_to_dag(g)
     if verbose:
         print(dag)
@@ -44,9 +43,12 @@ def graph_to_dag(graph):
             dag[u+1].add(v+1)
 
 def compcost(job, agent):
-    global communication_cpu
     if job == 0: return 0
-    return communication_cpu[job - 1]
+    try:
+        return communication_cpu[job - 1]
+    except:
+        print(len(dag), len(communication_cpu))
+        return communication_cpu[job - 1]
 
 def commcost(ni, nj, A, B):
     return 0
