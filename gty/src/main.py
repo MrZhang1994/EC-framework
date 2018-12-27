@@ -197,9 +197,9 @@ def main(k, gid):
     return 0
 
 if __name__ == '__main__':
-    num = 50
-    for k in range(len(tests)):
-        for gid in range(1, 5):
+    num = 100
+    for gid in [1, 2, 4, 3]:
+        for k in range(len(tests)):
             os.system('rm -f ./results/'+str(k)+str(gid)+'*')
             cnt = 0
             while cnt < num:
