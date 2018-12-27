@@ -57,7 +57,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
-
+    cont_open_f = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_f = new_tasks[vertex_num].aft
 
     # containerize
@@ -67,7 +67,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
-
+    cont_open_b = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_b = new_tasks[vertex_num].aft
 
     # containerize
@@ -77,7 +77,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
-
+    cont_open_i2c = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_i2c = new_tasks[vertex_num].aft
 
     # in order
@@ -87,7 +87,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
-
+    cont_open_i = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_i = new_tasks[vertex_num].aft
 
     # spectral clustering
@@ -97,7 +97,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
-
+    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_s = new_tasks[vertex_num].aft
 
     # random
@@ -107,6 +107,7 @@ def main(k, gid):
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
         print(new_tasks[vertex_num].aft)
         print(cont)
+    cont_open_r = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_r = new_tasks[vertex_num].aft
 
     # upper bound
@@ -160,28 +161,49 @@ def main(k, gid):
     with open('./results/'+str(k)+str(gid)+'forward.txt', 'a') as f:
         f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/'+str(k)+str(gid)+'forward_open.txt', 'a') as f:
+        f.write(str(cont_open_f) + '\n')
+    
     with open('./results/'+str(k)+str(gid)+'backward.txt', 'a') as f:
         f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/'+str(k)+str(gid)+'backward_open.txt', 'a') as f:
+        f.write(str(cont_open_b) + '\n')
+    
     with open('./results/'+str(k)+str(gid)+'i2c.txt', 'a') as f:
         f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'i2c_open.txt', 'a') as f:
+        f.write(str(cont_open_i2c) + '\n')
 
     with open('./results/'+str(k)+str(gid)+'inorder.txt', 'a') as f:
         f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/'+str(k)+str(gid)+'inorder_open.txt', 'a') as f:
+        f.write(str(cont_open_i) + '\n')
+    
     with open('./results/'+str(k)+str(gid)+'sc.txt', 'a') as f:
         f.write(str(round((makespan_s - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'sc_open.txt', 'a') as f:
+        f.write(str(cont_open_s) + '\n')
     
     with open('./results/'+str(k)+str(gid)+'random.txt', 'a') as f:
         f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
     
+    with open('./results/'+str(k)+str(gid)+'random_open.txt', 'a') as f:
+        f.write(str(cont_open_r) + '\n')
+    
     return 0
 
 if __name__ == '__main__':
-    num = 50
-    for k in range(len(tests)):
-        for gid in range(1, 5):
-            os.system('rm -r ./results/'+str(k)+str(gid)+'*')
+    num = 100
+    if not os.path.exists('./results'):
+        os.makedirs('./results')
+    else:
+        os.system('rm -f ./results/*')
+    for gid in [2]:
+        for k in [9]:# range(len(tests)):
             cnt = 0
             while cnt < num:
                 if main(k, gid) == 0:
