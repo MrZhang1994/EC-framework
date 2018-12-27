@@ -75,6 +75,8 @@ def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=5):
             cluster_data[val] = set()
         cluster_data[val].add(i+1)
 
+    if 0 not in cluster_data:
+        cluster_data[0] = set()
     cluster_data[0].add(0)
 
     # for i in cluster_data:
