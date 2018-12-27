@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.cluster import SpectralClustering
 from sklearn import metrics
 import warnings
+import time
 
 
 def warn_disable(*args, **kwargs):
@@ -39,7 +40,7 @@ def check_iso(Graph, iso, iso_threshold, sc_data):
     return True
 
 
-def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=20):
+def sc(Graph, isolation, isolation_threshold, time_measure, times_for_each_sc_num=5):
     Graph = list(Graph) + np.transpose(Graph)
     isolation = list(isolation) + np.transpose(isolation)
     warnings.warn = warn_disable
@@ -48,9 +49,12 @@ def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=20):
 
     for cluster_num in range(1, len(Graph)):
         for i_for_each_sc_num in range(1, times_for_each_sc_num):
+            sc_start = time.time()
             sc = SpectralClustering(n_clusters=cluster_num,
-                                    affinity='precomputed', n_init=100)
+                                    affinity='precomputed')
             sc.fit(Graph)
+            sc_end = time.time()
+            time_measure[0]+=sc_end-sc_start
 
             if not check_iso(Graph, isolation, isolation_threshold, sc.labels_):
                 continue
@@ -66,10 +70,6 @@ def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=20):
         if val not in cluster_data:
             cluster_data[val] = set()
         cluster_data[val].add(i)
-
-    # for i in cluster_data:
-    #     cluster = cluster_data[i]
-    #     print([chr(ord('a')+ii) for ii in cluster])
 
     cluster_num_result = max(cluster_data)+1
 
