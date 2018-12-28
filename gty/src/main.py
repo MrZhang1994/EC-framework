@@ -201,7 +201,7 @@ if __name__ == '__main__':
         os.makedirs('./results')
     else:
         os.system('rm -f ./results/*')
-    for gid in [3]:
+    for gid in [1, 2, 3, 4]:
         for k in range(len(tests)):
             cnt = 0
             while cnt < num:

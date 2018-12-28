@@ -10,6 +10,7 @@ def init_iso(N):
     global iso_value
     iso_value = np.random.rand(N**2).reshape(N, N)
     iso_value = (iso_value + iso_value.T)/2
+    iso_value -= np.diag(np.diag(iso_value))
     return iso_value
 
 def graph_parameter(gid):
