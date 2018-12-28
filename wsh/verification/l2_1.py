@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import os
 from jsonsocket import JsonServer
 from socket import gethostname
 from sys import argv
@@ -15,9 +15,13 @@ RAM = int(argv[3]) * 1024 * 1024
 file = open('/root/runtime/l2_1.log', 'w')
 resource.setrlimit(resource.RLIMIT_AS, (RAM, RAM))
 try:
+    tolog = os.popen('ps -e -orss=').read()
+    log(file, tolog)
     server = JsonServer(gethostname(), port, 2)
     log(file, 'Waiting for input...')
     data = server.serve()
+    tolog = os.popen('ps -e -orss=').read()
+    log(file, tolog)
     server.close()
     log(file, 'Received input, closing server')
     sleep_time = int(argv[4])
@@ -32,15 +36,17 @@ try:
     right = data[1]
     log(file, 'Input 2 length: {}'.format(len(right)))
     result = []
-    while len(left) != 0 and len(right) != 0:
-        if left[0] <= right[0]:
-            result.append(left.pop(0))
-        else:
-            result.append(right.pop(0))
-    if len(left) == 0:
-        result += right
-    else:
-        result += left
+    # while len(left) != 0 and len(right) != 0:
+    #     if left[0] <= right[0]:
+    #         result.append(left.pop(0))
+    #     else:
+    #         result.append(right.pop(0))
+    # if len(left) == 0:
+    #     result += right
+    # else:
+    #     result += left
+    result += left
+    result += right
     log(file, 'Completed. The length of result is {}'.format(len(result)))
 except Exception as e:
     log(file, "Failed: %s" % e)

@@ -1,2 +1,25 @@
 sort more
 transfer more
+############
+100000
+1 time sort: 0.364902
+10 times sort: 0.777011
+
+1000000
+1 time sort: 3.795009s
+7 times sort: 8.63398
+8 times sort: 8.932307s
+9 times sort: 10.434844s
+10 times sort: 10.62868s
+############
+1000000
+1 time sort: 3.668768
+10 times sort: 36.061212
+
+100000
+10 times sort: 3.501167
+1 time sort: 0.344646
+
+2000000
+1 time sort: 7.711747
+10 times sort: 73.405043
