@@ -196,13 +196,11 @@ def main(k, gid):
     return 0
 
 if __name__ == '__main__':
-    num = 100
+    num = 8
     if not os.path.exists('./results'):
         os.makedirs('./results')
-    else:
-        os.system('rm -f ./results/*')
-    for gid in [1, 2, 4, 3]:
-        for k in range(len(tests)):
+    for gid in [4]:
+        for k in [8]:
             cnt = 0
             while cnt < num:
                 if main(k, gid) == 0:
