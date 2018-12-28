@@ -48,6 +48,7 @@ class worker_node():
 
 
 if __name__ == '__main__':
+    os.system("rm -f *.log")
     # specify image
     IMAGES = "test/alpine:latest"
 

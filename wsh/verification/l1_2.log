@@ -1,5 +1,5 @@
-2018-12-27 14:59:02.047568: Apply memory limit: 256.0 MB
-2018-12-27 14:59:02.047604: Start sorting
-2018-12-27 14:59:05.978051: End sorting
-2018-12-27 14:59:05.978084: Sending result to worker-3:8080
-2018-12-27 14:59:06.432292: End sending
+2018-12-28 07:55:29.164756: Apply memory limit: 256.0 MB
+2018-12-28 07:55:29.164777: Start sorting
+2018-12-28 07:55:33.280665: End sorting
+2018-12-28 07:55:33.280700: Sending result to worker-3:8080
+2018-12-28 07:55:33.712446: End sending
