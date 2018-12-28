@@ -42,9 +42,8 @@ def main(k, gid):
         S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
     
     # init example for heft
-    init_dag(graph, communication_cpu, core)
+    example.init_dag(graph, communication_cpu, core)
 
-    # heft
     processors, tasks, priority_list = heft()
     order = [t.id for t in priority_list]
 
@@ -202,8 +201,8 @@ if __name__ == '__main__':
         os.makedirs('./results')
     else:
         os.system('rm -f ./results/*')
-    for gid in [2]:
-        for k in [9]:# range(len(tests)):
+    for gid in [1, 2, 4, 3]:
+        for k in range(len(tests)):
             cnt = 0
             while cnt < num:
                 if main(k, gid) == 0:

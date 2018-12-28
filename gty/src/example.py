@@ -24,31 +24,29 @@ communication_cpu = []
 core = 0
 
 def init_dag(g, cc, c):
-    global communication_cpu, graph, core
+    global core, graph, dag, communication_cpu
     core = c
     graph = list(g)
     communication_cpu = list(cc)
+    dag.clear()
     graph_to_dag(g)
     if verbose:
         print(dag)
 
-def graph_to_dag(graph):
+def graph_to_dag(g):
     global dag
     if verbose:
-        print(graph)
-    for u, x in enumerate(graph):
+        print(g)
+    for u, x in enumerate(g):
         dag[u+1] = set()
         for v, w in enumerate(x):
             if w == -1: continue
             dag[u+1].add(v+1)
 
 def compcost(job, agent):
+    global communication_cpu, dag, graph
     if job == 0: return 0
-    try:
-        return communication_cpu[job - 1]
-    except:
-        print(len(dag), len(communication_cpu))
-        return communication_cpu[job - 1]
+    return communication_cpu[job - 1]
 
 def commcost(ni, nj, A, B):
     return 0

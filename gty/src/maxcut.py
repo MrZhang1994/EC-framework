@@ -63,6 +63,7 @@ def list_sum(list, index):
     return sum
 
 def initial_graph_1(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
     graph = np.zeros((vertex_num, vertex_num))
     process = np.zeros(vertex_num)
     vertex_cpu = []
@@ -135,6 +136,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     return graph, vertex_cpu, process, communication_cpu
 
 def initial_graph_2(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
     graph = np.zeros((vertex_num, vertex_num))
     process = np.zeros(vertex_num)
     vertex_cpu = []
@@ -257,6 +259,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     return graph, vertex_cpu, process, communication_cpu
 
 def initial_graph_3(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
     graph = np.zeros((vertex_num, vertex_num))
     process = np.zeros(vertex_num)
     vertex_cpu = []
@@ -410,6 +413,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     return graph, vertex_cpu, process, communication_cpu
 
 def initial_graph_4(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
     graph = np.zeros((vertex_num, vertex_num))
     process = np.zeros(vertex_num)
     vertex_cpu = []

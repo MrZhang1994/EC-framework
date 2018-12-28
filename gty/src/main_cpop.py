@@ -1,79 +1,113 @@
 import maxcut
 from minlevel import minLevel, init_minLevel
-from example import init_dag, dag
+from example import init_dag, dag, verbose
 from cpop import cpop
 from containerize import *
 import draw
+import os
 
-def main():
-    iso_limit = 3
+cores = [2,    3,   4,    5,   6]
+mem   = [1, 0.95, 0.9, 0.85,  0.8, 0.75]
+isol  = [1.5,  3,   5,  7.5, 10.5]
+tests = [[0, 2, 1], [1, 2, 1], [2, 2, 1], [3, 2, 1], [4, 2, 1], [2, 0, 1], [2, 3, 1], [2, 4, 1], [2, 5, 1], [2, 2, 0], [2, 2, 2], [2, 2, 3], [2, 2, 4]]
+
+def main(k, gid):
+    core = cores[tests[k][0]]
+    Mem = mem[tests[k][1]]
+    iso_limit = isol[tests[k][2]]
+
     # init graph
-    impact_factor, arc_num, vertex_num, core = maxcut.graph1_parameter()
-    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph_1(vertex_num, arc_num, impact_factor)
+    impact_factor, arc_num, vertex_num = maxcut.graph_parameter(gid)
+    graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph(gid, vertex_num, arc_num, impact_factor)
 
     # calculate maxtopcut
     S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
-    M = cut * 0.9
+    M = cut * Mem
 
     # calculate backward edge
     init_minLevel(vertex_num, graph)
+    tmpu = 0
+    tmpv = 0
     while cut > M:
-        print(S, T)
+        if verbose:
+            print(S, T)
         u, v = minLevel(graph, S, T, 0, vertex_num-1)
-        if u == 0 and v == 0:
-            print('MinLevel Heuristic Failed\n')
-            return
+        if (u == 0 and v == 0) or (tmpu == u and tmpv == v):
+            if verbose:
+                print('MinLevel Heuristic Failed\n')
+            return -1
+        tmpu = u
+        tmpv = v
         maxcut.update_graph(graph, u, v)
         S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
     
     # init example for heft
-    init_dag(graph, communication_cpu, core)
+    example.init_dag(graph, communication_cpu, core)
 
-    # cpop
     processors, tasks, priority_list = cpop()
     order = [t.id for t in priority_list]
-    
+
     lower = tasks[vertex_num].aft
     
+    # spectral clustering
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph) 
+    if verbose:
+        print('sc:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
+    makespan_s = new_tasks[vertex_num].aft
+
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', iso_limit)
-    print('forward:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
+    if verbose:
+        print('forward:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_f = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_f = new_tasks[vertex_num].aft
-    print(new_tasks[vertex_num].aft)
-    print(cont)
 
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', iso_limit)
-    print('backward:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
+    if verbose:
+        print('backward:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_b = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_b = new_tasks[vertex_num].aft
-    print(new_tasks[vertex_num].aft)
-    print(cont)
 
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'i2c', iso_limit)
-    print('idle/comm:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
+    if verbose:
+        print('idle/comm:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_i2c = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_i2c = new_tasks[vertex_num].aft
-    print(new_tasks[vertex_num].aft)
-    print(cont)
 
     # in order
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', iso_limit)
-    print('in order:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
+    if verbose:
+        print('in order:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_i = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_i = new_tasks[vertex_num].aft
-    print(new_tasks[vertex_num].aft)
-    print(cont)
 
     # random
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', iso_limit)
-    print('random:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
+    if verbose:
+        print('random:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_r = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_r = new_tasks[vertex_num].aft
-    print(new_tasks[vertex_num].aft)
-    print(cont)
 
     # upper bound
     cont = dict()
@@ -81,44 +115,95 @@ def main():
         cont[i] = set()
         cont[i].add(i)
     one_tasks, one_processors = update_schedule(dag, r_dag, processors, tasks, range(1, vertex_num + 1), order, [i for i in range(vertex_num + 1)])
-    print('upper bound:')
-    draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks], cont, 'upper.png')
+    if verbose:
+        print('upper bound:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks], cont, 'upper.png')
+        print(one_tasks[vertex_num].aft)
+        print(cont)
     upper = one_tasks[vertex_num].aft
-    print(one_tasks[vertex_num].aft)
-    print(cont)
 
-    print('-'*21)
-    print('lower: ')
-    print(lower)
-    print('upper: ')
-    print(upper)
-    print('forward: ')
-    print(round((makespan_f - lower)/(upper - lower), 4))
-    print('backward: ')
-    print(round((makespan_b - lower)/(upper - lower), 4))
-    print('idle/communication: ')
-    print(round((makespan_i2c - lower)/(upper - lower), 4))
-    print('inorder: ')
-    print(round((makespan_i - lower)/(upper - lower), 4))
-    print('random: ')
-    print(round((makespan_r - lower)/(upper - lower), 4))
+    if verbose:
+        print('-'*10)
+        print('lower: ')
+        print(lower)
+        print('upper: ')
+        print(upper)
+        print('forward: ')
+        print(round((makespan_f - lower)/(upper - lower), 4))
+        print('backward: ')
+        print(round((makespan_b - lower)/(upper - lower), 4))
+        print('i2c: ')
+        print(round((makespan_i2c - lower)/(upper - lower), 4))
+        print('inorder: ')
+        print(round((makespan_i - lower)/(upper - lower), 4))
+        print('sc: ')
+        print(round((makespan_s - lower)/(upper - lower), 4))
+        print('random: ')
+        print(round((makespan_r - lower)/(upper - lower), 4))
+    
+        with open('./results/'+str(k)+str(gid)+'output.txt', 'a') as f:
+            f.write(str(lower))
+            f.write(str(upper))
+            f.write(str(round((makespan_f - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_b - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_i - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
+            f.write(str(round((makespan_r - lower)/(upper - lower), 4)))
 
+    with open('./results/'+str(k)+str(gid)+'lower.txt', 'a') as f:
+        f.write(str(lower) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'upper.txt', 'a') as f:
+        f.write(str(upper) + '\n')
 
-    with open('./results/forward.txt', 'a') as f:
+    with open('./results/'+str(k)+str(gid)+'forward.txt', 'a') as f:
         f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/backward.txt', 'a') as f:
+    with open('./results/'+str(k)+str(gid)+'forward_open.txt', 'a') as f:
+        f.write(str(cont_open_f) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'backward.txt', 'a') as f:
         f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/i2c.txt', 'a') as f:
+    with open('./results/'+str(k)+str(gid)+'backward_open.txt', 'a') as f:
+        f.write(str(cont_open_b) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'i2c.txt', 'a') as f:
         f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'i2c_open.txt', 'a') as f:
+        f.write(str(cont_open_i2c) + '\n')
 
-    with open('./results/inorder.txt', 'a') as f:
+    with open('./results/'+str(k)+str(gid)+'inorder.txt', 'a') as f:
         f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/random.txt', 'a') as f:
+    with open('./results/'+str(k)+str(gid)+'inorder_open.txt', 'a') as f:
+        f.write(str(cont_open_i) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'sc.txt', 'a') as f:
+        f.write(str(round((makespan_s - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'sc_open.txt', 'a') as f:
+        f.write(str(cont_open_s) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'random.txt', 'a') as f:
         f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
+    
+    with open('./results/'+str(k)+str(gid)+'random_open.txt', 'a') as f:
+        f.write(str(cont_open_r) + '\n')
+    
+    return 0
 
 if __name__ == '__main__':
-    for i in range(100):
-        main()
+    num = 100
+    if not os.path.exists('./results'):
+        os.makedirs('./results')
+    else:
+        os.system('rm -f ./results/*')
+    for gid in [1, 2, 4, 3]:
+        for k in range(len(tests)):
+            cnt = 0
+            while cnt < num:
+                if main(k, gid) == 0:
+                    cnt += 1

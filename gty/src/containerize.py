@@ -22,7 +22,7 @@ def add_core_dependency(processors, dag, r_dag):
             r_dag[p.tasks[i].id].add(p.tasks[i-1].id)
             dag[p.tasks[i-1].id].add(p.tasks[i].id)
             
-def cp(t, last, processors, tasks, step):
+def cp(t, last, processors, tasks, step, res):
     if t == 0:
         res[step] = 0
         return True
@@ -31,15 +31,14 @@ def cp(t, last, processors, tasks, step):
         while last[i] >= 0 and tasks[processors[i].tasks[last[i]].id].aft > time_stamp:
             last[i] -= 1
         if tasks[processors[i].tasks[last[i]].id].aft == time_stamp:
-            if cp(processors[i].tasks[last[i]].id, last, processors, tasks, step+1) == True:
+            if cp(processors[i].tasks[last[i]].id, last, processors, tasks, step+1, res) == True:
                 res[step] = t
                 return True
     return False
     
-res = dict()
-avg_cost = dict()
 
 def get_avg_commcost(dag):
+    avg_cost = dict()
     for key in dag:
         n = len(dag[key])
         if n == 0:
@@ -47,9 +46,10 @@ def get_avg_commcost(dag):
             continue
         s = sum([commcost_con(key, v) for v in dag[key]])
         avg_cost[key] = s / n;
+    return avg_cost
         
 
-def get_index(dag, tasks, cpath):
+def get_index(dag, tasks, cpath, avg_cost):
     influ_index = dict()
     N = len(tasks)
     for u in range(N):
@@ -316,22 +316,23 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     global iso_limit
     iso_limit = limit
     N = len(tasks)
-    dag = copy.deepcopy(d)
+    dag = dict(d)
     r_dag = dict([(i, set()) for i in range(N)])
 
     reverse_graph(dag, r_dag)
     add_core_dependency(processors, dag, r_dag)
-    get_avg_commcost(dag)
+    avg_cost = get_avg_commcost(dag)
     
     # get critical path
     t = max(enumerate(tasks), key = lambda x: x[1].aft)[0]
     last = [len(p.tasks)-1 for p in processors]
-    cp(t, last, processors, tasks, 0)
+    res = dict()
+    cp(t, last, processors, tasks, 0, res)
     cpath = []
     for key in res:
         cpath.append(res[key])
     
-    index = get_index(dag, tasks, cpath)
+    index = get_index(dag, tasks, cpath, avg_cost)
     if flag == 'inorder':
         cont = inorder(tasks)
     elif flag == 'rand':
@@ -345,14 +346,7 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     else:
         cont = sc(graph, maxcut.iso_value, iso_limit)
 
-    try:
-        cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
-    except:
-        print(graph)
-        print(maxcut.iso_value)
-        print(flag)
-        print(cont)
-        exit()
+    cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 
     new_tasks, new_processors = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
 
