@@ -199,9 +199,14 @@ if __name__ == '__main__':
     num = 100
     if not os.path.exists('./results'):
         os.makedirs('./results')
-    for gid in [4]:
-        for k in [9, 10, 11, 12]:
+    else:
+        os.system('rm -f ./results/*')
+    for gid in [3]:
+        for k in range(len(tests)):
             cnt = 0
             while cnt < num:
-                if main(k, gid) == 0:
-                    cnt += 1
+                try:
+                    if main(k, gid) == 0:
+                        cnt += 1
+                except:
+                    continue
