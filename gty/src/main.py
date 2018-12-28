@@ -16,6 +16,8 @@ def main(k, gid):
     Mem = mem[tests[k][1]]
     iso_limit = isol[tests[k][2]]
 
+    path = './results/graph' + str(gid) + '/' + str(k) + '/'
+
     # init graph
     impact_factor, arc_num, vertex_num = maxcut.graph_parameter(gid)
     graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph(gid, vertex_num, arc_num, impact_factor)
@@ -141,7 +143,7 @@ def main(k, gid):
         print('random: ')
         print(round((makespan_r - lower)/(upper - lower), 4))
     
-        with open('./results/'+str(k)+str(gid)+'output.txt', 'a') as f:
+        with open(path + 'output.txt', 'a') as f:
             f.write(str(lower))
             f.write(str(upper))
             f.write(str(round((makespan_f - lower)/(upper - lower), 4)))
@@ -151,58 +153,63 @@ def main(k, gid):
             f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
             f.write(str(round((makespan_r - lower)/(upper - lower), 4)))
 
-    with open('./results/'+str(k)+str(gid)+'lower.txt', 'a') as f:
+    with open(path + 'lower.txt', 'a') as f:
         f.write(str(lower) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'upper.txt', 'a') as f:
+    with open(path + 'upper.txt', 'a') as f:
         f.write(str(upper) + '\n')
 
-    with open('./results/'+str(k)+str(gid)+'forward.txt', 'a') as f:
+    with open(path + 'forward.txt', 'a') as f:
         f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'forward_open.txt', 'a') as f:
+    with open(path + 'forward_open.txt', 'a') as f:
         f.write(str(cont_open_f) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'backward.txt', 'a') as f:
+    with open(path + 'backward.txt', 'a') as f:
         f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'backward_open.txt', 'a') as f:
+    with open(path + 'backward_open.txt', 'a') as f:
         f.write(str(cont_open_b) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'i2c.txt', 'a') as f:
+    with open(path + 'i2c.txt', 'a') as f:
         f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'i2c_open.txt', 'a') as f:
+    with open(path + 'i2c_open.txt', 'a') as f:
         f.write(str(cont_open_i2c) + '\n')
 
-    with open('./results/'+str(k)+str(gid)+'inorder.txt', 'a') as f:
+    with open(path + 'inorder.txt', 'a') as f:
         f.write(str(round((makespan_i - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'inorder_open.txt', 'a') as f:
+    with open(path + 'inorder_open.txt', 'a') as f:
         f.write(str(cont_open_i) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'sc.txt', 'a') as f:
+    with open(path + 'sc.txt', 'a') as f:
         f.write(str(round((makespan_s - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'sc_open.txt', 'a') as f:
+    with open(path + 'sc_open.txt', 'a') as f:
         f.write(str(cont_open_s) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'random.txt', 'a') as f:
+    with open(path + 'random.txt', 'a') as f:
         f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
     
-    with open('./results/'+str(k)+str(gid)+'random_open.txt', 'a') as f:
+    with open(path + 'random_open.txt', 'a') as f:
         f.write(str(cont_open_r) + '\n')
     
     return 0
 
+def create_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    else:
+        os.system('rm -f ' + path + '/*')
+
 if __name__ == '__main__':
     num = 100
-    if not os.path.exists('./results'):
-        os.makedirs('./results')
-    else:
-        os.system('rm -f ./results/*')
+    create_dir('./results')
     for gid in [1, 2, 3, 4]:
+        create_dir('./results/graph' + str(gid))
         for k in range(len(tests)):
+            create_dir('./results/graph' + str(gid) + '/' + str(k))
             cnt = 0
             while cnt < num:
                 try:
