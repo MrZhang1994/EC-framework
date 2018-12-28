@@ -44,7 +44,6 @@ def sc(Graph, isolation, isolation_threshold, times_for_each_sc_num=5):
     Graph = [[i if (i != -1) else 0 for i in x ] for x in Graph]
     Graph = Graph + np.transpose(Graph)
 
-    isolation = list(isolation) + np.transpose(isolation)
     warnings.warn = warn_disable
 
     best_cluster, best_cut_sum = [], -1

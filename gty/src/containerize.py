@@ -348,6 +348,8 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     try:
         cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
     except:
+        print(graph)
+        print(maxcut.iso_value)
         print(flag)
         print(cont)
         exit()

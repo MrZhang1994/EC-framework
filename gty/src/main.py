@@ -50,6 +50,16 @@ def main(k, gid):
 
     lower = tasks[vertex_num].aft
     
+    # spectral clustering
+    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph) 
+    if verbose:
+        print('sc:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
+    makespan_s = new_tasks[vertex_num].aft
+
     # containerize
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', iso_limit)
     if verbose:
@@ -89,16 +99,6 @@ def main(k, gid):
         print(cont)
     cont_open_i = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_i = new_tasks[vertex_num].aft
-
-    # spectral clustering
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph)
-    if verbose:
-        print('sc:')
-        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
-        print(new_tasks[vertex_num].aft)
-        print(cont)
-    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
-    makespan_s = new_tasks[vertex_num].aft
 
     # random
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', iso_limit)
