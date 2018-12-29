@@ -16,7 +16,7 @@ def main(k, gid):
     Mem = mem[tests[k][1]]
     iso_limit = isol[tests[k][2]]
 
-    path = './results/graph' + str(gid) + '/' + str(k) + '/'
+    path = './results_heft/graph' + str(gid) + '/' + str(k) + '/'
 
     # init graph
     impact_factor, arc_num, vertex_num = maxcut.graph_parameter(gid)
@@ -205,11 +205,11 @@ def create_dir(path):
 
 if __name__ == '__main__':
     num = 1000
-    create_dir('./results')
+    create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
-        create_dir('./results/graph' + str(gid))
+        create_dir('./results_heft/graph' + str(gid))
         for k in range(len(tests)):
-            create_dir('./results/graph' + str(gid) + '/' + str(k))
+            create_dir('./results_heft/graph' + str(gid) + '/' + str(k))
             cnt = 0
             while cnt < num:
                 try:
