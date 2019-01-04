@@ -4,8 +4,8 @@ import os
 
 def printit():
 	threading.Timer(0.1, printit).start()
-	os.system(" ./psu 1451 >> log/dockerd.log")
-	os.system(" ./psu 1596 >> log/docker_containerd.log")
+	os.system(" ./psu 865 >> log/dockerd.log")
+	os.system(" ./psu 876 >> log/docker_containerd.log")
 
 """
 def read_and_print(input_file_dir, output_file_dir, mode):
