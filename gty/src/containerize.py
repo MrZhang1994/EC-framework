@@ -13,7 +13,7 @@ def reverse_graph(dag, r_dag):
             r_dag[u].add(key)
     return r_dag
 
-def add_core_dependency(processors, dag, r_dag):
+def add_core_dependency(processors, dag, r_dag, graph):
     dag[0] = set()
     r_dag[0] = set()
     for p in processors:
@@ -21,6 +21,7 @@ def add_core_dependency(processors, dag, r_dag):
         for i in range(1, n):
             r_dag[p.tasks[i].id].add(p.tasks[i-1].id)
             dag[p.tasks[i-1].id].add(p.tasks[i].id)
+            graph[p.tasks[i-1].id - 1][p.tasks[i].id - 1] = 0
             
 def cp(t, last, processors, tasks, step, res):
     if t == 0:
@@ -312,7 +313,7 @@ def get_bridge_tasks(d, N, cont):
                 break
     return cont_set, bridge_tasks
 
-def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
+def containerize_init(d, tasks, processors, limit, graph):
     global iso_limit
     iso_limit = limit
     N = len(tasks)
@@ -320,7 +321,7 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
     r_dag = dict([(i, set()) for i in range(N)])
 
     reverse_graph(dag, r_dag)
-    add_core_dependency(processors, dag, r_dag)
+    add_core_dependency(processors, dag, r_dag, graph)
     avg_cost = get_avg_commcost(dag)
     
     # get critical path
@@ -333,6 +334,9 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
         cpath.append(res[key])
     
     index = get_index(dag, tasks, cpath, avg_cost)
+    return dag, r_dag, index, t, N
+
+def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag):
     if flag == 'inorder':
         cont = inorder(tasks)
     elif flag == 'rand':
@@ -343,23 +347,23 @@ def containerize(d, processors, tasks, order, flag, limit, graph = [[]]):
         cont = bfs_backward(r_dag, tasks, index, t)
     elif flag == 'i2c':
         cont = bfs_i2c(r_dag, processors, tasks, t)
+    """
     else:
         cont = sc(graph, maxcut.iso_value, iso_limit)
+    """
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 
-    new_tasks, new_processors = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
+    new_tasks = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
 
-    return r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors
+    return cont, bridge_tasks, new_tasks
 
 def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     new_tasks = copy.deepcopy(tasks)
     new_processors = copy.deepcopy(processors)
     fact = 3.7
     w = [task.aft - task.ast for task in tasks]
-    
-    for i in range(len(w)):
-        if i in bridge_tasks:
+    for i in bridge_tasks:
             w[i] += sum([commcost_con(i, v) for v in d[i] if cont_set[i] != cont_set[v]]) * fact
 
     for i, p in enumerate(processors):
@@ -370,9 +374,10 @@ def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
         new_tasks[t].ast = max([new_tasks[x].aft for x in r_dag[t]]) if r_dag[t] != set() else 0
         new_tasks[t].aft = new_tasks[t].ast + w[t]
     
+    """
     for p in new_processors:
         for t in p.tasks:
             t.ast = new_tasks[t.id].ast
             t.aft = new_tasks[t.id].aft
-
-    return new_tasks, new_processors
+    """
+    return new_tasks# , new_processors

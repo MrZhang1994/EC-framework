@@ -51,6 +51,8 @@ def main(k, gid):
 
     lower = tasks[vertex_num].aft
     
+    dag_d, r_dag, index, t, N = containerize_init(dag, tasks, processors, iso_limit, graph)
+    """
     # spectral clustering
     r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph) 
     if verbose:
@@ -60,9 +62,10 @@ def main(k, gid):
         print(cont)
     cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_s = new_tasks[vertex_num].aft
+    """
 
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'forward', iso_limit)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
     if verbose:
         print('forward:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'forward.png')
@@ -72,7 +75,7 @@ def main(k, gid):
     makespan_f = new_tasks[vertex_num].aft
 
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'backward', iso_limit)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'backward')
     if verbose:
         print('backward:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'backward.png')
@@ -81,8 +84,13 @@ def main(k, gid):
     cont_open_b = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
     makespan_b = new_tasks[vertex_num].aft
 
+    if makespan_f < makespan_b:
+        makespan_fb, cont_open_fb = makespan_f, cont_open_f
+    else:
+        makespan_fb, cont_open_fb = makespan_b, cont_open_b
+
     # containerize
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'i2c', iso_limit)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'i2c')
     if verbose:
         print('idle/comm:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'i2c.png')
@@ -92,7 +100,7 @@ def main(k, gid):
     makespan_i2c = new_tasks[vertex_num].aft
 
     # in order
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'inorder', iso_limit)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'inorder')
     if verbose:
         print('in order:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'inorder.png')
@@ -102,7 +110,7 @@ def main(k, gid):
     makespan_i = new_tasks[vertex_num].aft
 
     # random
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'rand', iso_limit)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'rand')
     if verbose:
         print('random:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'random.png')
@@ -116,7 +124,7 @@ def main(k, gid):
     for i in range(vertex_num+1):
         cont[i] = set()
         cont[i].add(i)
-    one_tasks, one_processors = update_schedule(dag, r_dag, processors, tasks, range(1, vertex_num + 1), order, [i for i in range(vertex_num + 1)])
+    one_tasks = update_schedule(dag, r_dag, processors, tasks, range(1, vertex_num + 1), order, [i for i in range(vertex_num + 1)])
     if verbose:
         print('upper bound:')
         draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in one_tasks], cont, 'upper.png')
@@ -130,16 +138,14 @@ def main(k, gid):
         print(lower)
         print('upper: ')
         print(upper)
-        print('forward: ')
-        print(round((makespan_f - lower)/(upper - lower), 4))
-        print('backward: ')
-        print(round((makespan_b - lower)/(upper - lower), 4))
+        print('fb: ')
+        print(round((makespan_fb - lower)/(upper - lower), 4))
         print('i2c: ')
         print(round((makespan_i2c - lower)/(upper - lower), 4))
         print('inorder: ')
         print(round((makespan_i - lower)/(upper - lower), 4))
-        print('sc: ')
-        print(round((makespan_s - lower)/(upper - lower), 4))
+        # print('sc: ')
+        # print(round((makespan_s - lower)/(upper - lower), 4))
         print('random: ')
         print(round((makespan_r - lower)/(upper - lower), 4))
     
@@ -150,26 +156,21 @@ def main(k, gid):
             f.write(str(round((makespan_b - lower)/(upper - lower), 4)))
             f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)))
             f.write(str(round((makespan_i - lower)/(upper - lower), 4)))
-            f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
+            # f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
             f.write(str(round((makespan_r - lower)/(upper - lower), 4)))
 
+    """
     with open(path + 'lower.txt', 'a') as f:
         f.write(str(lower) + '\n')
     
     with open(path + 'upper.txt', 'a') as f:
         f.write(str(upper) + '\n')
-
-    with open(path + 'forward.txt', 'a') as f:
-        f.write(str(round((makespan_f - lower)/(upper - lower), 4)) + '\n')
+    """
+    with open(path + 'fb.txt', 'a') as f:
+        f.write(str(round((makespan_fb - lower)/(upper - lower), 4)) + '\n')
     
-    with open(path + 'forward_open.txt', 'a') as f:
-        f.write(str(cont_open_f) + '\n')
-    
-    with open(path + 'backward.txt', 'a') as f:
-        f.write(str(round((makespan_b - lower)/(upper - lower), 4)) + '\n')
-    
-    with open(path + 'backward_open.txt', 'a') as f:
-        f.write(str(cont_open_b) + '\n')
+    with open(path + 'fb_open.txt', 'a') as f:
+        f.write(str(cont_open_fb) + '\n')
     
     with open(path + 'i2c.txt', 'a') as f:
         f.write(str(round((makespan_i2c - lower)/(upper - lower), 4)) + '\n')
@@ -182,13 +183,13 @@ def main(k, gid):
     
     with open(path + 'inorder_open.txt', 'a') as f:
         f.write(str(cont_open_i) + '\n')
-    
+    """
     with open(path + 'sc.txt', 'a') as f:
         f.write(str(round((makespan_s - lower)/(upper - lower), 4)) + '\n')
     
     with open(path + 'sc_open.txt', 'a') as f:
         f.write(str(cont_open_s) + '\n')
-    
+    """
     with open(path + 'random.txt', 'a') as f:
         f.write(str(round((makespan_r - lower)/(upper - lower), 4)) + '\n')
     
@@ -201,9 +202,17 @@ def create_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
     else:
-        os.system('rm -f ' + path + '/*')
+        os.system('rm -rf ' + path + '/*')
 
 if __name__ == '__main__':
+    """
+    gid = 1
+    k = 0
+    create_dir('./results')
+    create_dir('./results/graph' + str(gid))
+    create_dir('./results/graph' + str(gid) + '/' + str(k))
+    main(k, gid)
+    """
     num = 1000
     create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
