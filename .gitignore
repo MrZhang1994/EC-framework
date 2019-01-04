@@ -1,3 +1,4 @@
 *.png
 __py*
 .ipy*
+.DS_Store
