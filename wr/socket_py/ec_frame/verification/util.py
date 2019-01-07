@@ -1,0 +1,1 @@
+cmd = 'echo start ps && ps -e -orss,args= && echo end ps'

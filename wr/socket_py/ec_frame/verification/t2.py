@@ -14,6 +14,7 @@ import resource
 from sys import argv
 from time import sleep
 from datetime import datetime
+import util
 
 
 def log(file, s):
@@ -25,7 +26,9 @@ RAM = int(argv[3]) * 1024 * 1024
 file = open('/root/runtime/t2.log', 'w')
 resource.setrlimit(resource.RLIMIT_AS, (RAM, RAM))
 try:
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps && top -n1').read()
+    command = util.cmd 
+
+    result = os.popen(command).read()
     log(file, result)
 
     port = 8082
@@ -36,7 +39,7 @@ try:
     server.close()
     log(file, 'Received input, closing server')
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps && top -n1').read()
+    result = os.popen(command).read()
     log(file, result)
 
 
@@ -62,13 +65,13 @@ try:
     input_data = [random.randint(0, 1000000) for i in range(length)]
     log(file, 'Random gened')
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    result = os.popen(command).read()
     log(file, result)
 
     data_to_send = sorted(input_data)
     log(file, 'sorted')
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    result = os.popen(command).read()
     log(file, result)
 
     host = 'worker-2'
@@ -82,7 +85,7 @@ try:
 
     log(file, 'sent')
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    result = os.popen(command).read()
     log(file, result)
 
 

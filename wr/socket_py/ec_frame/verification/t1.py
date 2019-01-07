@@ -8,6 +8,7 @@ import resource
 from sys import argv
 from time import sleep
 from datetime import datetime
+import util
 
 def log(file, s):
     file.write('{}: {}\n'.format(datetime.now().__str__(), s))
@@ -17,7 +18,9 @@ if __name__ == '__main__':
         length = 1000000
         file = open('/root/runtime/t1.log', 'w')
 
-        result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+        command = util.cmd 
+
+        result = os.popen(command).read()
         log(file, result)
 
         # pass-in arguments
@@ -32,8 +35,9 @@ if __name__ == '__main__':
         data_to_send = []
         input_data = [random.randint(0, 1000000) for i in range(length)]
         log(file, "dict  to gened")
+        log(file,sys.getsizeof(input_data)) 
 
-        result = os.popen('echo start ps && ps -e -orss= && echo end ps').read()
+        result = os.popen(command).read()
         log(file, result)
 
         log(file, "Start sorting")
@@ -42,7 +46,7 @@ if __name__ == '__main__':
         log(file, sys.getsizeof(data_to_send))
         log(file, "End sorting")
 
-        result = os.popen('echo start ps && ps -e -orss= && echo end ps').read()
+        result = os.popen(command).read()
         log(file, result)
 
 
@@ -57,7 +61,7 @@ if __name__ == '__main__':
 
         log(file,'sent 1')
 
-        result = os.popen('echo start ps && ps -e -orss= && echo end ps').read()
+        result = os.popen(command).read()
         log(file, result)
 
         host = 'worker-1'
@@ -73,7 +77,7 @@ if __name__ == '__main__':
 
         log(file, "End sending")
 
-        result = os.popen('echo start ps && ps -e -orss= && echo end ps').read()
+        result = os.popen(command).read()
         log(file, result)
 
 

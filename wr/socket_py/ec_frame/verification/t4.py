@@ -6,6 +6,7 @@ from sys import argv
 from time import sleep
 import resource
 from datetime import datetime
+import util
 
 def log(file, s):
     file.write('{}: {}\n'.format(datetime.now().__str__(), s))
@@ -16,7 +17,9 @@ file = open('/root/runtime/t4.log', 'w')
 resource.setrlimit(resource.RLIMIT_AS, (RAM, RAM))
 try:
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    command = util.cmd 
+
+    result = os.popen(command).read()
     log(file, result)
 
     port = 8084
@@ -24,14 +27,15 @@ try:
     log(file, 'Waiting for input...')
 
     data = server.serve()
-    tolog = os.popen('ps -e -orss=').read()
-    log(file, tolog)
+
+    result = os.popen(command).read()
+    log(file, result)
 
     server.close()
 
     log(file, 'Received input, closing server')
 
-    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    result = os.popen(command).read()
     log(file, result)
 
 
