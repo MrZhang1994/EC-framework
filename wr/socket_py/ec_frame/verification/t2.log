@@ -1,0 +1,51 @@
+2019-01-05 10:00:43.122013: start ps
+RSS  
+9.8m python3 /root/runtime/t2.py w-2 8 512 0
+9460 {runc:[2:INIT]} runc init
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:43.122173: Waiting for input...
+2019-01-05 10:00:46.044095: Received input, closing server
+2019-01-05 10:00:46.047281: start ps
+RSS  
+ 48m python3 /root/runtime/t2.py w-2 8 512 0
+   0 [sh]
+   4 top -n1
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:46.047311: Input 1 length: 1000000
+2019-01-05 10:00:46.060636: Completed. The length of result is 1000000
+2019-01-05 10:00:46.076935: start ps
+RSS  
+ 56m python3 /root/runtime/t2.py w-2 8 512 0
+   0 [sh]
+   4 top -n1
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:46.076976: before work
+2019-01-05 10:00:46.519217: after work
+2019-01-05 10:00:46.522584: start ps
+RSS  
+ 48m python3 /root/runtime/t2.py w-2 8 512 0
+   0 [sh]
+   4 top -n1
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:46.522614: before Sending result to worker-2:8084
+2019-01-05 10:00:46.858432: end Sending to worker-2:8084
+2019-01-05 10:00:46.862004: start ps
+RSS  
+ 49m python3 /root/runtime/t2.py w-2 8 512 0
+   0 [sh]
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
