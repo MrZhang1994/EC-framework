@@ -1,0 +1,1 @@
+rsync -azvh  wr@10.211.55.87:/home/wr/socket_py/ .

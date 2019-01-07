@@ -12,12 +12,14 @@ def log(file, s):
 
 port = int(argv[2])
 RAM = int(argv[3]) * 1024 * 1024
-file = open('/root/runtime/l2_1.log', 'w')
+file = open('/root/runtime/t4.log', 'w')
 resource.setrlimit(resource.RLIMIT_AS, (RAM, RAM))
 try:
-    tolog = os.popen('ps -e -orss=').read()
-    log(file, tolog)
 
+    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    log(file, result)
+
+    port = 8084
     server = JsonServer(gethostname(), port, 2)
     log(file, 'Waiting for input...')
 
@@ -28,12 +30,10 @@ try:
     server.close()
 
     log(file, 'Received input, closing server')
-    sleep_time = int(argv[4])
-    if sleep_time != 0:
-        log(file, 'Sleeping for {} sec'.format(sleep_time))
-        sleep(sleep_time)
-        log(file, 'Finish sleeping')
-    # left = data[0].get()
+
+    result = os.popen('echo start ps && ps -e -orss= && echo end ps ').read()
+    log(file, result)
+
 
     left = data[0]
     log(file, 'Input 1 length: {}'.format(len(left)))
