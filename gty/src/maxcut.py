@@ -34,27 +34,35 @@ def initial_graph(gid, vertex_num, arc_num, impact_factor):
         return initial_graph_4(vertex_num, arc_num, impact_factor)
 
 def graph1_parameter():
-    impact_factor = random.uniform(0.8, 1.1)
+    impact_factor = []
     arc_num = 18
     vertex_num = 12
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(1, 4))
     return impact_factor, arc_num, vertex_num
 
 def graph2_parameter():
-    impact_factor = random.uniform(0.8, 1.1)    
+    impact_factor = []    
     arc_num = 56
     vertex_num = 25
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(1, 4))
     return impact_factor, arc_num, vertex_num
 
 def graph3_parameter():
-    impact_factor = random.uniform(0.8, 1.1)
+    impact_factor = []
     arc_num = 71
     vertex_num = 41
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(1, 4))
     return impact_factor, arc_num, vertex_num
 
 def graph4_parameter():
-    impact_factor = random.uniform(0.8, 1.1)
+    impact_factor = []
     arc_num = 34
     vertex_num = 19
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(1, 4))
     return impact_factor, arc_num, vertex_num
 
 def list_sum(list, index):
@@ -110,17 +118,17 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     graph[9, 11] = arc_weight[16]
     graph[10, 11] = arc_weight[17]
 
-    process[0] = (arc_weight[0] + arc_weight[1] + arc_weight[2]) * impact_factor
-    process[1] = (arc_weight[3] + arc_weight[4]) * impact_factor
-    process[2] = (arc_weight[5] + arc_weight[6]) * impact_factor
-    process[3] = (arc_weight[7] + arc_weight[8]) * impact_factor
-    process[4] = (arc_weight[9]) * impact_factor
-    process[5] = (arc_weight[14]) * impact_factor
-    process[6] = (arc_weight[10] + arc_weight[11]) * impact_factor
-    process[7] = (arc_weight[12] + arc_weight[13]) * impact_factor
-    process[8] = (arc_weight[15]) * impact_factor
-    process[9] = (arc_weight[16]) * impact_factor
-    process[10] = (arc_weight[17]) * impact_factor
+    process[0] = (arc_weight[0] + arc_weight[1] + arc_weight[2]) * impact_factor[0]
+    process[1] = (arc_weight[3] + arc_weight[4]) * impact_factor[1]
+    process[2] = (arc_weight[5] + arc_weight[6]) * impact_factor[2]
+    process[3] = (arc_weight[7] + arc_weight[8]) * impact_factor[3]
+    process[4] = (arc_weight[9]) * impact_factor[4]
+    process[5] = (arc_weight[14]) * impact_factor[5]
+    process[6] = (arc_weight[10] + arc_weight[11]) * impact_factor[6]
+    process[7] = (arc_weight[12] + arc_weight[13]) * impact_factor[7]
+    process[8] = (arc_weight[15]) * impact_factor[8]
+    process[9] = (arc_weight[16]) * impact_factor[9]
+    process[10] = (arc_weight[17]) * impact_factor[10]
 
     iso_value = init_iso(vertex_num)
 
@@ -221,30 +229,30 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     graph[22, 24] = arc_weight[54]
     graph[23, 24] = arc_weight[55]
 
-    process[0] = list_sum(arc_weight, [0, 1, 2, 3, 4, 5]) * impact_factor
-    process[1] = list_sum(arc_weight, [6, 7, 8]) * impact_factor
-    process[2] = list_sum(arc_weight, [9, 10 ,11]) * impact_factor
-    process[3] = list_sum(arc_weight, [12, 13, 14, 15, 16]) * impact_factor
-    process[4] = list_sum(arc_weight, [17, 18, 19, 20]) * impact_factor
-    process[5] = list_sum(arc_weight, [21, 22, 23, 24]) * impact_factor
-    process[6] = list_sum(arc_weight, [25, 26, 27]) * impact_factor
-    process[7] = list_sum(arc_weight, [28]) * impact_factor
-    process[8] = list_sum(arc_weight, [29]) * impact_factor
-    process[9] = list_sum(arc_weight, [30]) * impact_factor
-    process[10] = list_sum(arc_weight, [31]) * impact_factor
-    process[11] = list_sum(arc_weight, [32]) * impact_factor
-    process[12] = list_sum(arc_weight, [33]) * impact_factor
-    process[13] = list_sum(arc_weight, [34]) * impact_factor
-    process[14] = list_sum(arc_weight, [35]) * impact_factor
-    process[15] = list_sum(arc_weight, [36]) * impact_factor
-    process[16] = list_sum(arc_weight, [37, 38, 39, 40, 41, 42]) * impact_factor
-    process[17] = list_sum(arc_weight, [43, 44]) * impact_factor
-    process[18] = list_sum(arc_weight, [45, 46]) * impact_factor
-    process[19] = list_sum(arc_weight, [47, 48]) * impact_factor
-    process[20] = list_sum(arc_weight, [49, 50]) * impact_factor
-    process[21] = list_sum(arc_weight, [51, 52]) * impact_factor
-    process[22] = list_sum(arc_weight, [53, 54]) * impact_factor
-    process[23] = list_sum(arc_weight, [55]) * impact_factor
+    process[0] = list_sum(arc_weight, [0, 1, 2, 3, 4, 5]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [6, 7, 8]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [9, 10 ,11]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [12, 13, 14, 15, 16]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [17, 18, 19, 20]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [21, 22, 23, 24]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [25, 26, 27]) * impact_factor[6]
+    process[7] = list_sum(arc_weight, [28]) * impact_factor[7]
+    process[8] = list_sum(arc_weight, [29]) * impact_factor[8]
+    process[9] = list_sum(arc_weight, [30]) * impact_factor[9]
+    process[10] = list_sum(arc_weight, [31]) * impact_factor[10]
+    process[11] = list_sum(arc_weight, [32]) * impact_factor[11]
+    process[12] = list_sum(arc_weight, [33]) * impact_factor[12]
+    process[13] = list_sum(arc_weight, [34]) * impact_factor[13]
+    process[14] = list_sum(arc_weight, [35]) * impact_factor[14]
+    process[15] = list_sum(arc_weight, [36]) * impact_factor[15]
+    process[16] = list_sum(arc_weight, [37, 38, 39, 40, 41, 42]) * impact_factor[16]
+    process[17] = list_sum(arc_weight, [43, 44]) * impact_factor[17]
+    process[18] = list_sum(arc_weight, [45, 46]) * impact_factor[18]
+    process[19] = list_sum(arc_weight, [47, 48]) * impact_factor[19]
+    process[20] = list_sum(arc_weight, [49, 50]) * impact_factor[20]
+    process[21] = list_sum(arc_weight, [51, 52]) * impact_factor[21]
+    process[22] = list_sum(arc_weight, [53, 54]) * impact_factor[22]
+    process[23] = list_sum(arc_weight, [55]) * impact_factor[23]
 
     iso_value = init_iso(vertex_num)
 
@@ -359,46 +367,46 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     graph[38, 40] = arc_weight[69]
     graph[39, 40] = arc_weight[70]
 
-    process[0] = list_sum(arc_weight, [0, 1, 2]) * impact_factor
-    process[1] = list_sum(arc_weight, [3, 4]) * impact_factor
-    process[2] = list_sum(arc_weight, [5, 6]) * impact_factor
-    process[3] = list_sum(arc_weight, [7, 8, 9, 10]) * impact_factor
-    process[4] = list_sum(arc_weight, [11]) * impact_factor
-    process[5] = list_sum(arc_weight, [12]) * impact_factor
-    process[6] = list_sum(arc_weight, [13, 14, 15]) * impact_factor
-    process[7] = list_sum(arc_weight, [16]) * impact_factor
-    process[8] = list_sum(arc_weight, [17]) * impact_factor
-    process[9] = list_sum(arc_weight, [18]) * impact_factor
-    process[10] = list_sum(arc_weight, [19]) * impact_factor
-    process[11] = list_sum(arc_weight, [20, 21, 22, 23, 24, 25]) * impact_factor
-    process[12] = list_sum(arc_weight, [26, 27, 28, 29, 30, 31]) * impact_factor
-    process[13] = list_sum(arc_weight, [32, 33]) * impact_factor
-    process[14] = list_sum(arc_weight, [34]) * impact_factor
-    process[15] = list_sum(arc_weight, [35, 36, 37]) * impact_factor
-    process[16] = list_sum(arc_weight, [38]) * impact_factor
-    process[17] = list_sum(arc_weight, [39]) * impact_factor
-    process[18] = list_sum(arc_weight, [40, 41]) * impact_factor
-    process[19] = list_sum(arc_weight, [42]) * impact_factor
-    process[20] = list_sum(arc_weight, [43, 44]) * impact_factor
-    process[21] = list_sum(arc_weight, [45, 46]) * impact_factor
-    process[22] = list_sum(arc_weight, [47]) * impact_factor
-    process[23] = list_sum(arc_weight, [48, 49]) * impact_factor
-    process[24] = list_sum(arc_weight, [50, 51]) * impact_factor
-    process[25] = list_sum(arc_weight, [52]) * impact_factor
-    process[26] = list_sum(arc_weight, [53]) * impact_factor
-    process[27] = list_sum(arc_weight, [54, 55, 56]) * impact_factor
-    process[28] = list_sum(arc_weight, [57, 58]) * impact_factor
-    process[29] = list_sum(arc_weight, [59]) * impact_factor
-    process[30] = list_sum(arc_weight, [60]) * impact_factor
-    process[31] = list_sum(arc_weight, [61]) * impact_factor
-    process[32] = list_sum(arc_weight, [62]) * impact_factor
-    process[33] = list_sum(arc_weight, [63]) * impact_factor
-    process[34] = list_sum(arc_weight, [64]) * impact_factor
-    process[35] = list_sum(arc_weight, [65]) * impact_factor
-    process[36] = list_sum(arc_weight, [66, 67]) * impact_factor
-    process[37] = list_sum(arc_weight, [68]) * impact_factor
-    process[38] = list_sum(arc_weight, [69]) * impact_factor
-    process[39] = list_sum(arc_weight, [70]) * impact_factor
+    process[0] = list_sum(arc_weight, [0, 1, 2]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [3, 4]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [5, 6]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [7, 8, 9, 10]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [11]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [12]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [13, 14, 15]) * impact_factor[6]
+    process[7] = list_sum(arc_weight, [16]) * impact_factor[7]
+    process[8] = list_sum(arc_weight, [17]) * impact_factor[8]
+    process[9] = list_sum(arc_weight, [18]) * impact_factor[9]
+    process[10] = list_sum(arc_weight, [19]) * impact_factor[10]
+    process[11] = list_sum(arc_weight, [20, 21, 22, 23, 24, 25]) * impact_factor[11]
+    process[12] = list_sum(arc_weight, [26, 27, 28, 29, 30, 31]) * impact_factor[12]
+    process[13] = list_sum(arc_weight, [32, 33]) * impact_factor[13]
+    process[14] = list_sum(arc_weight, [34]) * impact_factor[14]
+    process[15] = list_sum(arc_weight, [35, 36, 37]) * impact_factor[15]
+    process[16] = list_sum(arc_weight, [38]) * impact_factor[16]
+    process[17] = list_sum(arc_weight, [39]) * impact_factor[17]
+    process[18] = list_sum(arc_weight, [40, 41]) * impact_factor[18]
+    process[19] = list_sum(arc_weight, [42]) * impact_factor[19]
+    process[20] = list_sum(arc_weight, [43, 44]) * impact_factor[20]
+    process[21] = list_sum(arc_weight, [45, 46]) * impact_factor[21]
+    process[22] = list_sum(arc_weight, [47]) * impact_factor[22]
+    process[23] = list_sum(arc_weight, [48, 49]) * impact_factor[23]
+    process[24] = list_sum(arc_weight, [50, 51]) * impact_factor[24]
+    process[25] = list_sum(arc_weight, [52]) * impact_factor[25]
+    process[26] = list_sum(arc_weight, [53]) * impact_factor[26]
+    process[27] = list_sum(arc_weight, [54, 55, 56]) * impact_factor[27]
+    process[28] = list_sum(arc_weight, [57, 58]) * impact_factor[28]
+    process[29] = list_sum(arc_weight, [59]) * impact_factor[29]
+    process[30] = list_sum(arc_weight, [60]) * impact_factor[30]
+    process[31] = list_sum(arc_weight, [61]) * impact_factor[31]
+    process[32] = list_sum(arc_weight, [62]) * impact_factor[32]
+    process[33] = list_sum(arc_weight, [63]) * impact_factor[33]
+    process[34] = list_sum(arc_weight, [64]) * impact_factor[34]
+    process[35] = list_sum(arc_weight, [65]) * impact_factor[35]
+    process[36] = list_sum(arc_weight, [66, 67]) * impact_factor[36]
+    process[37] = list_sum(arc_weight, [68]) * impact_factor[37]
+    process[38] = list_sum(arc_weight, [69]) * impact_factor[38]
+    process[39] = list_sum(arc_weight, [70]) * impact_factor[39]
 
     iso_value = init_iso(vertex_num)
 
@@ -476,24 +484,24 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     graph[16, 18] = arc_weight[32]
     graph[17, 18] = arc_weight[33]
 
-    process[0] = list_sum(arc_weight, [0, 1, 2, 3, 4, 5]) * impact_factor
-    process[1] = list_sum(arc_weight, [6]) * impact_factor
-    process[2] = list_sum(arc_weight, [7, 8]) * impact_factor
-    process[3] = list_sum(arc_weight, [9]) * impact_factor
-    process[4] = list_sum(arc_weight, [10]) * impact_factor
-    process[5] = list_sum(arc_weight, [11]) * impact_factor
-    process[6] = list_sum(arc_weight, [12, 13, 14, 15, 16]) * impact_factor
-    process[7] = list_sum(arc_weight, [17]) * impact_factor
-    process[8] = list_sum(arc_weight, [18, 19]) * impact_factor
-    process[9] = list_sum(arc_weight, [20]) * impact_factor
-    process[10] = list_sum(arc_weight, [21]) * impact_factor
-    process[11] = list_sum(arc_weight, [22, 23, 24, 25]) * impact_factor
-    process[12] = list_sum(arc_weight, [26]) * impact_factor
-    process[13] = list_sum(arc_weight, [27, 28]) * impact_factor
-    process[14] = list_sum(arc_weight, [29]) * impact_factor
-    process[15] = list_sum(arc_weight, [30, 31]) * impact_factor
-    process[16] = list_sum(arc_weight, [32]) * impact_factor
-    process[17] = list_sum(arc_weight, [33]) * impact_factor
+    process[0] = list_sum(arc_weight, [0, 1, 2, 3, 4, 5]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [6]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [7, 8]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [9]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [10]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [11]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [12, 13, 14, 15, 16]) * impact_factor[6]
+    process[7] = list_sum(arc_weight, [17]) * impact_factor[7]
+    process[8] = list_sum(arc_weight, [18, 19]) * impact_factor[8]
+    process[9] = list_sum(arc_weight, [20]) * impact_factor[9]
+    process[10] = list_sum(arc_weight, [21]) * impact_factor[10]
+    process[11] = list_sum(arc_weight, [22, 23, 24, 25]) * impact_factor[11]
+    process[12] = list_sum(arc_weight, [26]) * impact_factor[12]
+    process[13] = list_sum(arc_weight, [27, 28]) * impact_factor[13]
+    process[14] = list_sum(arc_weight, [29]) * impact_factor[14]
+    process[15] = list_sum(arc_weight, [30, 31]) * impact_factor[15]
+    process[16] = list_sum(arc_weight, [32]) * impact_factor[16]
+    process[17] = list_sum(arc_weight, [33]) * impact_factor[17]
 
     iso_value = init_iso(vertex_num)
 
