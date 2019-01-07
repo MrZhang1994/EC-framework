@@ -1,3 +1,7 @@
+## Build container
+
+run `build_container.sh` to generate test/alpine image
+
 ## RUN
 
 First run `ec_frame/verification/docker_clean.sh` to clean unneeded containers, this will stop and delete all containers on your machine.
