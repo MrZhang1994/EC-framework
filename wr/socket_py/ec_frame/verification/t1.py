@@ -32,7 +32,6 @@ if __name__ == '__main__':
         resource.setrlimit(resource.RLIMIT_AS, (RAM, RAM))
 
         log(file, "dict  to gen")
-        data_to_send = []
         input_data = [random.randint(0, 1000000) for i in range(length)]
         log(file, "dict  to gened")
         log(file,sys.getsizeof(input_data)) 
@@ -40,11 +39,13 @@ if __name__ == '__main__':
         result = os.popen(command).read()
         log(file, result)
 
-        log(file, "Start sorting")
-        data_to_send = sorted(input_data)
+        log(file, "Start working")
+
+        util.be_busy()
+
+        log(file, "End working")
+
         log(file, sys.getsizeof(input_data))
-        log(file, sys.getsizeof(data_to_send))
-        log(file, "End sorting")
 
         result = os.popen(command).read()
         log(file, result)
@@ -52,28 +53,28 @@ if __name__ == '__main__':
 
         host = 'worker-2'
         port = 8083
-        log(file, "Sending result to {}:{} len:{}".format(host, port,len(data_to_send)))
+        log(file, "Sending result 1 to {}:{} len:{}".format(host, port,len(input_data)))
 
         client = JsonClient(host, port)
         client.connect()
-        client.send_obj(data_to_send, client.socket)
+        client.send_obj(input_data, client.socket)
         client.close()
 
-        log(file,'sent 1')
+        log(file,'After sent 1')
 
         result = os.popen(command).read()
         log(file, result)
 
         host = 'worker-1'
         port = 8082
-        log(file, "Sending result to {}:{} len:{}".format(host, port,len(data_to_send)))
+        log(file, "Start Sending 2 result to {}:{} len:{}".format(host, port,len(input_data)))
 
         client = JsonClient(host, port)
         client.connect()
-        client.send_obj(data_to_send, client.socket)
+        client.send_obj(input_data, client.socket)
         client.close()
 
-        log(file,'sent 2')
+        log(file,'After sent 2')
 
         log(file, "End sending")
 
