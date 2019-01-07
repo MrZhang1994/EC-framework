@@ -61,29 +61,31 @@ try:
 
     length = 1000000
 
-    data_to_send = []
-    input_data = [random.randint(0, 1000000) for i in range(length)]
-    log(file, 'Random gened')
+
+
 
     result = os.popen(command).read()
     log(file, result)
 
-    data_to_send = sorted(input_data)
-    log(file, 'sorted')
+
+    log(file, 'before work')
+    util.be_busy()
+    log(file, 'after work')
+
+
 
     result = os.popen(command).read()
     log(file, result)
 
     host = 'worker-2'
     port = 8084
-    log(file, "Sending result to {}:{}".format(host, port))
+    log(file, "before Sending result to {}:{}".format(host, port))
     client = JsonClient(host, port)
     client.connect()
-    client.send_obj(data_to_send, client.socket)
+    client.send_obj(left, client.socket)
     client.close()
-    log(file, "end sending to {}:{}".format(host, port))
+    log(file, "end Sending to {}:{}".format(host, port))
 
-    log(file, 'sent')
 
     result = os.popen(command).read()
     log(file, result)

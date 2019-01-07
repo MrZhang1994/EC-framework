@@ -1,0 +1,59 @@
+2019-01-05 10:00:43.180983: start ps
+RSS  
+9.8m python3 /root/runtime/t2.py w-2 8 512 0
+ 10m python3 /root/runtime/t1.py w-2 8 512 0
+   0 [sh]
+9160 {runc:[2:INIT]} runc init
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:43.181022: Apply memory limit: 512.0 MB
+2019-01-05 10:00:43.181053: dict  to gen
+2019-01-05 10:00:44.835074: dict  to gened
+2019-01-05 10:00:44.835109: 8697464
+2019-01-05 10:00:44.838020: start ps
+RSS  
+9.8m python3 /root/runtime/t2.py w-2 8 512 0
+ 48m python3 /root/runtime/t1.py w-2 8 512 0
+   0 [sh]
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:44.838041: Start working
+2019-01-05 10:00:45.267823: End working
+2019-01-05 10:00:45.267863: 8697464
+2019-01-05 10:00:45.270769: start ps
+RSS  
+9.8m python3 /root/runtime/t2.py w-2 8 512 0
+ 48m python3 /root/runtime/t1.py w-2 8 512 0
+   0 [sh]
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:45.270797: Sending result 1 to worker-2:8083 len:1000000
+2019-01-05 10:00:45.533277: After sent 1
+2019-01-05 10:00:45.536647: start ps
+RSS  
+9.8m python3 /root/runtime/t2.py w-2 8 512 0
+ 49m python3 /root/runtime/t1.py w-2 8 512 0
+   0 [sh]
+   4 top -n1
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:45.536676: Start Sending 2 result to worker-1:8082 len:1000000
+2019-01-05 10:00:45.815350: After sent 2
+2019-01-05 10:00:45.815375: End sending
+2019-01-05 10:00:45.835402: start ps
+RSS  
+ 24m python3 /root/runtime/t2.py w-2 8 512 0
+ 49m python3 /root/runtime/t1.py w-2 8 512 0
+   0 [sh]
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+

@@ -28,9 +28,6 @@ try:
 
     data = server.serve()
 
-    result = os.popen(command).read()
-    log(file, result)
-
     server.close()
 
     log(file, 'Received input, closing server')
@@ -54,6 +51,7 @@ try:
     #     result += right
     # else:
     #     result += left
+
     result += left
     result += right
     log(file, 'Completed. The length of result is {}'.format(len(result)))

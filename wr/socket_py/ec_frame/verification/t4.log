@@ -1,0 +1,22 @@
+2019-01-05 10:00:42.532389: start ps
+RSS  
+8444 python3 /root/runtime/t4.py w-2 8 512 0
+8940 {runc:[2:INIT]} runc init
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:42.532542: Waiting for input...
+2019-01-05 10:00:47.041185: Received input, closing server
+2019-01-05 10:00:47.045825: start ps
+RSS  
+ 86m python3 /root/runtime/t4.py w-2 8 512 0
+   0 [sh]
+   4 top -n1
+   4 /bin/sh -c echo start ps && ps -e -orss,args= && echo end ps
+   4 ps -e -orss,args=
+end ps
+
+2019-01-05 10:00:47.045856: Input 1 length: 1000000
+2019-01-05 10:00:47.045863: Input 2 length: 1000000
+2019-01-05 10:00:47.074714: Completed. The length of result is 2000000
