@@ -610,6 +610,7 @@ def maxtopocut(graph, process, vertex_num, core):
         for j in range(result.x.shape[0]):
             if augment_matrix[i, j] != -1 and i in origin_S and j in origin_T:
                 origin_cut += augment_matrix[i, j]
+    
 
     return valid_S, valid_T, origin_cut
 
