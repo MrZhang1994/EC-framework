@@ -2,6 +2,7 @@ import numpy as np
 import random
 from scipy.optimize import linprog
 from example import verbose
+from datetime import datetime
 
 iso_value = np.zeros((1, 1))
 cpu_factor = 10
@@ -38,7 +39,7 @@ def graph1_parameter():
     arc_num = 18
     vertex_num = 12
     for i in range(vertex_num):
-        impact_factor.append(random.uniform(1, 4))
+        impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
 
 def graph2_parameter():
@@ -46,7 +47,7 @@ def graph2_parameter():
     arc_num = 56
     vertex_num = 25
     for i in range(vertex_num):
-        impact_factor.append(random.uniform(1, 4))
+        impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
 
 def graph3_parameter():
@@ -54,7 +55,7 @@ def graph3_parameter():
     arc_num = 71
     vertex_num = 41
     for i in range(vertex_num):
-        impact_factor.append(random.uniform(1, 4))
+        impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
 
 def graph4_parameter():
@@ -62,7 +63,7 @@ def graph4_parameter():
     arc_num = 34
     vertex_num = 19
     for i in range(vertex_num):
-        impact_factor.append(random.uniform(1, 4))
+        impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
 
 def list_sum(list, index):
@@ -78,7 +79,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -87,7 +88,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
 
     arc_weight = []
     for i in range(arc_num):
-        arc_weight.append(random.randint(2,10))
+        arc_weight.append(random.uniform(0.8, 2))
     if verbose:
         print('edge weight:')
         print(arc_weight)
@@ -133,7 +134,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     iso_value = init_iso(vertex_num)
 
     for i in range(vertex_num):
-        communication_cpu.append(process[i] / impact_factor + vertex_cpu[i])
+        communication_cpu.append(process[i] / impact_factor[i] + vertex_cpu[i])
     
     if verbose:
         print('communication_cpu')
@@ -151,7 +152,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -160,7 +161,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
 
     arc_weight = []
     for i in range(arc_num):
-        arc_weight.append(random.randint(2,10))
+        arc_weight.append(random.uniform(0.8, 2))
     if verbose:
         print('edge weight:')
         print(arc_weight)
@@ -257,7 +258,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     iso_value = init_iso(vertex_num)
 
     for i in range(vertex_num):
-        communication_cpu.append(process[i] / impact_factor + vertex_cpu[i])
+        communication_cpu.append(process[i] / impact_factor[i] + vertex_cpu[i])
     if verbose:
         print('communication_cpu')
         print(communication_cpu)
@@ -274,7 +275,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -283,7 +284,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
 
     arc_weight = []
     for i in range(arc_num):
-        arc_weight.append(random.randint(2,10))
+        arc_weight.append(random.uniform(0.8, 2))
     if verbose:
         print('edge weight:')
         print(arc_weight)
@@ -411,7 +412,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     iso_value = init_iso(vertex_num)
 
     for i in range(vertex_num):
-        communication_cpu.append(process[i] / impact_factor + vertex_cpu[i])
+        communication_cpu.append(process[i] / impact_factor[i] + vertex_cpu[i])
     if verbose:
         print('communication_cpu')
         print(communication_cpu)
@@ -428,7 +429,7 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.randint(2,10)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -437,7 +438,7 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
 
     arc_weight = []
     for i in range(arc_num):
-        arc_weight.append(random.randint(2,10))
+        arc_weight.append(random.uniform(0.8, 2))
     if verbose:
         print('edge weight:')
         print(arc_weight)
@@ -506,7 +507,7 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     iso_value = init_iso(vertex_num)
 
     for i in range(vertex_num):
-        communication_cpu.append(process[i] / impact_factor + vertex_cpu[i])
+        communication_cpu.append(process[i] / impact_factor[i] + vertex_cpu[i])
     if verbose:
         print('communication_cpu')
         print(communication_cpu)

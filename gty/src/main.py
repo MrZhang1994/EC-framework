@@ -5,6 +5,7 @@ from heft import heft
 from containerize import *
 import draw
 import os
+from datetime import datetime
 
 cores = [2,    3,   4,    5,   6]
 mem   = [1, 0.95, 0.9, 0.85,  0.8, 0.75]
@@ -213,6 +214,7 @@ if __name__ == '__main__':
     create_dir('./results/graph' + str(gid) + '/' + str(k))
     main(k, gid)
     """
+    random.seed(datetime.now())
     num = 1000
     create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
