@@ -217,7 +217,7 @@ if __name__ == '__main__':
     random.seed(datetime.now())
     num = 1000
     create_dir('./results_heft')
-    for gid in [1, 2, 3, 4]:
+    for gid in [1, 2]:
         create_dir('./results_heft/graph' + str(gid))
         for k in range(len(tests)):
             create_dir('./results_heft/graph' + str(gid) + '/' + str(k))
