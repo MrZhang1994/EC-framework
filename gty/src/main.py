@@ -206,18 +206,10 @@ def create_dir(path):
         os.system('rm -rf ' + path + '/*')
 
 if __name__ == '__main__':
-    """
-    gid = 1
-    k = 0
-    create_dir('./results')
-    create_dir('./results/graph' + str(gid))
-    create_dir('./results/graph' + str(gid) + '/' + str(k))
-    main(k, gid)
-    """
     random.seed(datetime.now())
-    num = 1000
+    num = 200
     create_dir('./results_heft')
-    for gid in [1, 2]:
+    for gid in [1, 2, 3, 4]:
         create_dir('./results_heft/graph' + str(gid))
         for k in range(len(tests)):
             create_dir('./results_heft/graph' + str(gid) + '/' + str(k))
