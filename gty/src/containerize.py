@@ -373,11 +373,5 @@ def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     for t in order:
         new_tasks[t].ast = max([new_tasks[x].aft for x in r_dag[t]]) if r_dag[t] != set() else 0
         new_tasks[t].aft = new_tasks[t].ast + w[t]
-    
-    """
-    for p in new_processors:
-        for t in p.tasks:
-            t.ast = new_tasks[t.id].ast
-            t.aft = new_tasks[t.id].aft
-    """
+        
     return new_tasks# , new_processors

@@ -229,4 +229,5 @@ def cpop():
             priority_list.append(t)
     tasks[0].processor = 0
     processors[0].tasks = [tasks[0]] + processors[0].tasks
+    
     return processors, tasks, priority_list

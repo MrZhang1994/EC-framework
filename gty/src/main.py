@@ -160,13 +160,12 @@ def main(k, gid):
             # f.write(str(round((makespan_s - lower)/(upper - lower), 4)))
             f.write(str(round((makespan_r - lower)/(upper - lower), 4)))
 
-    """
     with open(path + 'lower.txt', 'a') as f:
         f.write(str(lower) + '\n')
     
     with open(path + 'upper.txt', 'a') as f:
         f.write(str(upper) + '\n')
-    """
+    
     with open(path + 'fb.txt', 'a') as f:
         f.write(str(round((makespan_fb - lower)/(upper - lower), 4)) + '\n')
     
@@ -207,7 +206,7 @@ def create_dir(path):
 
 if __name__ == '__main__':
     random.seed(datetime.now())
-    num = 200
+    num = 1000
     create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
         create_dir('./results_heft/graph' + str(gid))

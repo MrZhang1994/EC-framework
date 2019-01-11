@@ -52,6 +52,7 @@ def draw_read():
             for i, x in enumerate(FB):
                 df.loc[cnt] = ['CPF', x, FB_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
                 cnt += 1
+            
             for i, x in enumerate(I2C):
                 df.loc[cnt] = ['ICRB', x, I2C_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
                 cnt += 1
