@@ -76,7 +76,7 @@ class JsonSocket(object):
 
 
 class JsonServer(JsonSocket):
-    def __init__(self, address='127.0.0.1', port=5489, capacity = 1):
+    def __init__(self, address='127.0.0.1', port=8080, capacity = 1):
         super(JsonServer, self).__init__(address, port)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.address, self.port))

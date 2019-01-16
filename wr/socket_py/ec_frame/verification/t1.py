@@ -15,7 +15,7 @@ def log(file, s):
 
 if __name__ == '__main__':
     try:
-        length = 1000000
+        length = util.length
         file = open('/root/runtime/t1.log', 'w')
 
         command = util.cmd 
@@ -43,8 +43,9 @@ if __name__ == '__main__':
 
         util.be_busy()
 
-        log(file, "End working")
+        sent_data = input_data[0:util.lhed_length]
 
+        log(file, "End working")
         log(file, sys.getsizeof(input_data))
 
         result = os.popen(command).read()
@@ -67,11 +68,11 @@ if __name__ == '__main__':
 
         host = 'worker-1'
         port = 8082
-        log(file, "Start Sending 2 result to {}:{} len:{}".format(host, port,len(input_data)))
+        log(file, "Start Sending 2 result to {}:{} len:{}".format(host, port,len(sent_data)))
 
         client = JsonClient(host, port)
         client.connect()
-        client.send_obj(input_data, client.socket)
+        client.send_obj(sent_data, client.socket)
         client.close()
 
         log(file,'After sent 2')

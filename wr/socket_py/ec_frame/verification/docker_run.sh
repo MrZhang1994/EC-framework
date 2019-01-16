@@ -1,1 +1,1 @@
-python backend.py
+sudo python3 backend.py

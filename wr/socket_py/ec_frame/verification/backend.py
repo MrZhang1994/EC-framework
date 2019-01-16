@@ -64,19 +64,19 @@ if __name__ == '__main__':
     # create workers here
     NUM_WORKERS = 2
     workers = [0]*NUM_WORKERS
-    workers[0] = worker_node('worker-1', '0,1', '512m', "workers")
-    workers[1] = worker_node('worker-2', '0,1', '512m', "workers")
+    workers[0] = worker_node('worker-1', '0,1', '1024m', "workers")
+    workers[1] = worker_node('worker-2', '0,1', '1024m', "workers")
 
     # first run servers
 
 
-    workers[1].run_script('t4.py', 'w-2', '8', 512, 0)
+    workers[1].run_script('t4.py', 'w-2', '8', 1024, 0)
 
-    workers[1].run_script('t3.py', 'w-2', '8', 512, 0)
+    workers[1].run_script('t3.py', 'w-2', '8', 1024, 0)
 
-    workers[0].run_script('t2.py', 'w-2', '8', 512, 0)
+    workers[0].run_script('t2.py', 'w-2', '8', 1024, 0)
 
-    workers[0].run_script('t1.py', 'w-2', '8', 512, 0)
+    workers[0].run_script('t1.py', 'w-2', '8', 1024, 0)
 
 
 
