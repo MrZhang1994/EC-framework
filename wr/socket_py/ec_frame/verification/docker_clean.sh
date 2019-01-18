@@ -1,2 +1,2 @@
-docker kill $(docker ps -a -q)
-docker rm $(docker ps -a -q)
+sudo docker kill $(sudo docker ps -a -q)
+sudo docker rm $(sudo docker ps -a -q)

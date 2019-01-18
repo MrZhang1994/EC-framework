@@ -59,9 +59,6 @@ try:
     result += left
     log(file, 'Completed. The length of result is {}'.format(len(result)))
 
-    length = 1000000
-
-
 
 
     result = os.popen(command).read()
@@ -69,7 +66,8 @@ try:
 
 
     log(file, 'before work')
-    util.be_busy()
+    #util.be_busy()
+    sent_data = [random.randint(0, 1000000) for i in range(util.length)]
     log(file, 'after work')
 
 
@@ -82,7 +80,7 @@ try:
     log(file, "before Sending result to {}:{}".format(host, port))
     client = JsonClient(host, port)
     client.connect()
-    client.send_obj(left, client.socket)
+    client.send_obj(sent_data, client.socket)
     client.close()
     log(file, "end Sending to {}:{}".format(host, port))
 
