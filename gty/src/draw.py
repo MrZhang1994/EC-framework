@@ -146,6 +146,7 @@ def cal_cont_open(sche, cont):
     for cont_i in cont:
         jobs = cont[cont_i]
         for job_id in jobs:
+            if job_id == 0: continue
             start = sche[job_id][1]
             end = sche[job_id][2]
 
