@@ -52,18 +52,8 @@ def main(k, gid):
 
     lower = tasks[vertex_num].aft
     
-    dag_d, r_dag, index, t, N = containerize_init(dag, tasks, processors, iso_limit, graph)
-    """
-    # spectral clustering
-    r_dag, cpath, index, cont, bridge_tasks, new_tasks, new_processors = containerize(dag, processors, tasks, order, 'sc', iso_limit, graph) 
-    if verbose:
-        print('sc:')
-        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
-        print(new_tasks[vertex_num].aft)
-        print(cont)
-    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
-    makespan_s = new_tasks[vertex_num].aft
-    """
+    dag_d, r_dag, index, t, N, cpath = containerize_init(dag, tasks, processors, iso_limit, graph)
+    
 
     # containerize
     cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
@@ -132,6 +122,21 @@ def main(k, gid):
         print(one_tasks[vertex_num].aft)
         print(cont)
     upper = one_tasks[vertex_num].aft
+
+    """
+    # spectral clustering
+    Graph = graph
+    Graph = [[i if (i != -1) else 0 for i in x ] for x in Graph]
+    Graph = Graph + np.transpose(Graph)
+    cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'sc', Graph)
+    if verbose:
+        print('sc:')
+        draw.draw_canvas([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont, 'sc.png')
+        print(new_tasks[vertex_num].aft)
+        print(cont)
+    cont_open_s = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
+    makespan_s = new_tasks[vertex_num].aft
+    """
 
     if verbose:
         print('-'*10)
@@ -206,7 +211,7 @@ def create_dir(path):
 
 if __name__ == '__main__':
     random.seed(datetime.now())
-    num = 1000
+    num = 200
     create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
         create_dir('./results_heft/graph' + str(gid))

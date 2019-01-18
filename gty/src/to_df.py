@@ -3,11 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-matlab = ["#0073bd", "#d9541a", "#78ab30", "#edb021"]
-color_codes_wanted = ['blue', 'red', 'green', 'orange']
-c = lambda x: matlab[color_codes_wanted.index(x)]
-
-df = pd.DataFrame(columns=('Type', 'Ratio', 'Times', 'gid', 'k', 'Number of CPU Cores', 'Memory Constraints', 'Isolation Level'))
+df = pd.DataFrame(columns=('Type', 'Ratio', 'Times', 'gid', 'k', 'Number of CPU Cores', 'Memory Constraints', 'Isolation Level', 'Lower Bound', 'Upper Bound'))
 
 cores = [2,    3,   4,    5,   6]
 mem   = [1, 0.95, 0.9, 0.85,  0.8, 0.75]
@@ -18,7 +14,7 @@ def draw_read():
     cnt = 0
     for gid in [1, 2, 3, 4]:
         for k in range(14):
-            path = './results_heft/graph' + str(gid) + '/' + str(k) + '/'
+            path = './graph' + str(gid) + '/' + str(k) + '/'
             
             with open(path+'fb.txt', 'r') as f:
                 FB = [float(line.strip()) for line in f.readlines()]
@@ -31,6 +27,12 @@ def draw_read():
 
             with open(path+'random.txt', 'r') as f:
                 R = [float(line.strip()) for line in f.readlines()]
+            
+            with open(path+'lower.txt', 'r') as f:
+                L = [float(line.strip()) for line in f.readlines()]
+
+            with open(path+'upper.txt', 'r') as f:
+                U = [float(line.strip()) for line in f.readlines()]
 
             """
             with open(path+'sc.txt', 'r') as f:
@@ -50,21 +52,21 @@ def draw_read():
                 R_open = [float(line.strip()) for line in f.readlines()]
 
             for i, x in enumerate(FB):
-                df.loc[cnt] = ['CPF', x, FB_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
+                df.loc[cnt] = ['CPF', x, FB_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]], L[i], U[i]]
                 cnt += 1
             
             for i, x in enumerate(I2C):
-                df.loc[cnt] = ['ICRB', x, I2C_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
+                df.loc[cnt] = ['ICRB', x, I2C_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]], L[i], U[i]]
                 cnt += 1
             for i, x in enumerate(I):
-                df.loc[cnt] = ['STO', x, I_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
+                df.loc[cnt] = ['STO', x, I_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]], L[i], U[i]]
                 cnt += 1
             for i, x in enumerate(R):
-                df.loc[cnt] = ['Rand', x, R_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]]]
+                df.loc[cnt] = ['Rand', x, R_open[i], gid, k, cores[tests[k][0]], mem[tests[k][1]], isol[tests[k][2]], L[i], U[i]]
                 cnt += 1
             print(gid, k)
     return 
 
 if __name__ == '__main__':
     draw_read()
-    df.to_csv('./df.csv')
+    df.to_csv('./df_heft.csv')

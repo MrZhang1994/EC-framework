@@ -38,14 +38,14 @@ def cp(t, last, processors, tasks, step, res):
     return False
     
 
-def get_avg_commcost(dag):
+def get_avg_commcost(tasks, dag):
     avg_cost = dict()
     for key in dag:
         n = len(dag[key])
         if n == 0:
             avg_cost[key] = 0
             continue
-        s = sum([commcost_con(key, v) for v in dag[key]])
+        s = tasks[key].aft - tasks[key].ast + sum([commcost_con(key, v) for v in dag[key]]) * 2.7
         avg_cost[key] = s / n;
     return avg_cost
         
@@ -56,7 +56,7 @@ def get_index(dag, tasks, cpath, avg_cost):
     for u in range(N):
         if not u in dag:
             continue
-        tmp = sum([tasks[v].ast - tasks[u].aft for v in dag[u] if v in cpath])
+        tmp = sum([tasks[v].ast - tasks[u].aft for v in dag[u] if v in cpath and tasks[u].processor == tasks[v].processor])
         tmp -= avg_cost[u]
         n = sum([v in cpath for v in dag[u]])
         if n == 0:
@@ -322,7 +322,7 @@ def containerize_init(d, tasks, processors, limit, graph):
 
     reverse_graph(dag, r_dag)
     add_core_dependency(processors, dag, r_dag, graph)
-    avg_cost = get_avg_commcost(dag)
+    avg_cost = get_avg_commcost(tasks, dag)
     
     # get critical path
     t = max(enumerate(tasks), key = lambda x: x[1].aft)[0]
@@ -334,9 +334,9 @@ def containerize_init(d, tasks, processors, limit, graph):
         cpath.append(res[key])
     
     index = get_index(dag, tasks, cpath, avg_cost)
-    return dag, r_dag, index, t, N
+    return dag, r_dag, index, t, N, cpath
 
-def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag):
+def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag, Graph = example.graph):
     if flag == 'inorder':
         cont = inorder(tasks)
     elif flag == 'rand':
@@ -347,10 +347,8 @@ def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag):
         cont = bfs_backward(r_dag, tasks, index, t)
     elif flag == 'i2c':
         cont = bfs_i2c(r_dag, processors, tasks, t)
-    """
     else:
-        cont = sc(graph, maxcut.iso_value, iso_limit)
-    """
+        cont = sc(Graph, maxcut.iso_value, iso_limit)
 
     cont_set, bridge_tasks = get_bridge_tasks(d, N, cont)
 
@@ -361,7 +359,7 @@ def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag):
 def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     new_tasks = copy.deepcopy(tasks)
     new_processors = copy.deepcopy(processors)
-    fact = 3.7
+    fact = 2.7
     w = [task.aft - task.ast for task in tasks]
     for i in bridge_tasks:
             w[i] += sum([commcost_con(i, v) for v in d[i] if cont_set[i] != cont_set[v]]) * fact
