@@ -211,7 +211,7 @@ def create_dir(path):
 
 if __name__ == '__main__':
     random.seed(datetime.now())
-    num = 200
+    num = 500
     create_dir('./results_heft')
     for gid in [1, 2, 3, 4]:
         create_dir('./results_heft/graph' + str(gid))
