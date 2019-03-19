@@ -1,0 +1,1 @@
+ssh  -t wr@10.211.55.93 "cd /home/wr/py_ipc/; zsh"
