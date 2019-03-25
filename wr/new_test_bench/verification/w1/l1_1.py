@@ -13,11 +13,15 @@ def log(file, s):
 
 if __name__ == '__main__':
     try:
-        length = 1000000
+
         file = open('/root/runtime/l1_1.log', 'w')
 
+        result = os.popen('ls runtime').read()
+        result = result.replace("\n", " ")
+        log(file, result)
+
         result = os.popen('ps -e -orss=').read()
-        result = result.replace("\n", "")
+        result = result.replace("\n", " ")
         log(file, result)
 
         a = 0
