@@ -1,6 +1,10 @@
 # ECB
 Edge computing bench
 
+# Reviewed version
+Do a specific work.
+DONE: transmit file between containers, the ways is to use `--net=host`
+
 
 ## TODO:
 
