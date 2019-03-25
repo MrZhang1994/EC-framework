@@ -104,6 +104,12 @@ int main(int argc, char **argv)
 		} while (read_return > 0);
 		close(filefd);
 		close(client_sockfd);
+		
+		// FEATURE-1
+		// Break here, then the server will only wait for 1 time
+		// as it has received the file, it will exit
+		break;
+		// ==========
 	}
 	return EXIT_SUCCESS;
 }

@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
-	int a = 0;
+	int loop_time = 0;
 
 	clock_t begin = clock();
 
@@ -113,15 +113,21 @@ int main(int argc, char **argv)
 		 * https://stackoverflow.com/questions/24259640/writing-a-full-buffer-using-write-system-call
 		 */
 
-		a++;
+		loop_time++;
 		if (write(sockfd, buffer, read_return) == -1) {
 			perror("write");
 			exit(EXIT_FAILURE);
 		}
 	}
+
+
+	// FEATURE-2
+	// measuring the time spent
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("%d %lf", a, time_spent);
+	printf("%d %lf", loop_time, time_spent);
+
+
 	free(user_input);
 	free(server_reply);
 	close(filefd);
