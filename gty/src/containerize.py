@@ -337,7 +337,7 @@ def containerize_init(d, tasks, processors, limit, graph):
     return dag, r_dag, index, t, N, cpath
 
 def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag, Graph = example.graph):
-    if flag == 'inorder':
+    if flag == 'STO':
         cont = inorder(tasks)
     elif flag == 'rand':
         cont = rd(tasks)
@@ -345,7 +345,7 @@ def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag, Gra
         cont = bfs_forward(dag, tasks, index, t)
     elif flag == 'backward':
         cont = bfs_backward(r_dag, tasks, index, t)
-    elif flag == 'i2c':
+    elif flag == 'ICRB':
         cont = bfs_i2c(r_dag, processors, tasks, t)
     else:
         cont = sc(Graph, maxcut.iso_value, iso_limit)
@@ -362,7 +362,7 @@ def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     fact = 2.7
     w = [task.aft - task.ast for task in tasks]
     for i in bridge_tasks:
-            w[i] += sum([commcost_con(i, v) for v in d[i] if cont_set[i] != cont_set[v]]) * fact
+        w[i] += sum([commcost_con(i, v) for v in d[i] if cont_set[i] != cont_set[v]]) * fact
 
     for i, p in enumerate(processors):
         for t in p.tasks:
@@ -371,5 +371,5 @@ def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     for t in order:
         new_tasks[t].ast = max([new_tasks[x].aft for x in r_dag[t]]) if r_dag[t] != set() else 0
         new_tasks[t].aft = new_tasks[t].ast + w[t]
-        
+    
     return new_tasks# , new_processors
