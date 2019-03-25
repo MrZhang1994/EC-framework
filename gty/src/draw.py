@@ -242,7 +242,7 @@ def draw_canvas(sche, cont, picture_name):
 
     draw_line_v(data, [90, 100], size - 25*2, 3)
 
-    Image.fromarray(data).save(picture_name)
+    Image.fromarray(data).save('./images/'+picture_name)
 
 
 # # ------------1  2  3  4  5  6  7  8  9  10 11 12-----
