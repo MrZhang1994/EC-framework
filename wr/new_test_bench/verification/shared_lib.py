@@ -1,0 +1,1 @@
+log_dir = '/root/task.log'

@@ -31,14 +31,14 @@ class worker_node():
 
         if not self.container:
             self.container = client.containers.run(IMAGES,
-            'python3 /root/runtime/{0} {1}'.format( script,script_args),
+            'python3 /root/{0} {1}'.format( script,script_args),
             detach=True, name=self.name, hostname=self.name,
             cpuset_cpus=self.cpus, network=self.net, mem_limit=self.mem_limit,
-            volumes={host_dir: {"bind": "/root/runtime", "mode": "rw"}}
+            volumes={host_dir: {"bind": "/root", "mode": "rw"}}
             )
         else:
             self.container.exec_run(detach=True, cmd=
-            'python3 /root/runtime/{0} {1}'.format(script, script_args)
+            'python3 /root/{0} {1}'.format(script, script_args)
             )
 
     def __del__(self):
@@ -66,11 +66,16 @@ if __name__ == '__main__':
     networks = [net.name for net in client.networks.list()]
     if 'workers' not in networks:
         client.networks.create("workers", driver="bridge")
+
     # create workers here
-    NUM_WORKERS = 2
+
+    NUM_WORKERS = 3
+
     workers = [0]*NUM_WORKERS
     workers[0] = worker_node('w1', '0', '256m', "workers")
-    workers[1] = worker_node('w2', '1', '256m', "workers")
+    workers[1] = worker_node('w2', '0', '256m', "workers")
+    workers[2] = worker_node('w3', '0', '256m', "workers")
 
-    workers[0].run_script('l1_1.py','')
-    workers[1].run_script('l1_2.py','') 
+    workers[0].run_script('w1.py','')
+    workers[1].run_script('w2.py','') 
+    workers[2].run_script('w3.py','') 

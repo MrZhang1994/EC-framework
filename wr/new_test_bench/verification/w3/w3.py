@@ -14,20 +14,18 @@ def log(file, s):
 if __name__ == '__main__':
     try:
 
-        file = open('/root/runtime/l1_1.log', 'w')
+        file = open(shared_lib.log_dir, 'w')
 
-        result = os.popen('ls runtime').read()
+        result = os.popen('echo 1234 > local.file').read()
+
+        result = os.popen('ls ').read()
         result = result.replace("\n", " ")
-        log(file, result)
+        log(file, 'root-dir:'+result)
 
         result = os.popen('ps -e -orss=').read()
         result = result.replace("\n", " ")
         log(file, result)
 
-        a = 0
-        while a < 1000000:
-            a = a + 1
-        log(file, a)
 
 
     except Exception as e:
