@@ -73,7 +73,7 @@ def get_color(th, total):
     #  get_color(node_th,node_total_num)
     #  0 <= node_th <= node_total_num - 1
 
-    if th == 0:
+    if (th == 0 or total==0):
         R, G, B = 0, 0, 0
         return [int(R), int(G), int(B)]
     # 0 < index < 875

@@ -69,7 +69,18 @@ def draw_rule(data):
 
 
 # 0<index < 875
-def get_color(x):
+
+def get_color(th, total):
+    # TODO: wrap up the draw function with
+    #  get_color(node_th,node_total_num)
+    #  0 <= node_th <= node_total_num - 1
+
+    if (th == 0 or total==0):
+        R, G, B = 0, 0, 0
+        return [int(R), int(G), int(B)]
+    # 0 < index < 875
+    x = (th-1)*875/(total-1)
+
     if (175 <= x < 350):
         R = (-1)*(x-175)+255
     elif (700 <= x < 700+175):
@@ -96,7 +107,6 @@ def get_color(x):
         B = 255
 
     return [int(R), int(G), int(B)]
-
 
 def get_color_from_origin(i):
     cont_color_origin = ["ff6666", "ffb266", "ffff66",
@@ -175,8 +185,13 @@ def draw_schedule(sche, cont, data):
 
     cont_color = {}
     i = 0
-    for color in cont:
+    """for color in cont:
         cont_color[i] = get_color((i+1)*875/(container_count+1))
+        i += 1 
+    """
+
+    for color in cont:
+        cont_color[i] = get_color(i, container_count)
         i += 1
 
     wr_cont = {}
