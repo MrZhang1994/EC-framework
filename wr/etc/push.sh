@@ -1,0 +1,1 @@
+rsync -azvh ../.. wr@10.211.55.93:/home/wr/EC-Framework --delete

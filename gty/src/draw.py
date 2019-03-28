@@ -68,18 +68,8 @@ def draw_rule(data):
         draw_text(data, [60, 100+de-5], str(i), [0, 0, 0])
 
 
-# 0<index < 875
-
-def get_color(th, total):
-    # TODO: wrap up the draw function with
-    #  get_color(node_th,node_total_num)
-    #  0 <= node_th <= node_total_num - 1
-
-    if (th == 0 or total==0):
-        R, G, B = 0, 0, 0
-        return [int(R), int(G), int(B)]
-    # 0 < index < 875
-    x = (th-1)*875/(total-1)
+def get_color_helper(x):
+    # 0 < x < 875
 
     if (175 <= x < 350):
         R = (-1)*(x-175)+255
@@ -107,6 +97,22 @@ def get_color(th, total):
         B = 255
 
     return [int(R), int(G), int(B)]
+
+
+def get_color(th, total):
+    # DONE: wrap up the draw function with
+    #  get_color(node_th,node_total_num)
+    #  0 <= node_th <= node_total_num - 1
+    # th=th+1
+    print([th, total])
+
+    if (total == 1):
+        x = 0
+        return get_color_helper(x)
+    else:
+        x = (th)*875/(total-1)
+        return get_color_helper(x)
+
 
 def get_color_from_origin(i):
     cont_color_origin = ["ff6666", "ffb266", "ffff66",
@@ -156,7 +162,6 @@ def cal_cont_open(sche, cont):
     for cont_i in cont:
         jobs = cont[cont_i]
         for job_id in jobs:
-            if job_id == 0: continue
             start = sche[job_id][1]
             end = sche[job_id][2]
 
@@ -185,13 +190,9 @@ def draw_schedule(sche, cont, data):
 
     cont_color = {}
     i = 0
-    """for color in cont:
-        cont_color[i] = get_color((i+1)*875/(container_count+1))
-        i += 1 
-    """
-
     for color in cont:
         cont_color[i] = get_color(i, container_count)
+
         i += 1
 
     wr_cont = {}
@@ -234,6 +235,7 @@ def draw_schedule(sche, cont, data):
     for i in range(len(cont_open_data)):
         draw_text(data, [25, 500+i*cont_open_data_print_gap],
                   str(cont_open_data[i]), [0, 0, 0])
+    print(cont_open_data)
 
     # up left side
     draw_text(data, [25, 25],
@@ -257,7 +259,7 @@ def draw_canvas(sche, cont, picture_name):
 
     draw_line_v(data, [90, 100], size - 25*2, 3)
 
-    Image.fromarray(data).save('./images/'+picture_name)
+    Image.fromarray(data).save(picture_name)
 
 
 # # ------------1  2  3  4  5  6  7  8  9  10 11 12-----

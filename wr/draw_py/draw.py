@@ -68,16 +68,8 @@ def draw_rule(data):
         draw_text(data, [60, 100+de-5], str(i), [0, 0, 0])
 
 
-def get_color(th, total):
-    # TODO: wrap up the draw function with
-    #  get_color(node_th,node_total_num)
-    #  0 <= node_th <= node_total_num - 1
-
-    if (th == 0 or total==0):
-        R, G, B = 0, 0, 0
-        return [int(R), int(G), int(B)]
-    # 0 < index < 875
-    x = (th-1)*875/(total-1)
+def get_color_helper(x):
+    # 0 < x < 875
 
     if (175 <= x < 350):
         R = (-1)*(x-175)+255
@@ -105,6 +97,21 @@ def get_color(th, total):
         B = 255
 
     return [int(R), int(G), int(B)]
+
+
+def get_color(th, total):
+    # DONE: wrap up the draw function with
+    #  get_color(node_th,node_total_num)
+    #  0 <= node_th <= node_total_num - 1
+    # th=th+1
+    print([th, total])
+
+    if (total == 1):
+        x = 0
+        return get_color_helper(x)
+    else:
+        x = (th)*875/(total-1)
+        return get_color_helper(x)
 
 
 def get_color_from_origin(i):
