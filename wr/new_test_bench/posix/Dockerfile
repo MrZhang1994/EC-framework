@@ -11,13 +11,14 @@
 
 FROM ubuntu:18.04
 
-# RUN sed -i 's/archive.ubuntu.com/ftp.sjtu.edu.cn/g' /etc/apt/sources.list
+RUN sed -i 's/archive.ubuntu.com/ftp.sjtu.edu.cn/g' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
 vim \
 zsh \
 wget \
-htop
+htop \
+net-tools
 
 
 

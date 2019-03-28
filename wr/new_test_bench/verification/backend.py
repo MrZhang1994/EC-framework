@@ -30,6 +30,7 @@ class worker_node():
         host_dir = CWD+'/'+self.name
 
         if not self.container:
+            print('insc')
             self.container = client.containers.run(IMAGES,
             'python3 /root/{0} {1}'.format( script,script_args),
             detach=True, name=self.name, hostname=self.name,
@@ -41,13 +42,13 @@ class worker_node():
             'python3 /root/{0} {1}'.format(script, script_args)
             )
 
-    def __del__(self):
+        """     def __del__(self):
         if self.container:
             try:
                 self.container.remove()
             except:
                 sleep(2.5)
-                self.container.remove()
+                self.container.remove() """
 
     # class task():
     #     def __init__(self, mem, input, output):
