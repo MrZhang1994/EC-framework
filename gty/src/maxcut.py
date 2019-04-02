@@ -3,15 +3,26 @@ import random
 from scipy.optimize import linprog
 from example import verbose
 from datetime import datetime
+from math import ceil, floor
 
 iso_value = np.zeros((1, 1))
 cpu_factor = 10
+
+def add_software_dependency(N):
+    global iso_value
+    INF = 1e4
+    num = random.choice([floor(N/10), ceil(N/10)])
+    for _ in range(num):
+        conflict_pair = random.sample(range(N), 2)
+        iso_value[conflict_pair[0]][conflict_pair[1]] = INF
+        iso_value[conflict_pair[1]][conflict_pair[0]] = INF
 
 def init_iso(N):
     global iso_value
     iso_value = np.random.rand(N**2).reshape(N, N)
     iso_value = (iso_value + iso_value.T)/2
     iso_value -= np.diag(np.diag(iso_value))
+    add_software_dependency(N)
     return iso_value
 
 def graph_parameter(gid):
