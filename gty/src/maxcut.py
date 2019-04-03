@@ -7,13 +7,15 @@ from math import ceil, floor
 
 iso_value = np.zeros((1, 1))
 cpu_factor = 10
+conflict_pairs = []
 
 def add_software_dependency(N):
-    global iso_value
+    global iso_value, conflict_pairs
     INF = 1e4
     num = random.choice([floor(N/10), ceil(N/10)])
     for _ in range(num):
         conflict_pair = random.sample(range(N), 2)
+        conflict_pairs.append(conflict_pair)
         iso_value[conflict_pair[0]][conflict_pair[1]] = INF
         iso_value[conflict_pair[1]][conflict_pair[0]] = INF
 
@@ -49,6 +51,7 @@ def graph1_parameter():
     impact_factor = []
     arc_num = 18
     vertex_num = 12
+    # memory factor
     for i in range(vertex_num):
         impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
@@ -90,7 +93,7 @@ def initial_graph_1(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2) * random.uniform(1, 10))
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -163,7 +166,7 @@ def initial_graph_2(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2) * random.uniform(1, 10))
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -286,7 +289,7 @@ def initial_graph_3(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2) * random.uniform(1, 10))
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:
@@ -440,7 +443,7 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     vertex_cpu = []
     communication_cpu = []
     for i in range(vertex_num):
-        vertex_cpu.append(random.uniform(0.8, 2)*cpu_factor)
+        vertex_cpu.append(random.uniform(0.8, 2) * random.uniform(1, 10))
         for j in range(vertex_num):
             graph[i, j] = -1
     if verbose:

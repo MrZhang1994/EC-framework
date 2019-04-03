@@ -29,7 +29,7 @@ tests = [[0, 2, 1], [1, 2, 1], [2, 2, 1], [3, 2, 1], [4, 2, 1], [2, 0, 1], [2, 1
 # record counter
 df_cnt = 0
 
-def get_result(vertex_num, tasks, processors, dag,dag_d, r_dag, index, t, N, order, algo, Graph = graph):
+def get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, algo, Graph = graph):
     _ = time.time()
     cont, bridge_tasks, new_tasks = containerize(tasks, processors, dag, dag_d, r_dag, index, t, N, order, algo, Graph)
     if verbose:
@@ -95,8 +95,6 @@ def main(k, gid):
     # extract the task id from priority_list
     order = [t.id for t in priority_list]
 
-    # lower bound of containerization is the finish time of the last task
-    lower = tasks[vertex_num].aft
     
     # 'dag_d' is 'dag' with core dependency
     # 'r_dag' is the reversed dag
@@ -108,6 +106,12 @@ def main(k, gid):
     _ = time.time()
     dag_d, r_dag, index, t, N, cpath = containerize_init(dag, tasks, processors, iso_limit, graph)
     time_fb = time.time() - _
+
+
+    # lower bound of containerization is the finish time of the last task
+    # lower = tasks[vertex_num].aft
+
+    lower = optimal(vertex_num, tasks, processors, dag, r_dag, order)
     
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
     cont_open_b, makespan_b, busy_time_b, time_b = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'backward')
@@ -146,15 +150,19 @@ def main(k, gid):
         print('upper: ')
         print(upper)
         print('CDF: ')
-        print(round((makespan_fb - lower)/(upper - lower), 4))
+        print(makespan_fb)
+        # print(round((makespan_fb - lower)/(upper - lower), 4))
         print('ICRB: ')
-        print(round((makespan_i2c - lower)/(upper - lower), 4))
+        print(makespan_i2c)
+        # print(round((makespan_i2c - lower)/(upper - lower), 4))
         print('STO: ')
-        print(round((makespan_i - lower)/(upper - lower), 4))
+        print(makespan_i)
+        # print(round((makespan_i - lower)/(upper - lower), 4))
         # print('sc: ')
         # print(round((makespan_s - lower)/(upper - lower), 4))
         print('random: ')
-        print(round((makespan_r - lower)/(upper - lower), 4))
+        print(makespan_r)
+        # print(round((makespan_r - lower)/(upper - lower), 4))
     
     open_upper = gg[gid]
     open_lower = ceil(gg[gid]/con[tests[k][2]])
@@ -222,12 +230,13 @@ if __name__ == '__main__':
             verbose = True
 
     if verbose:
-        main(2, 2)
+        main(13, 1)
         exit()
 
     # test numbers
     num = 10
-    for gid in [1, 2, 3, 4]:
+    # for gid in [1, 2, 3, 4]:
+    for gid in [1]:
         for k in range(len(tests)):
             records = 0
             while records < num:
