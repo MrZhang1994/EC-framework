@@ -115,9 +115,11 @@ def main(k, gid):
     cont_open_i, makespan_i, busy_time_i, time_i = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'STO')
     cont_open_r, makespan_r, busy_time_r, time_r = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'rand')
 
+    """
     Graph = [[i if (i != -1) else 0 for i in x ] for x in graph]
     Graph = Graph + np.transpose(Graph)
     cont_open_sc, makespan_sc, busy_time_sc, time_sc = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'sc', Graph)
+    """
     
     if makespan_f < makespan_b:
         makespan_fb, cont_open_fb, busy_time_fb, time_fb = makespan_f, cont_open_f, busy_time_f, time_f + time_fb
@@ -224,7 +226,7 @@ if __name__ == '__main__':
         exit()
 
     # test numbers
-    num = 5
+    num = 10
     for gid in [1, 2, 3, 4]:
         for k in range(len(tests)):
             records = 0
