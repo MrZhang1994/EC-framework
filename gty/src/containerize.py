@@ -6,6 +6,7 @@ import queue
 import copy
 import random
 from wr_sc import sc
+import itertools
 
 def reverse_graph(dag, r_dag):
     for key in dag:
@@ -299,6 +300,51 @@ def rd(tasks):
         
         cont[cnt].add(vc)
     return cont
+
+def cont_iso_sum(x):
+    s = 0
+    for pair in itertools.combinations(x, 2):
+        s += iso(pair[0], pair[1])
+        if s > iso_limit:
+            return False
+    return True
+
+def optimal(vertex_num, tasks, processors, d, r_dag, order):
+    import time
+    _ = time.time()
+    best_makespan = 1e4
+    for combination in itertools.product(*([[0,1,2,3] for _ in range(len(tasks)-1)])):
+        # if (0 not in combination) or (1 not in combination) or (2 not in combination) or (3 not in combination): continue
+        if (0 not in combination) or (1 not in combination): continue
+        flag = False
+        for pair in maxcut.conflict_pairs:
+            if combination[pair[0]] == combination[pair[1]]:
+                flag = True
+                break
+        if flag: continue
+
+        cont = dict()
+        for i, x in enumerate(combination):
+            if x not in cont:
+                cont[x] = set()
+            cont[x].add(i+1)
+
+        iso_flag = False
+        for key in cont:
+            if cont_iso_sum(cont[key]) == False:
+                iso_flag = True
+                break
+        if iso_flag: continue
+        
+        cont_set, bridge_tasks = get_bridge_tasks(d, len(tasks), cont)
+        new_tasks = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
+        makespan = new_tasks[vertex_num].aft
+        if makespan < best_makespan:
+            best_makespan = makespan
+            # print(best_makespan, cont)
+        if time.time() - _ > 3: return best_makespan
+
+    return best_makespan
 
 def get_bridge_tasks(d, N, cont):
     bridge_tasks = []
