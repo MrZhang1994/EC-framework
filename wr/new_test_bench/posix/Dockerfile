@@ -36,4 +36,6 @@ RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  Pillow
 RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  tensorflow
 RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  numpy
 
+RUN apt-get update && apt-get install -y zip
+
 WORKDIR /root

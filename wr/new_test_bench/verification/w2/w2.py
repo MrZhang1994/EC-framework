@@ -64,9 +64,13 @@ if __name__ == '__main__':
         result = os.popen('mv images_to_send car').read()
         log(file, result) """
 
-        result = os.popen('python2 train-license-digits.py predict > predict_result.txt').read()
-        result = result.replace("\n", " ")
+
+        result = os.popen('cp total.output test_images').read()
         log(file, result)
+
+        result = os.popen('zip -r file_to_send_w2.zip test_images && ls && ./client file_to_send_w2.zip 172.18.0.4 12346').read()
+        log(file, result)
+
 
     except Exception as e:
         log(file, "Failed: {}".format(e))

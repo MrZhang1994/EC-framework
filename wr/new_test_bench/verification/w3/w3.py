@@ -19,14 +19,16 @@ if __name__ == '__main__':
 
         file = open(shared_lib.log_dir, 'w')
 
-        result = os.popen('ls ').read()
-        result = result.replace("\n", " ")
+        result = os.popen('./server got.zip 12346').read()
         log(file, result)
 
-        result = os.popen('ifconfig').read()
+        result = os.popen('ls').read()
         log(file, result)
 
-        result = os.popen('ps -e -orss=').read()
+        result = os.popen('unzip got.zip ').read()
+        log(file, result)
+
+        result = os.popen('python2 train-license-digits.py predict > predict_result.txt').read()
         result = result.replace("\n", " ")
         log(file, result)
 
