@@ -30,4 +30,12 @@ python3-pip
 
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
+RUN apt-get update && apt-get install -y unzip
+
+RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  Pillow
+RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  tensorflow
+RUN pip2 install -i https://pypi.tuna.tsinghua.edu.cn/simple  numpy
+
+RUN apt-get update && apt-get install -y zip
+
 WORKDIR /root
