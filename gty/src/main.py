@@ -13,8 +13,9 @@ import pandas as pd
 import numpy as np
 from math import ceil
 import time
+import itertools
 
-df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Heft Time', 'gid', 'Case', 'Lower Bound', 'Upper Bound'))
+df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'DFS', 'Time', 'Heft Time', 'gid', 'Case', 'Lower Bound', 'Upper Bound'))
 
 # parameters
 cores = [2,    3,   4,    5,   6]
@@ -110,9 +111,11 @@ def main(k, gid):
 
 
     # lower bound of containerization is the finish time of the last task
-    # lower = tasks[vertex_num].aft
+    lower = tasks[vertex_num].aft
 
-    lower= optimal(vertex_num, tasks, processors, dag, r_dag, order)
+    search_result = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+    if search_result == 1e4:
+        return -1
     
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
     cont_open_b, makespan_b, busy_time_b, time_b = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'backward')
@@ -172,8 +175,10 @@ def main(k, gid):
         'CPF',
         round(busy_time_fb / (makespan_fb*core), 4),
         round(total_calculation_cost / (makespan_fb*core), 4),
-        round((makespan_fb - lower)/(upper - lower), 4),
+        makespan_fb,
+        # round((makespan_fb - lower)/(upper - lower), 4),
         round((cont_open_fb - open_lower)/(open_upper - open_lower), 4),
+        search_result,
         time_fb+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
@@ -182,8 +187,10 @@ def main(k, gid):
         'ICRB',
         round(busy_time_i2c / (makespan_i2c*core), 4),
         round(total_calculation_cost / (makespan_i2c*core), 4),
-        round((makespan_i2c - lower)/(upper - lower), 4),
+        makespan_i2c,
+        # round((makespan_i2c - lower)/(upper - lower), 4),
         round((cont_open_i2c - open_lower)/(open_upper - open_lower), 4),
+        search_result,
         time_i2c+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
@@ -192,8 +199,10 @@ def main(k, gid):
         'STO',
         round(busy_time_i / (makespan_i*core), 4),
         round(total_calculation_cost / (makespan_i*core), 4),
-        round((makespan_i - lower)/(upper - lower), 4),
+        makespan_i,
+        # round((makespan_i - lower)/(upper - lower), 4),
         round((cont_open_i - open_lower)/(open_upper - open_lower), 4),
+        search_result,
         time_i+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
@@ -203,8 +212,10 @@ def main(k, gid):
         'Rand',
         round(busy_time_r / (makespan_r*core), 4),
         round(total_calculation_cost / (makespan_r*core), 4),
-        round((makespan_r - lower)/(upper - lower), 4),
+        makespan_r,
+        # round((makespan_r - lower)/(upper - lower), 4),
         round((cont_open_r - open_lower)/(open_upper - open_lower), 4),
+        search_result,
         time_r+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
@@ -229,7 +240,7 @@ if __name__ == '__main__':
     # test numbers
     num = 15
     case_graph = 1
-    case_indices = range(len(tests))
+    case_indices = range(9)
     # opts
     opts, args = getopt.getopt(sys.argv[1:], 'vg:i:n:')
     for o, a in opts:

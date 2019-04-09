@@ -335,6 +335,7 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
                 iso_flag = True
                 break
         if iso_flag: continue
+        search_cnt += 1
         
         cont_set, bridge_tasks = get_bridge_tasks(d, len(tasks), cont)
         new_tasks = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
@@ -342,9 +343,8 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
         if makespan < best_makespan:
             best_makespan = makespan
             # print(best_makespan, cont)
-        search_cnt += 1
-        if search_cnt > 4e3: return best_makespan
-        
+        if search_cnt > 2e3: return best_makespan
+             
     return best_makespan
 
 def get_bridge_tasks(d, N, cont):
