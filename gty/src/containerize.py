@@ -311,10 +311,12 @@ def cont_iso_sum(x):
 
 def optimal(vertex_num, tasks, processors, d, r_dag, order):
     search_cnt = 0
+    comb_cnt = 0
     best_makespan = 1e4
     # mapp = random.shuffle([i for i in range(len(tasks)-1)])
-    for combination in itertools.product(*([[0,1,2,3] for _ in range(len(tasks)-1)])):
-        if (0 not in combination) or (1 not in combination) or (2 not in combination): continue
+    for combination in itertools.product(*([[0,1,2,3,4] for _ in range(len(tasks)-1)])):
+        comb_cnt += 1
+        if (0 not in combination) or (1 not in combination): continue
         # if (0 not in combination) or (1 not in combination): continue
         flag = False
         for pair in maxcut.conflict_pairs:
@@ -343,8 +345,12 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
         if makespan < best_makespan:
             best_makespan = makespan
             # print(best_makespan, cont)
-        if search_cnt > 2e3: return best_makespan
-             
+        if search_cnt > 2000:
+            print('.....')
+            print(comb_cnt)
+            return best_makespan
+    print(comb_cnt)
+    print(cont)
     return best_makespan
 
 def get_bridge_tasks(d, N, cont):
