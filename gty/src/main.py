@@ -1,4 +1,5 @@
 import sys
+import getopt
 import os
 from datetime import datetime
 import maxcut
@@ -12,8 +13,9 @@ import pandas as pd
 import numpy as np
 from math import ceil
 import time
+import itertools
 
-df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Heft Time', 'gid', 'Case', 'Number of CPU Cores', 'Memory Constraints', 'Isolation Level', 'Lower Bound', 'Upper Bound'))
+df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Heft Time', 'gid', 'Case', 'Lower Bound', 'Upper Bound'))
 
 # parameters
 cores = [2,    3,   4,    5,   6]
@@ -109,10 +111,11 @@ def main(k, gid):
 
 
     # lower bound of containerization is the finish time of the last task
-    # lower = tasks[vertex_num].aft
+    lower = tasks[vertex_num].aft
 
-    lower = optimal(vertex_num, tasks, processors, dag, r_dag, order)
-    
+    search_result = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+    print(search_result)
+
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
     cont_open_b, makespan_b, busy_time_b, time_b = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'backward')
     cont_open_i2c, makespan_i2c, busy_time_i2c, time_i2c = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'ICRB')
@@ -171,9 +174,10 @@ def main(k, gid):
         'CPF',
         round(busy_time_fb / (makespan_fb*core), 4),
         round(total_calculation_cost / (makespan_fb*core), 4),
+        # makespan_fb,
         round((makespan_fb - lower)/(upper - lower), 4),
         round((cont_open_fb - open_lower)/(open_upper - open_lower), 4),
-        time_fb+time_heft, time_heft, gid, k, core, Mem, iso_limit,
+        time_fb+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
 
@@ -181,9 +185,10 @@ def main(k, gid):
         'ICRB',
         round(busy_time_i2c / (makespan_i2c*core), 4),
         round(total_calculation_cost / (makespan_i2c*core), 4),
+        # makespan_i2c,
         round((makespan_i2c - lower)/(upper - lower), 4),
         round((cont_open_i2c - open_lower)/(open_upper - open_lower), 4),
-        time_i2c+time_heft, time_heft, gid, k, core, Mem, iso_limit,
+        time_i2c+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
 
@@ -191,9 +196,10 @@ def main(k, gid):
         'STO',
         round(busy_time_i / (makespan_i*core), 4),
         round(total_calculation_cost / (makespan_i*core), 4),
+        # makespan_i,
         round((makespan_i - lower)/(upper - lower), 4),
         round((cont_open_i - open_lower)/(open_upper - open_lower), 4),
-        time_i+time_heft, time_heft, gid, k, core, Mem, iso_limit,
+        time_i+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
 
@@ -202,9 +208,20 @@ def main(k, gid):
         'Rand',
         round(busy_time_r / (makespan_r*core), 4),
         round(total_calculation_cost / (makespan_r*core), 4),
+        # makespan_r,
         round((makespan_r - lower)/(upper - lower), 4),
         round((cont_open_r - open_lower)/(open_upper - open_lower), 4),
-        time_r+time_heft, time_heft, gid, k, core, Mem, iso_limit,
+        time_r+time_heft, time_heft, gid, k,
+        lower, upper]
+    df_cnt += 1
+
+    df.loc[df_cnt] = [
+        'DFS',
+        0,
+        0,
+        round((search_result - lower)/(upper - lower), 4),
+        0,
+        0, 0, gid, k,
         lower, upper]
     df_cnt += 1
     
@@ -215,7 +232,7 @@ def main(k, gid):
         round(total_calculation_cost / (makespan_sc*core), 4),
         round((makespan_sc - lower)/(upper - lower), 4),
         round((cont_open_sc - open_lower)/(open_upper - open_lower), 4),
-        time_sc+time_heft, time_heft, gid, k, core, Mem, iso_limit,
+        time_sc+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
     """
@@ -224,20 +241,35 @@ def main(k, gid):
 
 if __name__ == '__main__':
     random.seed(datetime.now())
-    # if verbose
-    for arg in sys.argv[1:]:
-        if arg == '-v':
-            verbose = True
-
-    if verbose:
-        main(13, 1)
-        exit()
 
     # test numbers
-    num = 10
+    num = 15
+    case_graph = 1
+    case_indices = range(8)
+    # opts
+    opts, args = getopt.getopt(sys.argv[1:], 'vg:i:n:c:')
+    for o, a in opts:
+        if o in ('-v', '--verbose'):
+            verbose = True
+        elif o in ('-g', '--graph'):
+            case_graph = int(a)
+        elif o in ('-i', '--index'):
+            case_indices = [int(a)]
+        elif o in ('-n', '--number'):
+            num = int(a)
+        elif o in ('-c', '--case'):
+            kase = a
+        else:
+            sys.exit()
+
+    if verbose:
+        main(case_graph, case_index)
+        sys.exit()
+
     # for gid in [1, 2, 3, 4]:
-    for gid in [1]:
-        for k in range(len(tests)):
+    #    for k in range(len(tests)):
+    for gid in [case_graph]:
+        for k in case_indices:
             records = 0
             while records < num:
                 # if fail, ignore
@@ -247,4 +279,4 @@ if __name__ == '__main__':
                 except:
                     continue
             print(gid, k)
-    df.to_csv('./df_heft.csv', index = False)
+    df.to_csv('./df_heft{}{}.csv'.format(str(case_indices[0]), kase), index = False)
