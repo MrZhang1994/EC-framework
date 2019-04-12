@@ -279,4 +279,4 @@ if __name__ == '__main__':
                 except:
                     continue
             print(gid, k)
-    df.to_csv('./df_heft{}.csv'.format(kase), index = False)
+    df.to_csv('./df_heft{}{}.csv'.format(str(case_indices[0]), kase), index = False)
