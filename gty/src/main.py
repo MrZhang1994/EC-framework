@@ -247,7 +247,7 @@ if __name__ == '__main__':
     case_graph = 1
     case_indices = range(8)
     # opts
-    opts, args = getopt.getopt(sys.argv[1:], 'vg:i:n:')
+    opts, args = getopt.getopt(sys.argv[1:], 'vg:i:n:c:')
     for o, a in opts:
         if o in ('-v', '--verbose'):
             verbose = True
@@ -257,6 +257,8 @@ if __name__ == '__main__':
             case_indices = [int(a)]
         elif o in ('-n', '--number'):
             num = int(a)
+        elif o in ('-c', '--case'):
+            kase = a
         else:
             sys.exit()
 
@@ -277,4 +279,4 @@ if __name__ == '__main__':
                 except:
                     continue
             print(gid, k)
-    df.to_csv('./df_heft.csv', index = False)
+    df.to_csv('./df_heft{}.csv'.format(kase), index = False)
