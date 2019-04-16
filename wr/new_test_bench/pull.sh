@@ -1,1 +1,1 @@
-rsync -azvh  wr@10.211.55.93:/home/wr/py_ipc/ .
+rsync -azvh  wr@10.211.55.94:/home/wr/py_ipc/ .

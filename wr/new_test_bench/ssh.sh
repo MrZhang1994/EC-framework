@@ -1,1 +1,1 @@
-ssh  -t wr@10.211.55.93 "cd /home/wr/py_ipc/; zsh"
+ssh  -t wr@10.211.55.94 "cd /home/wr/py_ipc/; zsh"

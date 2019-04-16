@@ -35,8 +35,8 @@ if __name__ == '__main__':
 
         result = os.popen('unzip got.zip ').read()
         log(file, result)
-        result = os.popen('mv images_to_send test_images').read()
-        log(file, result)
+        #result = os.popen('mv images_to_send test_images').read()
+        #log(file, result)
 
         result = os.popen('echo try cding').read();
         log(file, result)
@@ -44,25 +44,17 @@ if __name__ == '__main__':
         result = os.popen('ls').read()
         log(file, result)
 
-        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_sig.jpg > ../sig.output').read()
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_sig.jpg > ../sig.output && date +"%T.%3N" >> ../sig.output').read()
         log(file, result)
-        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_car.jpg > ../car.output').read()
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_car.jpg > ../car.output && date +"%T.%3N" >> ../car.output').read()
         log(file, result)
-        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_human.jpg > ../human.output').read()
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_human.jpg > ../human.output && date +"%T.%3N" >> ../human.output').read()
         log(file, result)
-
-        result = os.popen('cat car.output > total.output && cat human.output >> total.output && cat sig.output >> total.output').read()
-        log(file, result)
-
-        """result = os.popen('unzip got1.zip ').read()
-        log(file, result)
-        result = os.popen('mv images_to_send sig').read()
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_lic.jpg > ../lic.output && date +"%T.%3N" >> ../lic.output').read()
         log(file, result)
 
-        result = os.popen('unzip got2.zip ').read()
+        result = os.popen('cat car.output > total.output && cat human.output >> total.output && cat sig.output >> total.output && cat lic.output >> total.output  ').read()
         log(file, result)
-        result = os.popen('mv images_to_send car').read()
-        log(file, result) """
 
 
         result = os.popen('cp total.output test_images').read()

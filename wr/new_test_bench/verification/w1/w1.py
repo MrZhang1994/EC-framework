@@ -20,6 +20,13 @@ if __name__ == '__main__':
         file = open(shared_lib.log_dir, 'w')
 
 
+        result = os.popen('rm -f images_to_send/start.time && date +"%T.%3N" > test_images/start.time ').read()
+        log(file, result)
+
+        result = os.popen('rm -f images_to_send.zip && zip -r images_to_send.zip test_images').read()
+        log(file, result)
+
+
         result = os.popen('./client images_to_send.zip 172.18.0.3 12345').read()
         result = result.replace("\n", " ")
         log(file, result)
