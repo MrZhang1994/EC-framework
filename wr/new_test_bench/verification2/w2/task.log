@@ -1,0 +1,125 @@
+2019-04-16 09:31:38.373154: 
+2019-04-16 09:31:38.375874: 09:31:38.375
+
+2019-04-16 09:31:38.381197: 
+2019-04-16 09:31:38.383514: __pycache__
+client
+darknet
+server
+shared_lib.py
+start.time1
+task.log
+test_images
+w2.py
+
+2019-04-16 09:31:38.387193: eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.18.0.3  netmask 255.255.0.0  broadcast 172.18.255.255
+        ether 02:42:ac:12:00:03  txqueuelen 0  (Ethernet)
+        RX packets 2  bytes 200 (200.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+2019-04-16 09:31:39.219086: Makefile
+README.md
+backup
+cfg
+darknet
+darknet.weights
+data
+examples
+include
+libdarknet.a
+libdarknet.so
+obj
+python
+results
+scripts
+sig.output
+src
+
+2019-04-16 09:31:40.096163: Makefile
+README.md
+backup
+cfg
+darknet
+darknet.weights
+data
+examples
+include
+libdarknet.a
+libdarknet.so
+obj
+python
+results
+scripts
+sig.output
+src
+
+2019-04-16 09:31:40.739434: Makefile
+README.md
+backup
+cfg
+darknet
+darknet.weights
+data
+examples
+include
+libdarknet.a
+libdarknet.so
+obj
+python
+results
+scripts
+sig.output
+src
+
+2019-04-16 09:31:41.260204: Makefile
+README.md
+backup
+cfg
+darknet
+darknet.weights
+data
+examples
+include
+libdarknet.a
+libdarknet.so
+obj
+python
+results
+scripts
+sig.output
+src
+
+2019-04-16 09:31:41.263322: 
+2019-04-16 09:31:41.265419: 
+2019-04-16 09:31:41.289409:   adding: test_images/1.bmp (deflated 30%)
+  adding: test_images/2.bmp (deflated 31%)
+  adding: test_images/3.bmp (deflated 35%)
+  adding: test_images/4.bmp (deflated 30%)
+  adding: test_images/5.bmp (deflated 44%)
+  adding: test_images/6.bmp (deflated 32%)
+  adding: test_images/7.bmp (deflated 29%)
+  adding: test_images/lic_1.bmp (deflated 30%)
+  adding: test_images/lic_2.bmp (deflated 31%)
+  adding: test_images/lic_3.bmp (deflated 35%)
+  adding: test_images/lic_4.bmp (deflated 30%)
+  adding: test_images/lic_5.bmp (deflated 44%)
+  adding: test_images/lic_6.bmp (deflated 32%)
+  adding: test_images/lic_7.bmp (deflated 29%)
+  adding: test_images/sig_1.bmp (deflated 35%)
+  adding: test_images/sig_2.bmp (deflated 41%)
+  adding: test_images/sig_3.bmp (deflated 27%)
+  adding: test_images/sig_4.bmp (deflated 31%)
+  adding: test_images/start.time1 (stored 0%)
+4 0.0000691 0.000010
