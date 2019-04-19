@@ -217,6 +217,8 @@ def main(k, gid):
         time_r+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k,
         lower, upper]
     df_cnt += 1
+    
+    return 0
     """
     df.loc[df_cnt] = [
         'DFS',
@@ -238,7 +240,6 @@ def main(k, gid):
         lower, upper]
     df_cnt += 1
     """
-    return 0
 
 if __name__ == '__main__':
     random.seed(datetime.now())
