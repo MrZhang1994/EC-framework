@@ -1,0 +1,51 @@
+2019-04-16 09:31:18.224317: waiting for client
+
+2019-04-16 09:31:18.226537: __pycache__
+client
+got.zip
+server
+shared_lib.py
+task.log
+train-license-digits4.py
+train-license-digits7.py
+train-saver
+w3.py
+
+2019-04-16 09:31:18.468353: Archive:  got.zip
+   creating: test_images/
+  inflating: test_images/sig_4.bmp   
+  inflating: test_images/sig_3.bmp   
+  inflating: test_images/lic_4.bmp   
+  inflating: test_images/sig_2.bmp   
+  inflating: test_images/img_lic.jpg  
+  inflating: test_images/sig_1.bmp   
+  inflating: test_images/img_car.jpg  
+  inflating: test_images/5.bmp       
+  inflating: test_images/lic_2.bmp   
+  inflating: test_images/1509806878_75_4.bmp  
+  inflating: test_images/1509807168_983_2_new_smaller.bmp  
+  inflating: test_images/total.output  
+  inflating: test_images/1509807847_589_5.bmp  
+  inflating: test_images/1.bmp       
+  inflating: test_images/lic_7.bmp   
+  inflating: test_images/lic_5.bmp   
+  inflating: test_images/lic_3.bmp   
+  inflating: test_images/6.bmp       
+ extracting: test_images/start.time  
+  inflating: test_images/1509807306_562_6.bmp  
+  inflating: test_images/man-holding-stop-sign-at-road-works-broadway-leigh-on-sea-essex-england-F5DXEB.jpg  
+  inflating: test_images/7.bmp       
+  inflating: test_images/4.bmp       
+  inflating: test_images/1509808105_927_3.bmp  
+  inflating: test_images/lic_1.bmp   
+  inflating: test_images/img.jpg     
+  inflating: test_images/lic_6.bmp   
+  inflating: test_images/2.bmp       
+  inflating: test_images/img_human.jpg  
+  inflating: test_images/img_sig.jpg  
+  inflating: test_images/3.bmp       
+  inflating: test_images/1509806878_75_7.bmp  
+
+2019-04-16 09:31:19.569904: 
+2019-04-16 09:31:20.574239: 
+2019-04-16 09:31:20.578269: 

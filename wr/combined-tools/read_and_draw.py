@@ -32,9 +32,7 @@ def read_and_print(input_file_dir, output_file_dir, mode):
 #read_and_print("../tools/procstat/dockerd_s.log", "d.png", 'diff')
 
 read_and_print("log/dockerd.log", "fig/dd.png", "not")
-read_and_print("log/docker_containerd.log", "fig/dcd.png", "not")
 read_and_print("log/dockerd.log", "fig/ddd.png", "diff")
-read_and_print("log/docker_containerd.log", "fig/dcdd.png", "diff")
 
 
 #read_and_print("../tools/procstat/dockerd_s.log", "d.png", 'diff')

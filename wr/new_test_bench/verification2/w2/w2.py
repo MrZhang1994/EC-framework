@@ -1,0 +1,69 @@
+#!/usr/bin/python3
+import os
+import sys
+import subprocess
+import random
+import resource
+from sys import argv
+from time import sleep
+from datetime import datetime
+import shared_lib
+
+
+def log(file, s):
+    file.write('{}: {}\n'.format(datetime.now().__str__(), s))
+
+
+if __name__ == '__main__':
+    try:
+
+        file = open(shared_lib.log_dir, 'w')
+
+        result = os.popen('rm -rf image_to_send').read()
+        result = os.popen('rm -rf sig').read()
+        result = os.popen('rm -rf car').read()
+
+        log(file, result)
+
+        #result = os.popen('./server got.zip 12345').read()
+        #log(file, result)
+
+        result = os.popen('date +"%T.%3N"').read()
+        log(file, result)
+
+        result = os.popen('rm -f start.time1 && rm -f test_images/start.time1 && date +"%T.%3N" > start.time1 && cp start.time1 test_images/ ').read()
+        log(file, result)
+
+        result = os.popen('ls ').read()
+        log(file, result)
+
+        result = os.popen('ifconfig ').read()
+        log(file, result)
+
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_sig.jpg > ../sig.output && date +"%T.%3N" >> ../sig.output').read()
+        log(file, result)
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_car.jpg > ../car.output && date +"%T.%3N" >> ../car.output').read()
+        log(file, result)
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_human.jpg > ../human.output && date +"%T.%3N" >> ../human.output').read()
+        log(file, result)
+        result = os.popen('cd darknet && ls && ./darknet classifier predict cfg/imagenet1k.data cfg/darknet.cfg darknet.weights ../test_images/img_lic.jpg > ../lic.output && date +"%T.%3N" >> ../lic.output').read()
+        log(file, result)
+
+        result = os.popen('cat car.output > total.output && cat human.output >> total.output && cat sig.output >> total.output && cat lic.output >> total.output  ').read()
+        log(file, result)
+
+
+        result = os.popen('cp total.output test_images/').read()
+        log(file, result)
+
+        #result = os.popen('zip -r file_to_send_w2.zip test_images && ls && ./client file_to_send_w2.zip 172.18.0.2 12346').read()
+        result = os.popen('zip file_to_send_w2.zip test_images/?.bmp test_images/lic_*.bmp  test_images/sig_*  test_images/start.time1  && ./client file_to_send_w2.zip 172.18.0.2 12346 && ./client total.output 172.18.0.4 12348 ').read()
+        log(file, result)
+
+        
+
+
+    except Exception as e:
+        log(file, "Failed: {}".format(e))
+    finally:
+        file.close()

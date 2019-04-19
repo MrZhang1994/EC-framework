@@ -3,3 +3,9 @@ client
 server
 .vscode
 *.zip
+
+local.file
+client
+server
+verifica*/w*/shared_lib.py
+verifi*/w*/.keras
