@@ -31,7 +31,7 @@ tests = [[0, 2, 1], [1, 2, 1], [2, 2, 1], [3, 2, 1], [4, 2, 1], [2, 0, 1], [2, 1
 # record counter
 df_cnt = 0
 
-def main(core, gid):
+def main(gid):
     global df_cnt
 
     # init graph
@@ -39,11 +39,12 @@ def main(core, gid):
     graph, vertex_cpu, process, communication_cpu = maxcut.initial_graph(gid, vertex_num, arc_num, impact_factor)
     total_calculation_cost = sum(vertex_cpu)
 
-    # calculate maxtopcut
-    S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
+    for core in [1, 2, 3, 4, 5, 6]:
+        # calculate maxtopcut
+        S, T, cut = maxcut.maxtopocut(graph, process, vertex_num, core)
+        df.loc[df_cnt] = [gid, core, cut]
+        df_cnt += 1
 
-    df.loc[df_cnt] = [gid, core, cut]
-    df_cnt += 1
     return 0
 
 if __name__ == '__main__':
@@ -53,14 +54,13 @@ if __name__ == '__main__':
     num = 100
 
     for gid in [1, 2, 3, 4]:
-        for core in [2, 3, 4, 5, 6]:
-            records = 0
-            while records < num:
-                # if fail, ignore
-                try:
-                    if main(core, gid) == 0:
-                        records += 1
-                except:
-                    continue
-            print(gid, core)
+        records = 0
+        while records < num:
+            # if fail, ignore
+            try:
+                if main(gid) == 0:
+                    records += 1
+            except:
+                continue
+        print(gid)
     df.to_csv('./df_mem.csv', index = False)
