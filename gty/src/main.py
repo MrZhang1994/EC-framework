@@ -113,8 +113,8 @@ def main(k, gid):
     # lower bound of containerization is the finish time of the last task
     lower = tasks[vertex_num].aft
 
-    search_result = optimal(vertex_num, tasks, processors, dag, r_dag, order)
-    print(search_result)
+    search_EDER, search_DOR = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+    # print(search_result)
 
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
     cont_open_b, makespan_b, busy_time_b, time_b = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'backward')
@@ -219,12 +219,14 @@ def main(k, gid):
         'DFS',
         0,
         0,
-        round((search_result - lower)/(upper - lower), 4),
-        0,
+        round((search_EDER - lower)/(upper - lower), 4),
+        round((search_DOR  - open_lower)/(open_upper - open_lower), 4),
         0, 0, gid, k,
         lower, upper]
     df_cnt += 1
     
+    return 0
+
     """
     df.loc[df_cnt] = [
         'SC',
@@ -236,8 +238,6 @@ def main(k, gid):
         lower, upper]
     df_cnt += 1
     """
-
-    return 0
 
 if __name__ == '__main__':
     random.seed(datetime.now())
@@ -279,4 +279,4 @@ if __name__ == '__main__':
                 except:
                     continue
             print(gid, k)
-    df.to_csv('./df_heft{}{}.csv'.format(str(case_indices[0]), kase), index = False)
+    df.to_csv('./df_heft{}_{}.csv'.format(str(case_indices[0]), kase), index = False)
