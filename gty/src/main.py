@@ -112,8 +112,8 @@ def main(k, gid):
 
     # lower bound of containerization is the finish time of the last task
     lower = tasks[vertex_num].aft
-
-    search_EDER, search_DOR = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+    if verbose == False:
+        search_EDER, search_DOR = optimal(vertex_num, tasks, processors, dag, r_dag, order)
     # print(search_result)
 
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
@@ -215,15 +215,16 @@ def main(k, gid):
         lower, upper]
     df_cnt += 1
 
-    df.loc[df_cnt] = [
-        'DFS',
-        0,
-        0,
-        round((search_EDER - lower)/(upper - lower), 4),
-        round((search_DOR  - open_lower)/(open_upper - open_lower), 4),
-        0, 0, gid, k,
-        lower, upper]
-    df_cnt += 1
+    if verbose == False:
+        df.loc[df_cnt] = [
+            'DFS',
+            0,
+            0,
+            round((search_EDER - lower)/(upper - lower), 4),
+            round((search_DOR  - open_lower)/(open_upper - open_lower), 4),
+            0, 0, gid, k,
+            lower, upper]
+        df_cnt += 1
     
     return 0
 
@@ -263,7 +264,7 @@ if __name__ == '__main__':
             sys.exit()
 
     if verbose:
-        main(case_graph, case_index)
+        main(case_graph, case_indices[0])
         sys.exit()
 
     # for gid in [1, 2, 3, 4]:
