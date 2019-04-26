@@ -46,8 +46,14 @@ def draw_text(canvas_p, start_p, string_input, color=[0, 0, 0]):
     draw.text((0, 0), string_input, font=font)  # render the text to the bitmap
     for row_num in range(size[1]):
         for col_num in range(size[0]):
+            if start_p[0]+row_num > len(canvas_p[0]):
+                return
+            if start_p[1]+col_num > len(canvas_p[1]):
+                return
+            #print(start_p[0]+row_num,'|',start_p[1]+col_num)
             if not image.getpixel((col_num, row_num)):
                 canvas_p[start_p[0]+row_num, start_p[1]+col_num] = color
+            
 
 
 def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
@@ -256,10 +262,6 @@ def draw_schedule(sche, cont, data):
 
     # last end v line
     draw_line_v(data, [50, 100 + int(last_end)], int(len(data)) - 25*2, 1)
-
-
-
-
 
 def get_data_span(sche_input):
     max_width = 100

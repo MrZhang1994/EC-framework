@@ -18,6 +18,14 @@ def fill_color(data_p, start_p, size, color):
         draw_line_h(data_p, line_start_p, size[1], 1, color=color)
     pass
 
+def get_data_max_point(sche_input):
+    max_width = 0
+    for i in sche_input:
+        if i[1]> max_width:
+            max_width = int(i[1])
+        if i[2]> max_width:
+            max_width = int(i[2])
+    return max_width
 
 def draw_box(data_p, start_p, size):
     blw = 1  # box line width
@@ -38,8 +46,14 @@ def draw_text(canvas_p, start_p, string_input, color=[0, 0, 0]):
     draw.text((0, 0), string_input, font=font)  # render the text to the bitmap
     for row_num in range(size[1]):
         for col_num in range(size[0]):
+            if start_p[0]+row_num > len(canvas_p[0]):
+                return
+            if start_p[1]+col_num > len(canvas_p[1]):
+                return
+            #print(start_p[0]+row_num,'|',start_p[1]+col_num)
             if not image.getpixel((col_num, row_num)):
                 canvas_p[start_p[0]+row_num, start_p[1]+col_num] = color
+            
 
 
 def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
@@ -56,10 +70,10 @@ def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
     draw_text(canvas_p, text_start_p, job_name, color=[0, 0, 0])
 
 
-def draw_rule(data):
-    draw_line_h(data, [90, 100], 1800, 2, [0, 0, 0])
+def draw_rule(data,max_width):
+    draw_line_h(data, [90, 100], max_width, 2, [0, 0, 0])
 
-    for i in range(18):
+    for i in range(int(max_width/100+1)):
         de = 100 * (i)
         for j in range(2):
             draw_line_v(data, [90, 100+de+j*50], 5, 2, [0, 0, 0])
@@ -104,7 +118,7 @@ def get_color(th, total):
     #  get_color(node_th,node_total_num)
     #  0 <= node_th <= node_total_num - 1
     # th=th+1
-    print([th, total])
+    #print([th, total])
 
     if (total == 1):
         x = 0
@@ -235,7 +249,7 @@ def draw_schedule(sche, cont, data):
     for i in range(len(cont_open_data)):
         draw_text(data, [25, 500+i*cont_open_data_print_gap],
                   str(cont_open_data[i]), [0, 0, 0])
-    print(cont_open_data)
+    #print(cont_open_data)
 
     # up left side
     draw_text(data, [25, 25],
@@ -243,62 +257,41 @@ def draw_schedule(sche, cont, data):
     draw_text(data, [25, 125], 'con_num:'+str(container_count), [0, 0, 0])
 
     # rule
-    draw_rule(data)
+    print(get_data_max_point(sche))
+    draw_rule(data,(int(get_data_max_point(sche)/100)+1)*100+30)
 
     # last end v line
     draw_line_v(data, [50, 100 + int(last_end)], int(len(data)) - 25*2, 1)
 
+def get_data_span(sche_input):
+    max_width = 100
+    max_core = 0
+    for i in sche_input:
+        if i[1]> max_width:
+            max_width = int(i[1])
+        if i[2]> max_width:
+            max_width = int(i[2])
+        if i[3]> max_core:
+            max_core = i[3]
+
+    max_width = max_width+150
+    max_height = 150 + (max_core+1)*100
+
+    return max_width,max_height
+
 
 def draw_canvas(sche, cont, picture_name):
-    size = 1024
-    data = numpy.full((size, size*2, 3), 255, dtype=numpy.uint8)
+    print(sche)
 
-    mem_data = numpy.zeros((size*2),  dtype=numpy.uint8)
+    canvas_width, canvas_height = get_data_span(sche)
+
+    data = numpy.full((canvas_height, canvas_width, 3), 255, dtype=numpy.uint8)
+
+    #mem_data = numpy.zeros((size*2),  dtype=numpy.uint8)
 
     draw_schedule(sche, cont, data)
 
-    draw_line_v(data, [90, 100], size - 25*2, 3)
+    draw_line_v(data, [90, 100], canvas_width - 25*2, 3)
 
     Image.fromarray(data).save(picture_name)
 
-
-# # ------------1  2  3  4  5  6  7  8  9  10 11 12-----
-# vertex_cpu = [3, 2, 2, 7, 7, 4, 6, 2, 7, 10, 6, 5]
-# # (subtask execution)
-# communication_cpu = [15.0, 16.0, 17.0, 19.0,
-#                      11.0, 12.0, 15.0, 16.0, 9.0, 18.0, 10.0, 5.0]
-# # (input cpu for schedule)
-# arc_weight = [3, 2, 7, 6, 8, 6, 9, 5, 7, 4, 5, 4,
-#               8, 6, 8, 2, 8, 4]
-# # (transmission data and cpu)
-# process = [13.2, 15.4, 16.5, 13.2, 4.4, 8.8, 9.9, 15.4, 2.2, 8.8, 4.4, 0.]
-# # (subtask execution memory)
-
-
-# for x in sche:
-#     x_id = x[0]
-#     if x_id == 0:
-#         continue
-#     x_start = x[1]
-#     x_end = x[2]
-#     x_container = x[3]
-
-#     mem_middle_cut = vertex_cpu[x_id-1]
-
-#     cpu_memory = vertex_cpu[x_id-1]
-
-#     transmission_mem = 0
-#     for x in dag[x_id]:
-#         transmission_mem += arc_weight[x]
-
-#     for i in range(int(x_end-x_start)):
-#         mem_data_i = i + int(x_start)+100
-#         if i < mem_middle_cut:
-#             mem_data[mem_data_i] += cpu_memory
-#         else:
-#             mem_data[mem_data_i] += transmission_mem
-
-# for i in range(len(mem_data)):
-#     mem_data_ratio = 5
-#     draw_line_v(data, [(800-mem_data[i]*mem_data_ratio), i],
-#                 mem_data[i]*mem_data_ratio, 3, color=[0, 204, 204])
