@@ -7,6 +7,7 @@ import copy
 import random
 from wr_sc import sc
 import itertools
+import draw
 
 def reverse_graph(dag, r_dag):
     for key in dag:
@@ -344,14 +345,15 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
         makespan = new_tasks[vertex_num].aft
         if makespan < best_makespan:
             best_makespan = makespan
+            best_daemon = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
             # print(best_makespan, cont)
-        if search_cnt > 2000:
+        if search_cnt > 3000:
             print('.....')
             print(comb_cnt)
-            return best_makespan
+            return best_makespan, best_daemon
     print(comb_cnt)
     print(cont)
-    return best_makespan
+    return best_makespan, best_daemon
 
 def get_bridge_tasks(d, N, cont):
     bridge_tasks = []
