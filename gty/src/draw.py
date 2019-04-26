@@ -27,6 +27,13 @@ def get_data_max_point(sche_input):
             max_width = int(i[2])
     return max_width
 
+def get_max_from_dim(sche_in, dimention):
+    result = 0
+    for task in sche_in:
+        if task[dimention] > result:
+            result = task[dimention]
+    return result
+
 def draw_box(data_p, start_p, size):
     blw = 1  # box line width
     draw_line_h(data_p, start_p, size[1], blw)
@@ -71,12 +78,13 @@ def draw_job(canvas_p,  job_name, start_p, start, end, color_filled):
 
 
 def draw_rule(data,max_width):
-    draw_line_h(data, [90, 100], max_width, 2, [0, 0, 0])
+    width_factor = 5
+    draw_line_h(data, [90, 100], max_width*width_factor, 2, [0, 0, 0])
 
     for i in range(int(max_width/100+1)):
-        de = 100 * (i)
+        de = 100 * (i) * width_factor
         for j in range(2):
-            draw_line_v(data, [90, 100+de+j*50], 5, 2, [0, 0, 0])
+            draw_line_v(data, [90, 100+de+j*50*width_factor], 5, 2, [0, 0, 0])
 
         draw_line_v(data, [90, 100+de], 10, 2, [0, 0, 0])
         draw_text(data, [60, 100+de-5], str(i), [0, 0, 0])
@@ -84,29 +92,31 @@ def draw_rule(data,max_width):
 
 def get_color_helper(x):
     # 0 < x < 875
+    # sat =  saturation 
+    sat = 120
 
     if (175 <= x < 350):
         R = (-1)*(x-175)+255
     elif (700 <= x < 700+175):
-        R = (1)*(x-700)+80
+        R = (1)*(x-700)+sat
     elif (350 <= x < 700):
-        R = 80
+        R = sat
     else:
         R = 255
 
     if (0 <= x < 175):
-        G = (1)*(x)+80
+        G = (1)*(x)+sat
     elif (525 <= x < 700):
         G = (-1)*(x-525)+255
     elif (175 <= x < 525):
         G = 255
     else:
-        G = 80
+        G = sat
 
     if (350 <= x < 525):
-        B = (1)*(x-350)+80
+        B = (1)*(x-350)+sat
     elif (0 <= x < 350):
-        B = 80
+        B = sat
     else:
         B = 255
 
@@ -126,13 +136,6 @@ def get_color(th, total):
     else:
         x = (th)*875/(total-1)
         return get_color_helper(x)
-
-
-def get_color_from_origin(i):
-    cont_color_origin = ["ff6666", "ffb266", "ffff66",
-                         "66ff66",  "66ffff",  "6666ff", "b266ff", "ff66ff", "c0c0c0"]
-    return list(bytes.fromhex(cont_color_origin[i]))
-
 
 def cal_cont_open(sche, cont):
     def cont_open_data_maintain(data_l, d_input):
@@ -194,19 +197,16 @@ def cal_cont_open(sche, cont):
     return result
 
 
+
 def draw_schedule(sche, cont, data):
     container_count = len(cont)
 
-    core_num = 0
-    for task in sche:
-        if task[3] > core_num:
-            core_num = task[3]
+    core_num = get_max_from_dim(sche,3)
 
     cont_color = {}
     i = 0
     for color in cont:
         cont_color[i] = get_color(i, container_count)
-
         i += 1
 
     wr_cont = {}
@@ -219,11 +219,15 @@ def draw_schedule(sche, cont, data):
     used_cpu_time = 0
     core_used = set()
 
+    width_factor = 5
+
+    gap_between_each_line = 70
+
     for i in range(len(sche)):
         x_processor = sche[i][3]
-        x_p = 120+x_processor*100
-        x_aft = sche[i][2]
-        x_ast = sche[i][1]
+        x_p = 120+x_processor*gap_between_each_line
+        x_aft = sche[i][2] * width_factor
+        x_ast = sche[i][1] * width_factor
         if (x_aft > last_end):
             last_end = x_aft
 
@@ -232,6 +236,7 @@ def draw_schedule(sche, cont, data):
         draw_job(data, str(i), [x_p, 100], int(x_ast), int(
             x_aft), color_filled=cont_color[wr_cont[i]])
 
+        # open a new line for a new core
         if (x_processor not in core_used):
             core_used.add(x_processor)
             draw_text(data, [x_p+10, 20], 'core '+str(x_processor), [0, 0, 0])
@@ -264,6 +269,7 @@ def draw_schedule(sche, cont, data):
     draw_line_v(data, [50, 100 + int(last_end)], int(len(data)) - 25*2, 1)
 
 def get_data_span(sche_input):
+    width_factor = 5
     max_width = 100
     max_core = 0
     for i in sche_input:
@@ -274,8 +280,10 @@ def get_data_span(sche_input):
         if i[3]> max_core:
             max_core = i[3]
 
-    max_width = max_width+150
-    max_height = 150 + (max_core+1)*100
+    max_width = max_width * width_factor + 150
+    
+    gap_between_each_line = 70
+    max_height = 120 + (max_core+1)*gap_between_each_line
 
     return max_width,max_height
 
