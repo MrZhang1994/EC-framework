@@ -313,9 +313,12 @@ def cont_iso_sum(x):
 def optimal(vertex_num, tasks, processors, d, r_dag, order):
     search_cnt = 0
     comb_cnt = 0
-    best_makespan = 1e4
+    best_daemon_SFE = 1e4
+    best_makespan_SFE = 1e4
+    best_daemon_SFD = 1e4
+    best_makespan_SFD = 1e4
     # mapp = random.shuffle([i for i in range(len(tasks)-1)])
-    for combination in itertools.product(*([[0,1,2,3,4] for _ in range(len(tasks)-1)])):
+    for combination in itertools.product(*([[0,1,2,3] for _ in range(len(tasks)-1)])):
         comb_cnt += 1
         if (0 not in combination) or (1 not in combination): continue
         # if (0 not in combination) or (1 not in combination): continue
@@ -339,21 +342,25 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
                 break
         if iso_flag: continue
         search_cnt += 1
-        
+        # print(comb_cnt, search_cnt)
         cont_set, bridge_tasks = get_bridge_tasks(d, len(tasks), cont)
         new_tasks = update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set)
         makespan = new_tasks[vertex_num].aft
-        if makespan < best_makespan:
-            best_makespan = makespan
-            best_daemon = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
-            # print(best_makespan, cont)
-        if search_cnt > 3000:
-            print('.....')
-            print(comb_cnt)
-            return best_makespan, best_daemon
-    print(comb_cnt)
-    print(cont)
-    return best_makespan, best_daemon
+        daemon = sum(draw.cal_cont_open([(x.id, round(x.ast, 1), round(x.aft, 1), x.processor) for x in new_tasks], cont))
+        # print(best_makespan, cont)
+        if makespan < best_makespan_SFE:
+            best_makespan_SFE = makespan
+            best_daemon_SFE = daemon
+        if daemon < best_daemon_SFD:
+            best_makespan_SFD = makespan
+            best_daemon_SFD = daemon
+        if search_cnt > 2000:
+            # print('.....')
+            # print(comb_cnt)
+            return best_makespan_SFE, best_daemon_SFE, best_makespan_SFD, best_daemon_SFD
+    # print(comb_cnt)
+    # print(cont)
+    return best_makespan_SFE, best_daemon_SFE, best_makespan_SFD, best_daemon_SFD
 
 def get_bridge_tasks(d, N, cont):
     bridge_tasks = []

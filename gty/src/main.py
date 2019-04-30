@@ -15,7 +15,7 @@ from math import ceil
 import time
 import itertools
 
-df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Heft Time', 'gid', 'Case', 'Lower Bound', 'Upper Bound'))
+df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Heft Time', 'gid', 'Case'))
 
 # parameters
 cores = [2,    3,   4,    5,   6]
@@ -113,7 +113,7 @@ def main(k, gid):
     # lower bound of containerization is the finish time of the last task
     lower = tasks[vertex_num].aft
     if verbose == False:
-        search_EDER, search_DOR = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+        search_EDER_SFE, search_DOR_SFE, search_EDER_SFD, search_DOR_SFD = optimal(vertex_num, tasks, processors, dag, r_dag, order)
     # print(search_result)
 
     cont_open_f, makespan_f, busy_time_f, time_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
@@ -170,6 +170,40 @@ def main(k, gid):
     open_upper = gg[gid]
     open_lower = ceil(gg[gid]/con[tests[k][2]])
 
+    # make sure SFE and SFE are the lowest
+    if search_EDER_SFE > makespan_fb:
+        search_EDER_SFE = makespan_fb
+        search_DOR_SFE = cont_open_fb
+
+    if search_EDER_SFE > makespan_i2c:
+        search_EDER_SFE = makespan_i2c
+        search_DOR_SFE = cont_open_i2c
+
+    if search_EDER_SFE > makespan_i:
+        search_EDER_SFE = makespan_i
+        search_DOR_SFE = cont_open_i
+
+    if search_EDER_SFE > makespan_r:
+        search_EDER_SFE = makespan_r
+        search_DOR_SFE = cont_open_r
+
+    # DOR
+    if search_DOR_SFD > cont_open_fb:
+        search_EDER_SFD = makespan_fb
+        search_DOR_SFD = cont_open_fb
+
+    if search_DOR_SFD > cont_open_i2c:
+        search_EDER_SFD = makespan_i2c
+        search_DOR_SFD = cont_open_i2c
+
+    if search_DOR_SFD > cont_open_i:
+        search_EDER_SFD = makespan_i
+        search_DOR_SFD = cont_open_i
+
+    if search_DOR_SFD > cont_open_r:
+        search_EDER_SFD = makespan_r
+        search_DOR_SFD = cont_open_r
+
     df.loc[df_cnt] = [
         'CPF',
         round(busy_time_fb / (makespan_fb*core), 4),
@@ -177,8 +211,7 @@ def main(k, gid):
         # makespan_fb,
         round((makespan_fb - lower)/(upper - lower), 4),
         round((cont_open_fb - open_lower)/(open_upper - open_lower), 4),
-        time_fb+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_fb+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     df.loc[df_cnt] = [
@@ -188,8 +221,7 @@ def main(k, gid):
         # makespan_i2c,
         round((makespan_i2c - lower)/(upper - lower), 4),
         round((cont_open_i2c - open_lower)/(open_upper - open_lower), 4),
-        time_i2c+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_i2c+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     df.loc[df_cnt] = [
@@ -199,8 +231,7 @@ def main(k, gid):
         # makespan_i,
         round((makespan_i - lower)/(upper - lower), 4),
         round((cont_open_i - open_lower)/(open_upper - open_lower), 4),
-        time_i+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_i+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     
@@ -211,19 +242,26 @@ def main(k, gid):
         # makespan_r,
         round((makespan_r - lower)/(upper - lower), 4),
         round((cont_open_r - open_lower)/(open_upper - open_lower), 4),
-        time_r+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_r+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     if verbose == False:
         df.loc[df_cnt] = [
-            'DFS',
+            'SFE',
             0,
             0,
-            round((search_EDER - lower)/(upper - lower), 4),
-            round((search_DOR  - open_lower)/(open_upper - open_lower), 4),
-            0, 0, gid, k,
-            lower, upper]
+            round((search_EDER_SFE - lower)/(upper - lower), 4),
+            round((search_DOR_SFE  - open_lower)/(open_upper - open_lower), 4),
+            0, 0, gid, k]
+        df_cnt += 1
+
+        df.loc[df_cnt] = [
+            'SFD',
+            0,
+            0,
+            round((search_EDER_SFD - lower)/(upper - lower), 4),
+            round((search_DOR_SFD  - open_lower)/(open_upper - open_lower), 4),
+            0, 0, gid, k]
         df_cnt += 1
     
     return 0
@@ -235,8 +273,7 @@ def main(k, gid):
         round(total_calculation_cost / (makespan_sc*core), 4),
         round((makespan_sc - lower)/(upper - lower), 4),
         round((cont_open_sc - open_lower)/(open_upper - open_lower), 4),
-        time_sc+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_sc+time_heft, time_heft, gid, k]
     df_cnt += 1
     """
 

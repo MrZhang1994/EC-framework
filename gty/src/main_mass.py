@@ -15,7 +15,7 @@ from math import ceil
 import time
 import itertools
 
-df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Memory Constraint Time', 'Heft Time', 'gid', 'Case', 'Lower Bound', 'Upper Bound'))
+df = pd.DataFrame(columns=('Type', 'Total Pct.', 'Calculation Pct.', 'EDER', 'DOR', 'Time', 'Memory Constraint Time', 'Heft Time', 'gid', 'Case'))
 
 # parameters
 cores = [2,    3,   4,    5,   6]
@@ -180,8 +180,7 @@ def main(k, gid):
         # makespan_fb,
         round((makespan_fb - lower)/(upper - lower), 4),
         round((cont_open_fb - open_lower)/(open_upper - open_lower), 4),
-        time_fb+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_fb+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     df.loc[df_cnt] = [
@@ -191,8 +190,7 @@ def main(k, gid):
         # makespan_i2c,
         round((makespan_i2c - lower)/(upper - lower), 4),
         round((cont_open_i2c - open_lower)/(open_upper - open_lower), 4),
-        time_i2c+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_i2c+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     df.loc[df_cnt] = [
@@ -202,8 +200,7 @@ def main(k, gid):
         # makespan_i,
         round((makespan_i - lower)/(upper - lower), 4),
         round((cont_open_i - open_lower)/(open_upper - open_lower), 4),
-        time_i+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_i+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k]
     df_cnt += 1
 
     
@@ -214,8 +211,7 @@ def main(k, gid):
         # makespan_r,
         round((makespan_r - lower)/(upper - lower), 4),
         round((cont_open_r - open_lower)/(open_upper - open_lower), 4),
-        time_r+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_r+time_mem+time_heft, time_mem+time_heft, time_heft, gid, k]
     df_cnt += 1
     
     return 0
@@ -226,8 +222,7 @@ def main(k, gid):
         0,
         round((search_result - lower)/(upper - lower), 4),
         0,
-        0, 0, gid, k,
-        lower, upper]
+        0, 0, gid, k]
     df_cnt += 1
     
     df.loc[df_cnt] = [
@@ -236,8 +231,7 @@ def main(k, gid):
         round(total_calculation_cost / (makespan_sc*core), 4),
         round((makespan_sc - lower)/(upper - lower), 4),
         round((cont_open_sc - open_lower)/(open_upper - open_lower), 4),
-        time_sc+time_heft, time_heft, gid, k,
-        lower, upper]
+        time_sc+time_heft, time_heft, gid, k]
     df_cnt += 1
     """
 
@@ -245,9 +239,9 @@ if __name__ == '__main__':
     random.seed(datetime.now())
 
     # test numbers
-    num = 100
+    num = 1000
 
-    for gid in [1, 2, 3, 4]:
+    for gid in [2, 3, 4]:
        for k in range(len(tests)):
             records = 0
             while records < num:
