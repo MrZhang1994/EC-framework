@@ -13,7 +13,7 @@ fi
 function run_docker {
 	g=$1
 	i=$2
-	docker run -v $PWD:/home --rm --name jsc234_$(expr $i + 1) $IMAGE python /home/main.py -g $g -i $i -n $n
+	docker run -v $PWD:/home --rm --name jsc$1_$(expr $i + 1) $IMAGE python /home/main.py -g $g -i $i -n $n
 }
 
 for g in {2..4}; do
