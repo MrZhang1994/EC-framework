@@ -24,12 +24,12 @@ df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand'))
 
 # parameters
 cores = [2, 3, 4, 5, 6]
-# isol  = [1, 3, 5, 7, 9]
-isol  = [1.5, 3, 5, 7.5, 10.5]
+isol  = [1, 3, 5, 7, 9]
+# isol  = [1.5, 3, 5, 7.5, 10.5]
 
 gg = [0, 12, 25, 41, 19, 11]
-# con = [2, 4, 5, 5, 6]
-con = [3, 4, 5, 6, 7]
+con = [2, 4, 5, 6, 6]
+# con = [3, 4, 5, 6, 7]
 
 # index combinations
 tests = [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [1, 0], [1, 2], [1, 3], [1, 4]]
@@ -225,6 +225,7 @@ if __name__ == '__main__':
     case_graph = 1
     case_index = 0
     schedule_func = heft
+    is_cpop = False
     # opts
     opts, args = getopt.getopt(sys.argv[1:], 'vcg:i:n:')
     for o, a in opts:
@@ -232,6 +233,7 @@ if __name__ == '__main__':
             verbose = True
         elif o in ('-c', '--cpop'):
             schedule_func = cpop
+            is_cpop = True
         elif o in ('-g', '--graph'):
             case_graph = int(a)
             if case_graph == 5:
@@ -252,14 +254,19 @@ if __name__ == '__main__':
             records = 0
             while records < num:
                 # if fail, ignore
-                # try:
-                if main(k, gid) == 0:
-                    records += 1
-                # except:
-                    # continue
-    
-    appendDF('EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
-    appendDF('DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)
-    appendDF('COM_{}_{}.csv'.format(case_graph, case_index+1), df_COM)
-    appendDF('ALG_{}_{}.csv'.format(case_graph, case_index+1), df_ALG)
+                try:
+                    if main(k, gid) == 0:
+                        records += 1
+                except:
+                    continue
+    if is_cpop:
+        appendDF('cpop_EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
+        appendDF('cpop_DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)
+        appendDF('cpop_COM_{}_{}.csv'.format(case_graph, case_index+1), df_COM)
+        appendDF('cpop_ALG_{}_{}.csv'.format(case_graph, case_index+1), df_ALG)
+    else:
+        appendDF('EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
+        appendDF('DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)
+        appendDF('COM_{}_{}.csv'.format(case_graph, case_index+1), df_COM)
+        appendDF('ALG_{}_{}.csv'.format(case_graph, case_index+1), df_ALG)
     # os.system('ls /home')
