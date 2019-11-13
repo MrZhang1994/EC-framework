@@ -7,6 +7,7 @@ from minlevel import minLevel, init_minLevel
 from example import init_dag, dag, verbose
 # from heft import heft
 from cpop import cpop
+from heft import heft
 from containerize import *
 import draw
 
@@ -22,14 +23,15 @@ df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand'))
 df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand'))
 
 # parameters
-cores = [2,    3,   4,    5,   6]
-isol  = [1.5,  3,   5,  7.5, 10.5, 1, 7, 9]
+cores = [2, 3, 4, 5, 6]
+# isol  = [1, 3, 5, 7, 9]
+isol  = [1.5, 3, 5, 7.5, 10.5]
 
-gg = [0, 12, 25, 41, 19]
+gg = [0, 12, 25, 41, 19, 11]
 con = [3, 4, 5, 6, 7]
 
 # index combinations
-tests = [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1],  [1, 0], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]]
+tests = [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [1, 0], [1, 2], [1, 3], [1, 4]]
 # case 1: core = 2, iso = 3
 # case 2: core = 3, iso = 3
 # case 3: core = 4, iso = 3
@@ -39,14 +41,11 @@ tests = [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1],  [1, 0], [1, 2], [1, 3], [1, 4]
 # case 7: core = 3, iso = 5
 # case 8: core = 3, iso = 7.5
 # case 9: core = 3, iso = 10.5
-# case 10: core = 3, iso = 1
-# case 11: core = 3, iso = 7
-# case 12: core = 3, iso = 9
 
 # record counter
 df_cnt = 0
 
-is_graph1 = False
+is_graph5 = False
 
 def get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, algo, Graph = graph):
     _ = time.time()
@@ -79,7 +78,7 @@ def main(k, gid):
     # run heft
     # priority_list is a topological sequence of tasks in heft results, used to update containeration results
     _ = time.time()
-    processors, tasks, priority_list = heft()
+    processors, tasks, priority_list = schedule_func()
     time_heft = time.time() - _
 
     # extract the task id from priority_list
@@ -100,7 +99,7 @@ def main(k, gid):
 
     # lower bound of containerization is the finish time of the last task
     lower = tasks[vertex_num].aft
-    if is_graph1:
+    if is_graph5:
         _ = time.time()
         search_EDER_SFE, search_DOR_SFE, com_SFE, search_EDER_SFD, search_DOR_SFD, com_SFD = optimal(vertex_num, tasks, processors, dag, r_dag, order)
         time_o = time.time() - _
@@ -127,7 +126,7 @@ def main(k, gid):
     open_upper = gg[gid]
     open_lower = ceil(gg[gid]/con[tests[k][1]])
 
-    if is_graph1:
+    if is_graph5:
         # make sure SFE and SFE are the lowest
         if search_EDER_SFE > makespan_fb:
             search_EDER_SFE = makespan_fb
@@ -192,7 +191,7 @@ def main(k, gid):
         round(time_i+time_heft, 4), # STO
         round(time_r+time_heft, 4)]
 
-    if is_graph1:
+    if is_graph5:
         EDR.append(round((search_EDER_SFE - lower)/(upper - lower), 4))
         EDR.append(round((search_EDER_SFD - lower)/(upper - lower), 4))
         DOR.append(round((search_DOR_SFE  - open_lower)/(open_upper - open_lower), 4))
@@ -224,15 +223,18 @@ if __name__ == '__main__':
     num = 15
     case_graph = 1
     case_index = 0
+    schedule_func = heft
     # opts
-    opts, args = getopt.getopt(sys.argv[1:], 'vg:i:n:c:')
+    opts, args = getopt.getopt(sys.argv[1:], 'vcg:i:n:')
     for o, a in opts:
         if o in ('-v', '--verbose'):
             verbose = True
+        elif o in ('-c', '--cpop'):
+            schedule_func = cpop
         elif o in ('-g', '--graph'):
             case_graph = int(a)
-            if case_graph == 1:
-                is_graph1 = True
+            if case_graph == 5:
+                is_graph5 = True
                 df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD'))
                 df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD'))
                 df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD'))
@@ -241,8 +243,6 @@ if __name__ == '__main__':
             case_index = int(a)
         elif o in ('-n', '--number'):
             num = int(a)
-        elif o in ('-c', '--case'):
-            kase = a
         else:
             sys.exit()
 
@@ -251,11 +251,11 @@ if __name__ == '__main__':
             records = 0
             while records < num:
                 # if fail, ignore
-                try:
-                    if main(k, gid) == 0:
-                        records += 1
-                except:
-                    continue
+                # try:
+                if main(k, gid) == 0:
+                    records += 1
+                # except:
+                    # continue
     
     appendDF('EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
     appendDF('DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)

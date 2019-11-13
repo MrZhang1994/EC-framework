@@ -426,7 +426,7 @@ def containerize(tasks, processors, d, dag, r_dag, index, t, N, order, flag, Gra
 def update_schedule(d, r_dag, processors, tasks, bridge_tasks, order, cont_set):
     new_tasks = copy.deepcopy(tasks)
     new_processors = copy.deepcopy(processors)
-    fact = 2.7
+    fact = 1
     w = [task.aft - task.ast for task in tasks]
     bridge_com = 0
     for i in bridge_tasks:
