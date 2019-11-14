@@ -5,7 +5,7 @@ if [ "$1" = "test" ]; then
 	iter=2/n
 	echo testing
 else
-	n=10
+	n=100
 	iter=1000/n
 fi
 

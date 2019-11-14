@@ -5,7 +5,7 @@ if [ "$1" = "test" ]; then
 	iter=2/n
 	echo testing
 else
-	n=10
+	n=50
 	iter=1000/n
 fi
 
@@ -16,7 +16,7 @@ function run_docker {
 }
 
 for g in 5; do
-	for i in {0..8}; do
+	for i in $2 $3; do
 		for((j=0;j<iter;j++)); do
 			run_docker $g $i
 		done

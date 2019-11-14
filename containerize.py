@@ -320,6 +320,9 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
     best_daemon_SFD = 1e4
     best_makespan_SFD = 1e4
     best_com_SFD = 1e4
+    best_daemon_SFC = 1e4
+    best_makespan_SFC = 1e4
+    best_com_SFC = 1e4
     # mapp = random.shuffle([i for i in range(len(tasks)-1)])
     for combination in itertools.product(*([[0,1,2,3] for _ in range(len(tasks)-1)])):
         comb_cnt += 1
@@ -359,13 +362,17 @@ def optimal(vertex_num, tasks, processors, d, r_dag, order):
             best_makespan_SFD = makespan
             best_daemon_SFD = daemon
             best_com_SFD = com
+        if com < best_com_SFC:
+            best_makespan_SFC = makespan
+            best_daemon_SFC = daemon
+            best_com_SFC = com
         if search_cnt > 2000:
             # print('.....')
             # print(comb_cnt)
-            return best_makespan_SFE, best_daemon_SFE, best_com_SFE, best_makespan_SFD, best_daemon_SFD, best_com_SFD
+            return best_makespan_SFE, best_daemon_SFE, best_com_SFE, best_makespan_SFD, best_daemon_SFD, best_com_SFD, best_makespan_SFC, best_daemon_SFC, best_com_SFC
     # print(comb_cnt)
     # print(cont)
-    return best_makespan_SFE, best_daemon_SFE, best_com_SFE, best_makespan_SFD, best_daemon_SFD, best_com_SFD
+    return best_makespan_SFE, best_daemon_SFE, best_com_SFE, best_makespan_SFD, best_daemon_SFD, best_com_SFD, best_makespan_SFC, best_daemon_SFC, best_com_SFC
 
 def get_bridge_tasks(d, N, cont):
     bridge_tasks = []

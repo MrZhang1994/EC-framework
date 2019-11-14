@@ -102,7 +102,7 @@ def main(k, gid):
     lower = tasks[vertex_num].aft
     if is_graph5:
         _ = time.time()
-        search_EDER_SFE, search_DOR_SFE, com_SFE, search_EDER_SFD, search_DOR_SFD, com_SFD = optimal(vertex_num, tasks, processors, dag, r_dag, order)
+        search_EDER_SFE, search_DOR_SFE, com_SFE, search_EDER_SFD, search_DOR_SFD, com_SFD, search_EDER_SFC, search_DOR_SFC, com_SFC = optimal(vertex_num, tasks, processors, dag, r_dag, order)
         time_o = time.time() - _
 
     cont_open_f, makespan_f, time_f, com_f = get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, 'forward')
@@ -197,10 +197,12 @@ def main(k, gid):
         EDR.append(round((search_EDER_SFD - lower)/(upper - lower), 4))
         DOR.append(round((search_DOR_SFE  - open_lower)/(open_upper - open_lower), 4))
         DOR.append(round((search_DOR_SFD  - open_lower)/(open_upper - open_lower), 4))
+        DOR.append(round((search_DOR_SFC  - open_lower)/(open_upper - open_lower), 4))
         COM.append(round(com_SFE, 4))
         COM.append(round(com_SFD, 4))
-        ALG.append(round(time_o/2+time_heft, 4))
-        ALG.append(round(time_o/2+time_heft, 4))
+        COM.append(round(com_SFC, 4))
+        ALG.append(round(time_o/3+time_heft, 4)) # SFE, SFD, SFC
+        ALG.append(round(time_o/3+time_heft, 4)) # SFE, SFD, SFC
 
     df_EDR.loc[df_cnt] = EDR
     df_DOR.loc[df_cnt] = DOR
@@ -239,8 +241,8 @@ if __name__ == '__main__':
             if case_graph == 5:
                 is_graph5 = True
                 df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD'))
-                df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD'))
-                df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD'))
+                df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
+                df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand','SFE','SFD'))
         elif o in ('-i', '--index'):
             case_index = int(a)
