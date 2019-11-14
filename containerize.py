@@ -312,17 +312,18 @@ def cont_iso_sum(x):
     return True
 
 def optimal(vertex_num, tasks, processors, d, r_dag, order):
+    INF = 1e9
     search_cnt = 0
     comb_cnt = 0
-    best_daemon_SFE = 1e4
-    best_makespan_SFE = 1e4
-    best_com_SFE = 1e4
-    best_daemon_SFD = 1e4
-    best_makespan_SFD = 1e4
-    best_com_SFD = 1e4
-    best_daemon_SFC = 1e4
-    best_makespan_SFC = 1e4
-    best_com_SFC = 1e4
+    best_daemon_SFE = INF
+    best_makespan_SFE = INF
+    best_com_SFE = INF
+    best_daemon_SFD = INF
+    best_makespan_SFD = INF
+    best_com_SFD = INF
+    best_daemon_SFC = INF
+    best_makespan_SFC = INF
+    best_com_SFC = INF
     # mapp = random.shuffle([i for i in range(len(tasks)-1)])
     for combination in itertools.product(*([[0,1,2,3] for _ in range(len(tasks)-1)])):
         comb_cnt += 1

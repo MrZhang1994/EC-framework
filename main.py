@@ -125,58 +125,86 @@ def main(k, gid):
     upper = one_tasks[vertex_num].aft
     
     open_upper = gg[gid]
-    open_lower = ceil(gg[gid]/con[tests[k][1]])
+    open_lower = min([ceil(gg[gid]/con[tests[k][1]]), cont_open_fb, cont_open_i2c, cont_open_i, cont_open_r])
 
     if is_graph5:
         # make sure SFE and SFE are the lowest
         if search_EDER_SFE > makespan_fb:
             search_EDER_SFE = makespan_fb
             search_DOR_SFE = cont_open_fb
+            com_SFE = com_fb
 
         if search_EDER_SFE > makespan_i2c:
             search_EDER_SFE = makespan_i2c
             search_DOR_SFE = cont_open_i2c
+            com_SFE = com_i2c
 
         if search_EDER_SFE > makespan_i:
             search_EDER_SFE = makespan_i
             search_DOR_SFE = cont_open_i
+            com_SFE = com_i
 
         if search_EDER_SFE > makespan_r:
             search_EDER_SFE = makespan_r
             search_DOR_SFE = cont_open_r
+            com_SFE = com_r
 
         # DOR
         if search_DOR_SFD > cont_open_fb:
             search_EDER_SFD = makespan_fb
             search_DOR_SFD = cont_open_fb
+            com_SFD = com_fb
 
         if search_DOR_SFD > cont_open_i2c:
             search_EDER_SFD = makespan_i2c
             search_DOR_SFD = cont_open_i2c
+            com_SFD = com_i2c
 
         if search_DOR_SFD > cont_open_i:
             search_EDER_SFD = makespan_i
             search_DOR_SFD = cont_open_i
+            com_SFD = com_i
 
         if search_DOR_SFD > cont_open_r:
             search_EDER_SFD = makespan_r
             search_DOR_SFD = cont_open_r
+            com_SFD = com_r
+        
+        if com_SFC > com_fb:
+            search_EDER_SFC = makespan_fb
+            search_DOR_SFC = cont_open_fb
+            com_SFC = com_fb
+        
+        if com_SFC > com_i2c:
+            search_EDER_SFC = makespan_i2c
+            search_DOR_SFC = cont_open_i2c
+            com_SFC = com_i2c
+        
+        if com_SFC > com_i:
+            search_EDER_SFC = makespan_i
+            search_DOR_SFC = cont_open_i
+            com_SFC = com_i
+
+        if com_SFC > com_r:
+            search_EDER_SFC = makespan_r
+            search_DOR_SFC = cont_open_r
+            com_SFC = com_r
 
     EDR = [
         round(upper, 4), # max
         round(lower, 4), # min
-        round((makespan_fb - lower)/(upper - lower), 4), # CPF
-        round((makespan_i2c - lower)/(upper - lower), 4), # ICRO
-        round((makespan_i - lower)/(upper - lower), 4), # STO
-        round((makespan_r - lower)/(upper - lower), 4)]
+        round(makespan_fb, 4), # CPF
+        round(makespan_i2c, 4), # ICRO
+        round(makespan_i, 4), # STO
+        round(makespan_r, 4)]
 
     DOR = [
         round(open_upper, 4), # max
         round(open_lower, 4), # min
-        round((cont_open_fb - open_lower)/(open_upper - open_lower), 4),
-        round((cont_open_i2c - open_lower)/(open_upper - open_lower), 4),
-        round((cont_open_i - open_lower)/(open_upper - open_lower), 4),
-        round((cont_open_r - open_lower)/(open_upper - open_lower), 4)]
+        round(cont_open_fb, 4),
+        round(cont_open_i2c, 4),
+        round(cont_open_i, 4),
+        round(cont_open_r, 4)]
 
     COM = [
         round(com_max, 4),
@@ -193,11 +221,11 @@ def main(k, gid):
         round(time_r+time_heft, 4)]
 
     if is_graph5:
-        EDR.append(round((search_EDER_SFE - lower)/(upper - lower), 4))
-        EDR.append(round((search_EDER_SFD - lower)/(upper - lower), 4))
-        DOR.append(round((search_DOR_SFE  - open_lower)/(open_upper - open_lower), 4))
-        DOR.append(round((search_DOR_SFD  - open_lower)/(open_upper - open_lower), 4))
-        DOR.append(round((search_DOR_SFC  - open_lower)/(open_upper - open_lower), 4))
+        EDR.append(round(search_EDER_SFE, 4))
+        EDR.append(round(search_EDER_SFD, 4))
+        DOR.append(round(search_DOR_SFE, 4))
+        DOR.append(round(search_DOR_SFD, 4))
+        DOR.append(round(search_DOR_SFC, 4))
         COM.append(round(com_SFE, 4))
         COM.append(round(com_SFD, 4))
         COM.append(round(com_SFC, 4))
