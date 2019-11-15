@@ -12,11 +12,11 @@ fi
 function run_docker {
 	g=$1
 	i=$2
-	docker run -v $PWD:/home --rm --name jsc5_cpop_$(expr $i + 1) $IMAGE python /home/main.py -c -g $g -i $i -n $n
+	docker run -v $PWD:/home --rm --name jsc5_$(expr $i + 1) $IMAGE python /home/main.py -g $g -i $i -n $n
 }
 
 for g in 5; do
-	for i in $2; do
+	for i in 8; do
 		for((j=0;j<iter;j++)); do
 			run_docker $g $i
 		done

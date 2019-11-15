@@ -223,6 +223,7 @@ def main(k, gid):
     if is_graph5:
         EDR.append(round(search_EDER_SFE, 4))
         EDR.append(round(search_EDER_SFD, 4))
+        EDR.append(round(search_EDER_SFC, 4))
         DOR.append(round(search_DOR_SFE, 4))
         DOR.append(round(search_DOR_SFD, 4))
         DOR.append(round(search_DOR_SFC, 4))
@@ -268,7 +269,7 @@ if __name__ == '__main__':
             case_graph = int(a)
             if case_graph == 5:
                 is_graph5 = True
-                df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD'))
+                df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand','SFE','SFD'))
