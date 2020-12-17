@@ -5,7 +5,7 @@ from datetime import datetime
 import maxcut
 from minlevel import minLevel, init_minLevel
 from example import init_dag, dag, verbose
-# from heft import heft
+from ic_pcp import ic_pcp
 from cpop import cpop
 from heft import heft
 from containerize import *
@@ -20,7 +20,7 @@ import itertools
 df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand'))
 df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand'))
 df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand'))
-df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand'))
+df_ALG = pd.DataFrame(columns=('SCHED', 'CPF','ICRO','STO','Rand'))
 
 # parameters
 cores = [2, 3, 4, 5, 6]
@@ -242,7 +242,7 @@ def main(k, gid):
     return 0
 
 def appendDF(fname, df):
-    fname = '/home/' + fname
+    fname = algo_name + '/' + fname
     if not os.path.isfile(fname):
         df.to_csv(fname, header='column_names', index=False)
     else:
@@ -252,19 +252,20 @@ if __name__ == '__main__':
     random.seed(datetime.now())
 
     # test numbers
-    num = 15
+    algo = {'heft': heft, 'cpop': cpop, 'ic_pcp': ic_pcp}
+    num = 1000
     case_graph = 1
-    case_index = 0
-    schedule_func = heft
-    is_cpop = False
+    case_index = 1
+    schedule_func = ic_pcp
+    algo_name = 'ic_pcp'
     # opts
     opts, args = getopt.getopt(sys.argv[1:], 'vcg:i:n:')
     for o, a in opts:
         if o in ('-v', '--verbose'):
             verbose = True
-        elif o in ('-c', '--cpop'):
-            schedule_func = cpop
-            is_cpop = True
+        elif o in ('-s', '--sched'):
+            schedule_func = algo[a]
+            algo_name = a
         elif o in ('-g', '--graph'):
             case_graph = int(a)
             if case_graph == 5:
@@ -272,7 +273,7 @@ if __name__ == '__main__':
                 df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
                 df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
-                df_ALG = pd.DataFrame(columns=('HEFT', 'CPF','ICRO','STO','Rand','SFE','SFD'))
+                df_ALG = pd.DataFrame(columns=(algo_name, 'CPF','ICRO','STO','Rand','SFE','SFD'))
         elif o in ('-i', '--index'):
             case_index = int(a)
         elif o in ('-n', '--number'):
@@ -288,16 +289,12 @@ if __name__ == '__main__':
                 try:
                     if main(k, gid) == 0:
                         records += 1
+                        print(records)
                 except:
                     continue
-    if is_cpop:
-        appendDF('cpop_EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
-        appendDF('cpop_DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)
-        appendDF('cpop_COM_{}_{}.csv'.format(case_graph, case_index+1), df_COM)
-        appendDF('cpop_ALG_{}_{}.csv'.format(case_graph, case_index+1), df_ALG)
-    else:
-        appendDF('EDR_{}_{}.csv'.format(case_graph, case_index+1), df_EDR)
-        appendDF('DOR_{}_{}.csv'.format(case_graph, case_index+1), df_DOR)
-        appendDF('COM_{}_{}.csv'.format(case_graph, case_index+1), df_COM)
-        appendDF('ALG_{}_{}.csv'.format(case_graph, case_index+1), df_ALG)
+
+    appendDF('{}_NED_{}_{}.csv'.format(algo_name, case_graph, case_index+1), df_EDR)
+    appendDF('{}_DOR_{}_{}.csv'.format(algo_name, case_graph, case_index+1), df_DOR)
+    appendDF('{}_ICP_{}_{}.csv'.format(algo_name, case_graph, case_index+1), df_COM)
+    appendDF('{}_TIME_{}_{}.csv'.format(algo_name, case_graph, case_index+1), df_ALG)
     # os.system('ls /home')

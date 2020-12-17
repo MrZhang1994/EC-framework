@@ -200,8 +200,8 @@ def bfs_i2c(r_dag, processors, tasks, t):
         if len(p.tasks) == 0: continue
         for i in range(len(p.tasks)-1):
             idle[p.tasks[i].id] = p.tasks[i+1].ast - p.tasks[i].aft
-        if p.tasks[-1].id != t:
-            idle[p.tasks[-1].id] = tasks[t].ast - p.tasks[-1].aft
+
+        idle[p.tasks[-1].id] = tasks[t].ast - p.tasks[-1].aft
 
     N = len(tasks)
     V = [x for x in range(N)]
