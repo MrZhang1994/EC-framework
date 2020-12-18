@@ -8,6 +8,8 @@ from example import init_dag, dag, verbose
 from ic_pcp import ic_pcp
 from cpop import cpop
 from heft import heft
+from dls import dls
+from hlfet import hlfet
 from containerize import *
 import draw
 
@@ -16,6 +18,9 @@ import numpy as np
 from math import ceil
 import time
 import itertools
+
+import logging
+logging.basicConfig(level=logging.INFO)
 
 df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand'))
 df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand'))
@@ -45,8 +50,6 @@ tests = [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [1, 0], [1, 2], [1, 3], [1, 4]]
 
 # record counter
 df_cnt = 0
-
-is_graph5 = False
 
 def get_result(vertex_num, tasks, processors, dag, dag_d, r_dag, index, t, N, order, algo, Graph = graph):
     _ = time.time()
@@ -100,7 +103,7 @@ def main(k, gid):
 
     # lower bound of containerization is the finish time of the last task
     lower = tasks[vertex_num].aft
-    if is_graph5:
+    if False:
         _ = time.time()
         search_EDER_SFE, search_DOR_SFE, com_SFE, search_EDER_SFD, search_DOR_SFD, com_SFD, search_EDER_SFC, search_DOR_SFC, com_SFC = optimal(vertex_num, tasks, processors, dag, r_dag, order)
         time_o = time.time() - _
@@ -127,7 +130,7 @@ def main(k, gid):
     open_upper = gg[gid]
     open_lower = min([ceil(gg[gid]/con[tests[k][1]]), cont_open_fb, cont_open_i2c, cont_open_i, cont_open_r])
 
-    if is_graph5:
+    if False:
         # make sure SFE and SFE are the lowest
         if search_EDER_SFE > makespan_fb:
             search_EDER_SFE = makespan_fb
@@ -220,7 +223,7 @@ def main(k, gid):
         round(time_i+time_heft, 4), # STO
         round(time_r+time_heft, 4)]
 
-    if is_graph5:
+    if False:
         EDR.append(round(search_EDER_SFE, 4))
         EDR.append(round(search_EDER_SFD, 4))
         EDR.append(round(search_EDER_SFC, 4))
@@ -252,14 +255,14 @@ if __name__ == '__main__':
     random.seed(datetime.now())
 
     # test numbers
-    algo = {'heft': heft, 'cpop': cpop, 'ic_pcp': ic_pcp}
+    algo = {'heft': heft, 'cpop': cpop, 'ic_pcp': ic_pcp, 'dls': dls, 'hlfet': hlfet}
     num = 1000
     case_graph = 1
     case_index = 1
-    schedule_func = ic_pcp
-    algo_name = 'ic_pcp'
+    algo_name = 'hlfet'
+    schedule_func = algo[algo_name]
     # opts
-    opts, args = getopt.getopt(sys.argv[1:], 'vcg:i:n:')
+    opts, args = getopt.getopt(sys.argv[1:], 'vs:g:i:n:')
     for o, a in opts:
         if o in ('-v', '--verbose'):
             verbose = True
@@ -268,12 +271,11 @@ if __name__ == '__main__':
             algo_name = a
         elif o in ('-g', '--graph'):
             case_graph = int(a)
-            if case_graph == 5:
-                is_graph5 = True
-                df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
-                df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
-                df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
-                df_ALG = pd.DataFrame(columns=(algo_name, 'CPF','ICRO','STO','Rand','SFE','SFD'))
+            # if case_graph == 5:
+            #     df_EDR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
+            #     df_DOR = pd.DataFrame(columns=('max','min','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
+            #     df_COM = pd.DataFrame(columns=('max','CPF','ICRO','STO','Rand','SFE','SFD','SFC'))
+            #     df_ALG = pd.DataFrame(columns=(algo_name, 'CPF','ICRO','STO','Rand','SFE','SFD'))
         elif o in ('-i', '--index'):
             case_index = int(a)
         elif o in ('-n', '--number'):
