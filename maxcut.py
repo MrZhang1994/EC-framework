@@ -28,28 +28,14 @@ def init_iso(N):
     return iso_value
 
 def graph_parameter(gid):
-    if gid == 1:
-        return graph1_parameter()
-    if gid == 2:
-        return graph2_parameter()
-    if gid == 3:
-        return graph3_parameter()
-    if gid == 4:
-        return graph4_parameter()
-    if gid == 5:
-        return graph5_parameter()
+    graph_parameters = [None, graph1_parameter, graph2_parameter, graph3_parameter, graph4_parameter, graph5_parameter, graph6_parameter, graph7_parameter]
+    
+    return graph_parameters[gid]()
 
 def initial_graph(gid, vertex_num, arc_num, impact_factor):
-    if gid == 1:
-        return initial_graph_1(vertex_num, arc_num, impact_factor)
-    if gid == 2:
-        return initial_graph_2(vertex_num, arc_num, impact_factor)
-    if gid == 3:
-        return initial_graph_3(vertex_num, arc_num, impact_factor)
-    if gid == 4:
-        return initial_graph_4(vertex_num, arc_num, impact_factor)
-    if gid == 5:
-        return initial_graph_5(vertex_num, arc_num, impact_factor)
+    initial_graphs = [None, initial_graph_1, initial_graph_2, initial_graph_3, initial_graph_4, initial_graph_5, initial_graph_6, initial_graph_7]
+
+    return initial_graphs[gid](vertex_num, arc_num, impact_factor)
 
 def graph1_parameter():
     impact_factor = []
@@ -79,6 +65,30 @@ def graph4_parameter():
     impact_factor = []
     arc_num = 34
     vertex_num = 19
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(0.8, 2))
+    return impact_factor, arc_num, vertex_num
+
+def graph5_parameter():
+    impact_factor = []
+    arc_num = 12
+    vertex_num = 8
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(0.8, 2))
+    return impact_factor, arc_num, vertex_num
+
+def graph6_parameter():
+    impact_factor = []
+    arc_num = 15
+    vertex_num = 11
+    for i in range(vertex_num):
+        impact_factor.append(random.uniform(0.8, 2))
+    return impact_factor, arc_num, vertex_num
+
+def graph7_parameter():
+    impact_factor = []
+    arc_num = 20
+    vertex_num = 16
     for i in range(vertex_num):
         impact_factor.append(random.uniform(0.8, 2))
     return impact_factor, arc_num, vertex_num
@@ -508,6 +518,214 @@ def initial_graph_4(vertex_num, arc_num, impact_factor):
     process[15] = list_sum(arc_weight, [30, 31]) * impact_factor[15]
     process[16] = list_sum(arc_weight, [32]) * impact_factor[16]
     process[17] = list_sum(arc_weight, [33]) * impact_factor[17]
+
+    iso_value = init_iso(vertex_num)
+
+    for i in range(vertex_num):
+        communication_cpu.append(vertex_cpu[i])
+    if verbose:
+        print('communication_cpu')
+        print(communication_cpu)
+        print('process')
+        print(process)
+        print('iso_value')
+        print(iso_value)
+    return graph, vertex_cpu, process, communication_cpu
+
+def initial_graph_5(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
+    graph = np.zeros((vertex_num, vertex_num))
+    process = np.zeros(vertex_num)
+    vertex_cpu = []
+    communication_cpu = []
+    for i in range(vertex_num):
+        vertex_cpu.append(random.uniform(10, 100))
+        for j in range(vertex_num):
+            graph[i, j] = -1
+    if verbose:
+        print('vertex_cpu:')
+        print(vertex_cpu)
+
+    arc_weight = []
+    for i in range(arc_num):
+        arc_weight.append(random.uniform(10, 100)*random.choice([0.1, 0.5, 1, 5, 10]))
+    if verbose:
+        print('edge weight:')
+        print(arc_weight)
+    '''
+    arc_weight = [3, 2, 7, 6, 8, 6, 9, 5, 7, 4, 5, 4, 8, 6, 8, 2, 8, 4]
+    '''
+    '''
+    print('edge weight:')
+    print(arc_weight)
+    '''
+
+    graph[0, 1] = arc_weight[0]
+    graph[1, 2] = arc_weight[1]
+    graph[1, 3] = arc_weight[2]
+    graph[1, 4] = arc_weight[3]
+    graph[2, 5] = arc_weight[4]
+    graph[3, 5] = arc_weight[5]
+    graph[4, 5] = arc_weight[6]
+    graph[2, 6] = arc_weight[7]
+    graph[3, 6] = arc_weight[8]
+    graph[4, 6] = arc_weight[9]
+    graph[5, 6] = arc_weight[10]
+    graph[6, 7] = arc_weight[11]
+
+    process[0] = list_sum(arc_weight, [0]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [1, 2, 3]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [4, 7]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [5, 8]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [6, 9]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [10]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [11]) * impact_factor[6]
+
+    iso_value = init_iso(vertex_num)
+
+    for i in range(vertex_num):
+        communication_cpu.append(vertex_cpu[i])
+    if verbose:
+        print('communication_cpu')
+        print(communication_cpu)
+        print('process')
+        print(process)
+        print('iso_value')
+        print(iso_value)
+    return graph, vertex_cpu, process, communication_cpu
+
+def initial_graph_6(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
+    graph = np.zeros((vertex_num, vertex_num))
+    process = np.zeros(vertex_num)
+    vertex_cpu = []
+    communication_cpu = []
+    for i in range(vertex_num):
+        vertex_cpu.append(random.uniform(10, 100))
+        for j in range(vertex_num):
+            graph[i, j] = -1
+    if verbose:
+        print('vertex_cpu:')
+        print(vertex_cpu)
+
+    arc_weight = []
+    for i in range(arc_num):
+        arc_weight.append(random.uniform(10, 100)*random.choice([0.1, 0.5, 1, 5, 10]))
+    if verbose:
+        print('edge weight:')
+        print(arc_weight)
+    '''
+    arc_weight = [3, 2, 7, 6, 8, 6, 9, 5, 7, 4, 5, 4, 8, 6, 8, 2, 8, 4]
+    '''
+    '''
+    print('edge weight:')
+    print(arc_weight)
+    '''
+
+    graph[0, 1] = arc_weight[0]
+    graph[0, 2] = arc_weight[1]
+    graph[1, 3] = arc_weight[2]
+    graph[2, 3] = arc_weight[3]
+    graph[3, 4] = arc_weight[4]
+    graph[3, 5] = arc_weight[5]
+    graph[3, 6] = arc_weight[6]
+    graph[4, 5] = arc_weight[7]
+    graph[6, 5] = arc_weight[8]
+    graph[5, 7] = arc_weight[9]
+    graph[5, 8] = arc_weight[10]
+    graph[5, 9] = arc_weight[11]
+    graph[7, 10] = arc_weight[12]
+    graph[8, 10] = arc_weight[13]
+    graph[9, 10] = arc_weight[14]
+
+    process[0] = list_sum(arc_weight, [0, 1]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [2]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [3]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [4, 5, 6]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [7]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [9, 10, 11]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [8]) * impact_factor[6]
+    process[7] = list_sum(arc_weight, [12]) * impact_factor[7]
+    process[8] = list_sum(arc_weight, [13]) * impact_factor[8]
+    process[9] = list_sum(arc_weight, [14]) * impact_factor[9]
+
+    iso_value = init_iso(vertex_num)
+
+    for i in range(vertex_num):
+        communication_cpu.append(vertex_cpu[i])
+    if verbose:
+        print('communication_cpu')
+        print(communication_cpu)
+        print('process')
+        print(process)
+        print('iso_value')
+        print(iso_value)
+    return graph, vertex_cpu, process, communication_cpu
+
+def initial_graph_7(vertex_num, arc_num, impact_factor):
+    global iso_value, cpu_factor
+    graph = np.zeros((vertex_num, vertex_num))
+    process = np.zeros(vertex_num)
+    vertex_cpu = []
+    communication_cpu = []
+    for i in range(vertex_num):
+        vertex_cpu.append(random.uniform(10, 100))
+        for j in range(vertex_num):
+            graph[i, j] = -1
+    if verbose:
+        print('vertex_cpu:')
+        print(vertex_cpu)
+
+    arc_weight = []
+    for i in range(arc_num):
+        arc_weight.append(random.uniform(10, 100)*random.choice([0.1, 0.5, 1, 5, 10]))
+    if verbose:
+        print('edge weight:')
+        print(arc_weight)
+    '''
+    arc_weight = [3, 2, 7, 6, 8, 6, 9, 5, 7, 4, 5, 4, 8, 6, 8, 2, 8, 4]
+    '''
+    '''
+    print('edge weight:')
+    print(arc_weight)
+    '''
+
+    graph[0, 1] = arc_weight[0]
+    graph[0, 2] = arc_weight[1]
+    graph[1, 3] = arc_weight[2]
+    graph[1, 4] = arc_weight[3]
+    graph[2, 5] = arc_weight[4]
+    graph[3, 6] = arc_weight[5]
+    graph[4, 7] = arc_weight[6]
+    graph[5, 8] = arc_weight[7]
+    graph[5, 9] = arc_weight[8]
+    graph[6, 15] = arc_weight[9]
+    graph[7, 10] = arc_weight[10]
+    graph[8, 11] = arc_weight[11]
+    graph[9, 15] = arc_weight[12]
+    graph[10, 15] = arc_weight[13]
+    graph[11, 12] = arc_weight[14]
+    graph[11, 13] = arc_weight[15]
+    graph[11, 14] = arc_weight[16]
+    graph[12, 15] = arc_weight[17]
+    graph[13, 15] = arc_weight[18]
+    graph[14, 15] = arc_weight[19]
+
+    process[0] = list_sum(arc_weight, [0, 1]) * impact_factor[0]
+    process[1] = list_sum(arc_weight, [2, 3]) * impact_factor[1]
+    process[2] = list_sum(arc_weight, [4]) * impact_factor[2]
+    process[3] = list_sum(arc_weight, [5]) * impact_factor[3]
+    process[4] = list_sum(arc_weight, [6]) * impact_factor[4]
+    process[5] = list_sum(arc_weight, [7, 8]) * impact_factor[5]
+    process[6] = list_sum(arc_weight, [9]) * impact_factor[6]
+    process[7] = list_sum(arc_weight, [10]) * impact_factor[7]
+    process[8] = list_sum(arc_weight, [11]) * impact_factor[8]
+    process[9] = list_sum(arc_weight, [12]) * impact_factor[9]
+    process[10] = list_sum(arc_weight, [13]) * impact_factor[10]
+    process[11] = list_sum(arc_weight, [14, 15, 16]) * impact_factor[11]
+    process[12] = list_sum(arc_weight, [17]) * impact_factor[12]
+    process[13] = list_sum(arc_weight, [18]) * impact_factor[13]
+    process[14] = list_sum(arc_weight, [19]) * impact_factor[14]
 
     iso_value = init_iso(vertex_num)
 

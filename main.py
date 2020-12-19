@@ -8,6 +8,7 @@ from example import init_dag, dag, verbose
 from ic_pcp import ic_pcp
 from cpop import cpop
 from heft import heft
+from moheft import moheft
 from dls import dls
 from hlfet import hlfet
 from containerize import *
@@ -32,7 +33,7 @@ cores = [2, 3, 4, 5, 6]
 isol  = [1, 3, 5, 7, 9]
 # isol  = [1.5, 3, 5, 7.5, 10.5]
 
-gg = [0, 12, 25, 41, 19, 11]
+gg = [0, 11, 25, 41, 19, 8, 11, 16]
 con = [2, 4, 5, 6, 6]
 # con = [3, 4, 5, 6, 7]
 
@@ -255,11 +256,11 @@ if __name__ == '__main__':
     random.seed(datetime.now())
 
     # test numbers
-    algo = {'heft': heft, 'cpop': cpop, 'ic_pcp': ic_pcp, 'dls': dls, 'hlfet': hlfet}
+    algo = {'heft': heft, 'cpop': cpop, 'ic_pcp': ic_pcp, 'dls': dls, 'hlfet': hlfet, 'moheft': moheft}
     num = 1000
     case_graph = 1
     case_index = 1
-    algo_name = 'hlfet'
+    algo_name = 'moheft'
     schedule_func = algo[algo_name]
     # opts
     opts, args = getopt.getopt(sys.argv[1:], 'vs:g:i:n:')
